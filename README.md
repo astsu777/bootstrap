@@ -8,7 +8,7 @@ This works on macOS and various flavors of Linux (mainly Debian based, Red Hat b
 In order to execute this script, execute the following command:
 
 ```
-curl -sfL https://raw.githubusercontent.com/GSquad934/bootstrap/master/ubuntu-18.04/bootstrap.sh | sh
+curl -sfL https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh | sh
 ```
 
 # TODO
