@@ -1,0 +1,7 @@
+balenaetcher
+firefox
+keepassxc
+nextcloud
+plex
+rambox
+vlc
