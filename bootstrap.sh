@@ -19,26 +19,47 @@ fi
 #=============
 echo "Installing software..."
 if [[ $OSTYPE == "darwin"* ]]; then
-	echo "Updating software database..."
 	brew update
 	< macos_common_apps.txt xargs brew install
 	< macos_common_casks.txt xargs brew cask install
+	read -p "Do you want to install work applications?" -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		< macos_work_apps.txt xargs brew install
+		< macos_work_casks.txt xargs brew cask install
+	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt > /dev/null 2>&1; then
-	echo "Updating software database..."
 	sudo apt update
-	< debian_apps.txt xargs sudo apt install -y > /dev/null 2>&1
+	< debian_common_apps.txt xargs sudo apt install -y > /dev/null 2>&1
+	read -p "Do you want to install work applications?" -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		< debian_work_apps.txt xargs brew install
+	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt-get > /dev/null 2>&1; then
-	echo "Updating software database..."
 	sudo apt-get update
-	< debian_apps.txt xargs sudo apt-get install -y > /dev/null 2>&1
+	< debian_common_apps.txt xargs sudo apt-get install -y > /dev/null 2>&1
+	read -p "Do you want to install work applications?" -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		< debian_work_apps.txt xargs brew install
+	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v yum > /dev/null 2>&1; then
-	echo "Updating software database..."
 	sudo yum update
-	< redhat_apps.txt xargs sudo yum install -y > /dev/null 2>&1
+	< redhat_common_apps.txt xargs sudo yum install -y > /dev/null 2>&1
+	read -p "Do you want to install work applications?" -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		< redhat_work_apps.txt xargs brew install
+	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v pacman > /dev/null 2>&1; then
-	echo "Updating software database..."
 	sudo pacman -Syyu
-	< linux_apps.txt xargs sudo pacman -S --noconfirm install > /dev/null 2>&1
+	< linux_common_apps.txt xargs sudo pacman -S --noconfirm install > /dev/null 2>&1
+	read -p "Do you want to install work applications?" -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		< linux_work_apps.txt xargs brew install
+	fi
 fi
 
 #============
