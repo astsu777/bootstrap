@@ -1,0 +1,14 @@
+ansible
+docker
+gns3
+minicom
+mitmproxy
+peco
+speedtest-cli
+ssh-audit
+telnet
+testssl.sh
+tor
+wakeonlan
+wireshark
+xca

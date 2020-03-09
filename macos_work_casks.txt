@@ -1,0 +1,5 @@
+tftpserver
+tor-browser
+visual-studio-code
+wireshark
+xca
