@@ -20,8 +20,8 @@ fi
 echo "Installing software..."
 if [[ $OSTYPE == "darwin"* ]]; then
 	brew update
-	< macos_common_apps.txt xargs brew install
-	< macos_common_casks.txt xargs brew cask install
+	< "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt)" xargs brew install
+	< "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt)" xargs brew cask install
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -65,10 +65,8 @@ fi
 #============
 # Install Powerline font
 #============
-if [[ $OSTYPE == "darwin"* ]] && [[ ! -f "$HOME/Library/Fonts/Source Code Pro Medium for Powerline.otf" ]]; then
-	cd ~/Library/Fonts || exit
-	wget https://github.com/powerline/fonts/blob/master/SourceCodePro/Source%20Code%20Pro%20Medium%20for%20Powerline.otf
-fi
+git clone https://github.com/powerline/fonts "$HOME"/fonts && "$HOME"/fonts/install.sh
+rm -Rf "$HOME"/fonts
 
 #============
 # macOS - Set some defaults
