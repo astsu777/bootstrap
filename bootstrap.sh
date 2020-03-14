@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Description: this script automates the installation of my personal computer
 # Compatibility: it works for both macOS and Linux
@@ -6,9 +6,9 @@
 #=============
 # Install Homebrew if macOS
 #=============
-if [[ $OSTYPE == "darwin"* ]] && !command -v brew > /dev/null 2>&1; then
+if [[ $OSTYPE == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 	echo "Installing Homebrew..."
-	sudo chown -R $(whoami):admin /usr/local
+	sudo chown -R "$(whoami)":admin /usr/local
 	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" > /dev/null 2>&1
 	brew doctor > /dev/null 2>&1
 	brew update > /dev/null 2>&1
@@ -65,8 +65,8 @@ fi
 #============
 # Install Powerline font
 #============
-if [[ $OSTYPE == "darwin"* ]] && [[ -f "~/Library/Fonts/Source Code Pro Medium for Powerline.otf" ]]; then
-	cd ~/Library/Fonts
+if [[ $OSTYPE == "darwin"* ]] && [[ -f "$HOME/Library/Fonts/Source Code Pro Medium for Powerline.otf" ]]; then
+	cd ~/Library/Fonts || exit
 	wget https://github.com/powerline/fonts/blob/master/SourceCodePro/Source%20Code%20Pro%20Medium%20for%20Powerline.otf
 fi
 

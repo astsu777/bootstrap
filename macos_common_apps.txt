@@ -17,6 +17,7 @@ ntfs-3g
 openssl
 pwgen
 rsync
+shellcheck
 tmux
 tree
 watch
