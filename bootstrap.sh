@@ -112,8 +112,13 @@ fi
 #==============
 if [[ ! -d ~/projects/dotfiles ]]; then
 	echo "Retrieving dotfiles..."
-	git clone --recurse-submodules -j8 https://github.com/gsquad934/dotfiles.git ~/projects/dotfiles > /dev/null 2>&1
+	git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git ~/projects/dotfiles > /dev/null 2>&1
 	git -C ~/projects/dotfiles submodule foreach --recursive git checkout master > /dev/null 2>&1
+
+if [[ ! -d ~/projects/scripts ]]; then
+	echo "Retrieving scripts..."
+	git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git ~/projects/scripts > /dev/null 2>&1
+	git -C ~/projects/scripts submodule foreach --recursive git checkout master > /dev/null 2>&1
 
 #==============
 # Remove and backup all original dotfiles
