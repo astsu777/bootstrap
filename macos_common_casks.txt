@@ -1,4 +1,5 @@
 balenaetcher
+dozer
 firefox
 keepassxc
 nextcloud
