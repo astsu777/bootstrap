@@ -19,54 +19,80 @@ fi
 #=============
 echo "Installing software..."
 if [[ $OSTYPE == "darwin"* ]]; then
-	brew update
-	< "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt)" xargs brew install
-	< "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt)" xargs brew cask install
+	brew update > /dev/null 2>&1
+	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt --output ~/macos_common_apps.txt > /dev/null 2>&1
+	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt --output ~/macos_common_casks.txt > /dev/null 2>&1
+	< ~/macos_common_apps.txt xargs brew install > /dev/null 2>&1
+	< ~/macos_common_casks.txt xargs brew cask install > /dev/null 2>&1
+	rm ~/macos_common*.txt
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		< macos_work_apps.txt xargs brew install
-		< macos_work_casks.txt xargs brew cask install
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_apps.txt --output ~/macos_work_apps.txt > /dev/null 2>&1
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_casks.txt --output ~/macos_work_casks.txt > /dev/null 2>&1
+		< macos_work_apps.txt xargs brew install > /dev/null 2>&1
+		< macos_work_casks.txt xargs brew cask install > /dev/null 2>&1
+		rm ~/macos_work*.txt
 	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt > /dev/null 2>&1; then
-	sudo apt update
-	< debian_common_apps.txt xargs sudo apt install -y > /dev/null 2>&1
+	sudo apt update > /dev/null 2>&1
+	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt --output ~/debian_common_apps.txt > /dev/null 2>&1
+	< ~/debian_common_apps.txt xargs sudo apt install -y > /dev/null 2>&1
+	rm ~/debian_common*.txt
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		< debian_work_apps.txt xargs brew install
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_work_apps.txt --output ~/debian_work_apps.txt > /dev/null 2>&1
+		< debian_work_apps.txt xargs brew install > /dev/null 2>&1
+		rm ~/debian_work*.txt
 	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt-get > /dev/null 2>&1; then
 	sudo apt-get update
-	< debian_common_apps.txt xargs sudo apt-get install -y > /dev/null 2>&1
+	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt --output ~/debian_common_apps.txt > /dev/null 2>&1
+	< ~/debian_common_apps.txt xargs sudo apt-get install -y > /dev/null 2>&1
+	rm ~/debian_common*.txt
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		< debian_work_apps.txt xargs brew install
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_work_apps.txt --output ~/debian_work_apps.txt > /dev/null 2>&1
+		< ~/debian_work_apps.txt xargs brew install > /dev/null 2>&1
+		rm ~/debian_work*.txt
 	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v yum > /dev/null 2>&1; then
 	sudo yum update
-	< redhat_common_apps.txt xargs sudo yum install -y > /dev/null 2>&1
+	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_common_apps.txt --output ~/redhat_common_apps.txt > /dev/null 2>&1
+	< ~/redhat_common_apps.txt xargs sudo yum install -y > /dev/null 2>&1
+	rm ~/redhat_common*.txt
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		< redhat_work_apps.txt xargs brew install
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_work_apps.txt --output ~/redhat_work_apps.txt > /dev/null 2>&1
+		< ~/redhat_work_apps.txt xargs brew install > /dev/null 2>&1
+		rm ~/redhat_work*.txt
 	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v pacman > /dev/null 2>&1; then
 	sudo pacman -Syyu
-	< linux_common_apps.txt xargs sudo pacman -S --noconfirm install > /dev/null 2>&1
+	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_common_apps.txt --output ~/linux_common_apps.txt > /dev/null 2>&1
+	< ~/linux_common_apps.txt xargs sudo pacman -S --noconfirm install > /dev/null 2>&1
+	rm ~/linux_common*.txt
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		< linux_work_apps.txt xargs brew install
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_work_apps.txt --output ~/linux_work_apps.txt > /dev/null 2>&1
+		< ~/linux_work_apps.txt xargs brew install > /dev/null 2>&1
+		rm ~/linux_work*.txt
 	fi
 fi
+echo "Software list installed"
 
 #============
 # Install Powerline font
 #============
-git clone https://github.com/powerline/fonts "$HOME"/fonts && "$HOME"/fonts/install.sh
-rm -Rf "$HOME"/fonts
+if [[ $OSTYPE == "darwin"* ]]; then
+	echo "Installing Powerline fonts..."
+	git clone https://github.com/powerline/fonts "$HOME"/fonts > /dev/null 2>&1 && "$HOME"/fonts/install.sh
+	rm -Rf "$HOME"/fonts
+fi
 
 #============
 # macOS - Set some defaults
@@ -78,6 +104,7 @@ if [[ $OSTYPE == "darwin"* ]]; then
 	osascript -e 'tell application "System Preferences" to quit'
 
 	# Ask for the administrator password upfront
+	echo "Setting up system preferences..."
 	sudo -v
 
 	# Keep-alive: update existing `sudo` time stamp until bootstrap has finished
@@ -98,6 +125,8 @@ if [[ $OSTYPE == "darwin"* ]]; then
 	# Set a blazingly fast keyboard repeat rate
 	defaults write NSGlobalDomain KeyRepeat -int 1
 	defaults write NSGlobalDomain InitialKeyRepeat -int 10
+
+	echo "System preferences configured"
 fi
 
 #===============================================================================
@@ -115,8 +144,8 @@ if [[ ! -d ~/projects/dotfiles ]]; then
 	git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git ~/projects/dotfiles > /dev/null 2>&1
 	git -C ~/projects/dotfiles submodule foreach --recursive git checkout master > /dev/null 2>&1
 
-if [[ ! -d ~/projects/scripts ]]; then
-	echo "Retrieving scripts..."
+elif [[ ! -d ~/projects/scripts ]]; then
+	echo "Installing custom scripts..."
 	git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git ~/projects/scripts > /dev/null 2>&1
 	git -C ~/projects/scripts submodule foreach --recursive git checkout master > /dev/null 2>&1
 
@@ -124,7 +153,7 @@ if [[ ! -d ~/projects/scripts ]]; then
 # Remove and backup all original dotfiles
 #==============
 	if [[ ! -d ~/.old-dotfiles ]]; then
-		echo "Backup your current dotfiles to ~/.old-dotfiles ..."
+		echo "Backup your current dotfiles to ~/.old-dotfiles..."
 		mkdir ~/.old-dotfiles > /dev/null 2>&1
 		mv ~/.bash_profile ~/.old-dotfiles/bash_profile > /dev/null 2>&1
 		mv ~/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
@@ -151,11 +180,16 @@ if [[ ! -d ~/projects/scripts ]]; then
 	ln -sf ~/projects/dotfiles/vim/vimrc ~/.vimrc
 	ln -sf ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc
 	ln -sf ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc
+	echo "New dotfiles installed"
 fi
 
 #==============
-# And we are done
+# DONE
 #==============
-echo -e "\n====== All Done! ======\n"
 echo
-echo "You may now logout and login again for all the modifications to be applied. Enjoy!"
+echo
+echo "########################"
+echo "#====== ALL DONE ======#"
+echo "########################"
+echo
+echo "You may now logout and login again for all the modifications to be applied."
