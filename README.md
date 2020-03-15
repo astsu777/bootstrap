@@ -9,7 +9,8 @@ In order to execute this script, download this repository and execute the .boots
 Execute the following commands for easy setup:
 
 ```
-curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh | bash
+curl -sLO https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh
+bash bootstrap.sh
 ```
 
 # TODO
