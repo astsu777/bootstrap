@@ -17,81 +17,123 @@ fi
 #=============
 # Install packages
 #=============
-echo "Installing software..."
 if [[ $OSTYPE == "darwin"* ]]; then
-	brew update > /dev/null 2>&1
-	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt --output ~/macos_common_apps.txt > /dev/null 2>&1
-	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt --output ~/macos_common_casks.txt > /dev/null 2>&1
-	< ~/macos_common_apps.txt xargs brew install > /dev/null 2>&1
-	< ~/macos_common_casks.txt xargs brew cask install > /dev/null 2>&1
-	rm ~/macos_common*.txt
+	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing common software..."
+		brew update > /dev/null 2>&1
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt --output ~/macos_common_apps.txt > /dev/null 2>&1
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt --output ~/macos_common_casks.txt > /dev/null 2>&1
+		< ~/macos_common_apps.txt xargs brew install > /dev/null 2>&1
+		< ~/macos_common_casks.txt xargs brew cask install > /dev/null 2>&1
+		rm ~/macos_common*.txt
+		echo "Common software installed"
+	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_apps.txt --output ~/macos_work_apps.txt > /dev/null 2>&1
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_casks.txt --output ~/macos_work_casks.txt > /dev/null 2>&1
 		< macos_work_apps.txt xargs brew install > /dev/null 2>&1
 		< macos_work_casks.txt xargs brew cask install > /dev/null 2>&1
 		rm ~/macos_work*.txt
+		echo "Work software installed"
 	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt > /dev/null 2>&1; then
-	sudo apt update > /dev/null 2>&1
-	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt --output ~/debian_common_apps.txt > /dev/null 2>&1
-	< ~/debian_common_apps.txt xargs sudo apt install -y > /dev/null 2>&1
-	rm ~/debian_common*.txt
+	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing common software..."
+		sudo apt update > /dev/null 2>&1
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt --output ~/debian_common_apps.txt > /dev/null 2>&1
+		< ~/debian_common_apps.txt xargs sudo apt install -y > /dev/null 2>&1
+		rm ~/debian_common*.txt
+		echo "Common software installed"
+	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_work_apps.txt --output ~/debian_work_apps.txt > /dev/null 2>&1
 		< debian_work_apps.txt xargs brew install > /dev/null 2>&1
 		rm ~/debian_work*.txt
+		echo "Work software installed"
 	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt-get > /dev/null 2>&1; then
-	sudo apt-get update
-	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt --output ~/debian_common_apps.txt > /dev/null 2>&1
-	< ~/debian_common_apps.txt xargs sudo apt-get install -y > /dev/null 2>&1
-	rm ~/debian_common*.txt
+	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing common software..."
+		sudo apt-get update
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt --output ~/debian_common_apps.txt > /dev/null 2>&1
+		< ~/debian_common_apps.txt xargs sudo apt-get install -y > /dev/null 2>&1
+		rm ~/debian_common*.txt
+		echo "Common software installed"
+	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_work_apps.txt --output ~/debian_work_apps.txt > /dev/null 2>&1
 		< ~/debian_work_apps.txt xargs brew install > /dev/null 2>&1
 		rm ~/debian_work*.txt
+		echo "Work software installed"
 	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v yum > /dev/null 2>&1; then
-	sudo yum update
-	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_common_apps.txt --output ~/redhat_common_apps.txt > /dev/null 2>&1
-	< ~/redhat_common_apps.txt xargs sudo yum install -y > /dev/null 2>&1
-	rm ~/redhat_common*.txt
+	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing common software..."
+		sudo yum update
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_common_apps.txt --output ~/redhat_common_apps.txt > /dev/null 2>&1
+		< ~/redhat_common_apps.txt xargs sudo yum install -y > /dev/null 2>&1
+		rm ~/redhat_common*.txt
+		echo "Common software installed"
+	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_work_apps.txt --output ~/redhat_work_apps.txt > /dev/null 2>&1
 		< ~/redhat_work_apps.txt xargs brew install > /dev/null 2>&1
 		rm ~/redhat_work*.txt
+		echo "Work software installed"
 	fi
 elif [[ $OSTYPE == "linux-gnu" ]] && command -v pacman > /dev/null 2>&1; then
-	sudo pacman -Syyu
-	curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_common_apps.txt --output ~/linux_common_apps.txt > /dev/null 2>&1
-	< ~/linux_common_apps.txt xargs sudo pacman -S --noconfirm install > /dev/null 2>&1
-	rm ~/linux_common*.txt
+	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing common software..."
+		sudo pacman -Syyu
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_common_apps.txt --output ~/linux_common_apps.txt > /dev/null 2>&1
+		< ~/linux_common_apps.txt xargs sudo pacman -S --noconfirm install > /dev/null 2>&1
+		rm ~/linux_common*.txt
+		echo "Common software installed"
+	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_work_apps.txt --output ~/linux_work_apps.txt > /dev/null 2>&1
 		< ~/linux_work_apps.txt xargs brew install > /dev/null 2>&1
 		rm ~/linux_work*.txt
+		echo "Work software installed"
 	fi
 fi
-echo "Software list installed"
 
 #============
 # Install Powerline font
 #============
 if [[ $OSTYPE == "darwin"* ]]; then
-	echo "Installing Powerline fonts..."
-	git clone https://github.com/powerline/fonts "$HOME"/fonts > /dev/null 2>&1 && "$HOME"/fonts/install.sh
-	rm -Rf "$HOME"/fonts
+	read -p "Do you want to install Powerline fonts? (Y/n) " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing Powerline fonts..."
+		git clone https://github.com/powerline/fonts "$HOME"/fonts > /dev/null 2>&1 && "$HOME"/fonts/install.sh
+		rm -Rf "$HOME"/fonts
+	fi
 fi
 
 #============
