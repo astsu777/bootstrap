@@ -134,6 +134,15 @@ if [[ $OSTYPE == "darwin"* ]]; then
 		git clone https://github.com/powerline/fonts "$HOME"/fonts > /dev/null 2>&1 && "$HOME"/fonts/install.sh
 		rm -Rf "$HOME"/fonts
 	fi
+	read -p "Do you want to install Nerd fonts? (Y/n) " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing Nerd fonts..."
+		mkdir "$HOME"/fonts && cd "$HOME"
+		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf
+		mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/
+		rm -Rf "$HOME"/fonts
+	fi
 fi
 
 #============
