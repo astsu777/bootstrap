@@ -149,7 +149,13 @@ fi
 # Install Tmux Plugin Manager
 #============
 if [[ $OSTYPE == "darwin"* ]]; then
-	git clone https://github.com/tmux-plugins/tpm "$HOME"/.tmux/plugins/tpm
+	read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		echo "Installing TMUX Plugin Manager..."
+		git clone https://github.com/tmux-plugins/tpm "$HOME"/.tmux/plugins/tpm > /dev/null 2>&1
+		echo "In TMUX, press <PREFIX> + I to install plugins"
+	fi
 fi
 
 #============
