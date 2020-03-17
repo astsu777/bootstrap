@@ -146,6 +146,13 @@ if [[ $OSTYPE == "darwin"* ]]; then
 fi
 
 #============
+# Install Tmux Plugin Manager
+#============
+if [[ $OSTYPE == "darwin"* ]]; then
+	git clone https://github.com/tmux-plugins/tpm "$HOME"/.tmux/plugins/tpm
+fi
+
+#============
 # macOS - Set some defaults
 #============
 
