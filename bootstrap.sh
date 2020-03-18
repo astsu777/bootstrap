@@ -6,7 +6,7 @@
 #=============
 # Install Homebrew if macOS
 #=============
-if [[ $OSTYPE == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
+if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 	echo "Installing Homebrew..."
 	sudo chown -R "$(whoami)":admin /usr/local
 	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" > /dev/null 2>&1
@@ -17,10 +17,10 @@ fi
 #=============
 # Install packages
 #=============
-if [[ $OSTYPE == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
 	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing common software..."
 		brew update > /dev/null 2>&1
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt --output ~/macos_common_apps.txt > /dev/null 2>&1
@@ -32,7 +32,7 @@ if [[ $OSTYPE == "darwin"* ]]; then
 	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_apps.txt --output ~/macos_work_apps.txt > /dev/null 2>&1
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_casks.txt --output ~/macos_work_casks.txt > /dev/null 2>&1
@@ -41,10 +41,10 @@ if [[ $OSTYPE == "darwin"* ]]; then
 		rm ~/macos_work*.txt
 		echo "Work software installed"
 	fi
-elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt > /dev/null 2>&1; then
+elif [[ "$OSTYPE" == "linux-gnu" ]] && command -v apt > /dev/null 2>&1; then
 	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing common software..."
 		sudo apt update > /dev/null 2>&1
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt --output ~/debian_common_apps.txt > /dev/null 2>&1
@@ -54,17 +54,17 @@ elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt > /dev/null 2>&1; then
 	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_work_apps.txt --output ~/debian_work_apps.txt > /dev/null 2>&1
 		< debian_work_apps.txt xargs brew install > /dev/null 2>&1
 		rm ~/debian_work*.txt
 		echo "Work software installed"
 	fi
-elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt-get > /dev/null 2>&1; then
+elif [[ "$OSTYPE" == "linux-gnu" ]] && command -v apt-get > /dev/null 2>&1; then
 	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing common software..."
 		sudo apt-get update
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt --output ~/debian_common_apps.txt > /dev/null 2>&1
@@ -74,17 +74,17 @@ elif [[ $OSTYPE == "linux-gnu" ]] && command -v apt-get > /dev/null 2>&1; then
 	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_work_apps.txt --output ~/debian_work_apps.txt > /dev/null 2>&1
 		< ~/debian_work_apps.txt xargs brew install > /dev/null 2>&1
 		rm ~/debian_work*.txt
 		echo "Work software installed"
 	fi
-elif [[ $OSTYPE == "linux-gnu" ]] && command -v yum > /dev/null 2>&1; then
+elif [[ "$OSTYPE" == "linux-gnu" ]] && command -v yum > /dev/null 2>&1; then
 	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing common software..."
 		sudo yum update
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_common_apps.txt --output ~/redhat_common_apps.txt > /dev/null 2>&1
@@ -94,17 +94,17 @@ elif [[ $OSTYPE == "linux-gnu" ]] && command -v yum > /dev/null 2>&1; then
 	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_work_apps.txt --output ~/redhat_work_apps.txt > /dev/null 2>&1
 		< ~/redhat_work_apps.txt xargs brew install > /dev/null 2>&1
 		rm ~/redhat_work*.txt
 		echo "Work software installed"
 	fi
-elif [[ $OSTYPE == "linux-gnu" ]] && command -v pacman > /dev/null 2>&1; then
+elif [[ "$OSTYPE" == "linux-gnu" ]] && command -v pacman > /dev/null 2>&1; then
 	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing common software..."
 		sudo pacman -Syyu
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_common_apps.txt --output ~/linux_common_apps.txt > /dev/null 2>&1
@@ -114,7 +114,7 @@ elif [[ $OSTYPE == "linux-gnu" ]] && command -v pacman > /dev/null 2>&1; then
 	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing work software..."
 		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_work_apps.txt --output ~/linux_work_apps.txt > /dev/null 2>&1
 		< ~/linux_work_apps.txt xargs brew install > /dev/null 2>&1
@@ -126,19 +126,19 @@ fi
 #============
 # Install Powerline font
 #============
-if [[ $OSTYPE == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
 	read -p "Do you want to install Powerline fonts? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing Powerline fonts..."
 		git clone https://github.com/powerline/fonts "$HOME"/fonts > /dev/null 2>&1 && "$HOME"/fonts/install.sh
 		rm -Rf "$HOME"/fonts
 	fi
 	read -p "Do you want to install Nerd fonts? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing Nerd fonts..."
-		mkdir "$HOME"/fonts && cd "$HOME"
+		mkdir "$HOME"/fonts && cd "$HOME" || exit
 		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf
 		mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/
 		rm -Rf "$HOME"/fonts
@@ -148,10 +148,10 @@ fi
 #============
 # Install Tmux Plugin Manager
 #============
-if [[ $OSTYPE == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
 	read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r
 	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing TMUX Plugin Manager..."
 		git clone https://github.com/tmux-plugins/tpm "$HOME"/.tmux/plugins/tpm > /dev/null 2>&1
 		echo "In TMUX, press <PREFIX> + I to install plugins"
@@ -162,7 +162,7 @@ fi
 # macOS - Set some defaults
 #============
 
-if [[ $OSTYPE == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
 	# Close any open System Preferences panes, to prevent them from overriding
 	# settings we’re about to change
 	osascript -e 'tell application "System Preferences" to quit'
@@ -246,6 +246,10 @@ elif [[ ! -d ~/projects/scripts ]]; then
 	ln -sf ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc
 	ln -sf ~/.vim ~/.config/nvim
 	ln -sf ~/.vim/vimrc ~/.config/nvim/init.vim
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		rm ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
+		ln -sf ~/projects/dotfiles/config/com.amethyst.Amethyst.plist ~/Library/Preferences/com.amethyst.Amethyst.plist
+	fi
 	echo "New dotfiles installed"
 fi
 
