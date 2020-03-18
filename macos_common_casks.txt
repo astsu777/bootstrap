@@ -1,3 +1,4 @@
+amethyst
 balenaetcher
 dozer
 firefox
