@@ -244,6 +244,8 @@ elif [[ ! -d ~/projects/scripts ]]; then
 	ln -sf ~/projects/dotfiles/vim/vimrc ~/.vimrc
 	ln -sf ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc
 	ln -sf ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc
+	ln -sf ~/.vim ~/.config/nvim
+	ln -sf ~/.vim/vimrc ~/.config/nvim/init.vim
 	echo "New dotfiles installed"
 fi
 

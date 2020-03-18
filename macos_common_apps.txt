@@ -13,6 +13,7 @@ imagemagick
 lame
 moreutils
 ncdu
+neovim
 ntfs-3g
 openssl
 pwgen

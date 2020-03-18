@@ -13,6 +13,7 @@ keepassxc
 lame
 mplayer
 ncdu
+neovim
 ntfs-3g
 openssl
 pwgen
