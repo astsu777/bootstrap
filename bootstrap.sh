@@ -124,7 +124,7 @@ elif [[ "$OSTYPE" == "linux-gnu" ]] && command -v pacman > /dev/null 2>&1; then
 fi
 
 #============
-# Install Powerline font
+# Install font
 #============
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	read -p "Do you want to install Powerline fonts? (Y/n) " -n 1 -r
@@ -138,7 +138,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	echo
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing Nerd fonts..."
-		mkdir "$HOME"/fonts && cd "$HOME" || exit
+		mkdir "$HOME"/fonts && cd "$HOME/fonts" || exit
 		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf
 		mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/
 		rm -Rf "$HOME"/fonts
