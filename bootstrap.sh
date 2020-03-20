@@ -221,36 +221,44 @@ fi
 # Remove and backup all original dotfiles
 #==============
 echo "Backup your current dotfiles to ~/.old-dotfiles..."
-mkdir ~/.old-dotfiles > /dev/null 2>&1
+if [[ ! -d "$HOME"/.old-dotfiles ]]; then
+	mkdir ~/.old-dotfiles > /dev/null 2>&1
+else
+	rm -Rf ~/.old-dotfiles > /dev/null 2>&1
+	mkdir ~/.old-dotfiles > /dev/null 2>&1
+fi
 mv ~/.bash_profile ~/.old-dotfiles/bash_profile > /dev/null 2>&1
 mv ~/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
 mv ~/.gitconfig ~/.old-dotfiles/gitconfig > /dev/null 2>&1
 mv ~/.iterm2 ~/.old-dotfiles/iterm2 > /dev/null 2>&1
 mv ~/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1
+mv ~/.p10k.zsh ~/.old-dotfiles/p10k.zsh > /dev/null 2>&1
 mv ~/.tmux.conf ~/.old-dotfiles/tmux.conf > /dev/null 2>&1
 mv ~/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
 mv ~/.vimrc ~/.old-dotfiles/vimrc > /dev/null 2>&1
 mv ~/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
+mv ~/.config/nvim/init.vim ~/.old-dotfiles/zshrc > /dev/null 2>&1
+mv ~/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
 
 #==============
 # Create symlinks in the home folder
 # Allow overriding with files of matching names in the custom-configs dir
 #==============
 echo "Installing new dotfiles..."
-ln -sf ~/projects/dotfiles/gitconfig ~/.gitconfig
-ln -sf ~/projects/dotfiles/iterm2 ~/.iterm2
-ln -sf ~/projects/dotfiles/msmtprc ~/.msmtprc
-ln -sf ~/projects/dotfiles/shellconfig/p10k.zsh ~/.p10k.zsh
-ln -sf ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf
-ln -sf ~/projects/dotfiles/vim ~/.vim
-ln -sf ~/projects/dotfiles/vim/vimrc ~/.vimrc
-ln -sf ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc
-ln -sf ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc
-ln -sf ~/.vim ~/.config/nvim
-ln -sf ~/.vim/vimrc ~/.config/nvim/init.vim
+ln -s ~/projects/dotfiles/gitconfig ~/.gitconfig > /dev/null 2>&1
+ln -s ~/projects/dotfiles/iterm2 ~/.iterm2 > /dev/null 2>&1
+ln -s ~/projects/dotfiles/msmtprc ~/.msmtprc > /dev/null 2>&1
+ln -s ~/projects/dotfiles/shellconfig/p10k.zsh ~/.p10k.zsh > /dev/null 2>&1
+ln -s ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf > /dev/null 2>&1
+ln -s ~/projects/dotfiles/vim ~/.vim > /dev/null 2>&1
+ln -s ~/projects/dotfiles/vim/vimrc ~/.vimrc > /dev/null 2>&1
+ln -s ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc > /dev/null 2>&1
+ln -s ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc > /dev/null 2>&1
+ln -s ~/.vim ~/.config/nvim > /dev/null 2>&1
+ln -s ~/.vim/vimrc ~/.config/nvim/init.vim > /dev/null 2>&1
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	rm ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
-	ln -sf ~/projects/dotfiles/config/com.amethyst.Amethyst.plist ~/Library/Preferences/com.amethyst.Amethyst.plist
+	ln -s ~/projects/dotfiles/config/com.amethyst.Amethyst.plist ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
 fi
 echo "New dotfiles installed"
 
