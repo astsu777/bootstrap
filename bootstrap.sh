@@ -139,9 +139,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing Nerd fonts..."
 		mkdir "$HOME"/fonts && cd "$HOME/fonts" || exit
-		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf
-		mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/
-		rm -Rf "$HOME"/fonts
+		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
+		mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ > /dev/null 2>&1
+		rm -Rf "$HOME"/fonts > /dev/null 2>&1
 	fi
 fi
 
@@ -207,51 +207,52 @@ if [[ ! -d ~/projects/dotfiles ]]; then
 	echo "Retrieving dotfiles..."
 	git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git ~/projects/dotfiles > /dev/null 2>&1
 	git -C ~/projects/dotfiles submodule foreach --recursive git checkout master > /dev/null 2>&1
+else
+	git -C ~/projects/dotfiles pull > /dev/null 2>&1
+fi
 
-elif [[ ! -d ~/projects/scripts ]]; then
+if [[ ! -d ~/projects/scripts ]]; then
 	echo "Installing custom scripts..."
 	git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git ~/projects/scripts > /dev/null 2>&1
 	git -C ~/projects/scripts submodule foreach --recursive git checkout master > /dev/null 2>&1
+fi
 
 #==============
 # Remove and backup all original dotfiles
 #==============
-	if [[ ! -d ~/.old-dotfiles ]]; then
-		echo "Backup your current dotfiles to ~/.old-dotfiles..."
-		mkdir ~/.old-dotfiles > /dev/null 2>&1
-		mv ~/.bash_profile ~/.old-dotfiles/bash_profile > /dev/null 2>&1
-		mv ~/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
-		mv ~/.gitconfig ~/.old-dotfiles/gitconfig > /dev/null 2>&1
-		mv ~/.iterm2 ~/.old-dotfiles/iterm2 > /dev/null 2>&1
-		mv ~/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1
-		mv ~/.tmux.conf ~/.old-dotfiles/tmux.conf > /dev/null 2>&1
-		mv ~/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
-		mv ~/.vimrc ~/.old-dotfiles/vimrc > /dev/null 2>&1
-		mv ~/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
-	fi
+echo "Backup your current dotfiles to ~/.old-dotfiles..."
+mkdir ~/.old-dotfiles > /dev/null 2>&1
+mv ~/.bash_profile ~/.old-dotfiles/bash_profile > /dev/null 2>&1
+mv ~/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
+mv ~/.gitconfig ~/.old-dotfiles/gitconfig > /dev/null 2>&1
+mv ~/.iterm2 ~/.old-dotfiles/iterm2 > /dev/null 2>&1
+mv ~/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1
+mv ~/.tmux.conf ~/.old-dotfiles/tmux.conf > /dev/null 2>&1
+mv ~/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
+mv ~/.vimrc ~/.old-dotfiles/vimrc > /dev/null 2>&1
+mv ~/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
 
 #==============
 # Create symlinks in the home folder
 # Allow overriding with files of matching names in the custom-configs dir
 #==============
-	echo "Installing new dotfiles..."
-	ln -sf ~/projects/dotfiles/gitconfig ~/.gitconfig
-	ln -sf ~/projects/dotfiles/iterm2 ~/.iterm2
-	ln -sf ~/projects/dotfiles/msmtprc ~/.msmtprc
-	ln -sf ~/projects/dotfiles/shellconfig/p10k.zsh ~/.p10k.zsh
-	ln -sf ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf
-	ln -sf ~/projects/dotfiles/vim ~/.vim
-	ln -sf ~/projects/dotfiles/vim/vimrc ~/.vimrc
-	ln -sf ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc
-	ln -sf ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc
-	ln -sf ~/.vim ~/.config/nvim
-	ln -sf ~/.vim/vimrc ~/.config/nvim/init.vim
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		rm ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
-		ln -sf ~/projects/dotfiles/config/com.amethyst.Amethyst.plist ~/Library/Preferences/com.amethyst.Amethyst.plist
-	fi
-	echo "New dotfiles installed"
+echo "Installing new dotfiles..."
+ln -sf ~/projects/dotfiles/gitconfig ~/.gitconfig
+ln -sf ~/projects/dotfiles/iterm2 ~/.iterm2
+ln -sf ~/projects/dotfiles/msmtprc ~/.msmtprc
+ln -sf ~/projects/dotfiles/shellconfig/p10k.zsh ~/.p10k.zsh
+ln -sf ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf
+ln -sf ~/projects/dotfiles/vim ~/.vim
+ln -sf ~/projects/dotfiles/vim/vimrc ~/.vimrc
+ln -sf ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc
+ln -sf ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc
+ln -sf ~/.vim ~/.config/nvim
+ln -sf ~/.vim/vimrc ~/.config/nvim/init.vim
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	rm ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
+	ln -sf ~/projects/dotfiles/config/com.amethyst.Amethyst.plist ~/Library/Preferences/com.amethyst.Amethyst.plist
 fi
+echo "New dotfiles installed"
 
 #==============
 # DONE
