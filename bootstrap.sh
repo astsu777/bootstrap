@@ -213,7 +213,7 @@ fi
 
 if [[ ! -d ~/projects/scripts ]]; then
 	echo "Installing custom scripts..."
-	git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git ~/projects/scripts > /dev/null 2>&1
+	git clone --recurse-submodules https://github.com/gsquad934/scripts.git ~/projects/scripts > /dev/null 2>&1
 	git -C ~/projects/scripts submodule foreach --recursive git checkout master > /dev/null 2>&1
 fi
 
