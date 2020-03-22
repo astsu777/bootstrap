@@ -107,18 +107,18 @@ elif [[ "$OSTYPE" == "linux-gnu" ]] && command -v pacman > /dev/null 2>&1; then
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing common software..."
 		sudo pacman -Syyu
-		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_common_apps.txt --output ~/linux_common_apps.txt > /dev/null 2>&1
-		< ~/linux_common_apps.txt xargs sudo pacman -S --noconfirm install > /dev/null 2>&1
-		rm ~/linux_common*.txt
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/arch_common_apps.txt --output ~/arch_common_apps.txt > /dev/null 2>&1
+		< ~/arch_common_apps.txt xargs sudo pacman -S --noconfirm install > /dev/null 2>&1
+		rm ~/arch_common*.txt
 		echo "Common software installed"
 	fi
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo "Installing work software..."
-		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/linux_work_apps.txt --output ~/linux_work_apps.txt > /dev/null 2>&1
-		< ~/linux_work_apps.txt xargs brew install > /dev/null 2>&1
-		rm ~/linux_work*.txt
+		curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/arch_work_apps.txt --output ~/arch_work_apps.txt > /dev/null 2>&1
+		< ~/arch_work_apps.txt xargs brew install > /dev/null 2>&1
+		rm ~/arch_work*.txt
 		echo "Work software installed"
 	fi
 fi

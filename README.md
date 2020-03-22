@@ -3,6 +3,7 @@ This is a script that can be used to automate the setup of a workstation or a pe
 
 # Compatibility
 This works on macOS and various flavors of Linux (mainly Debian based, Red Hat based and Arch based).
+It also been successfully tested on WSL (Windows Subsystem for Linux) with Ubuntu/Debian image.
 
 # Usage
 In order to execute this script, download this repository and execute the .bootstrap.sh script.
