@@ -3,6 +3,7 @@ balenaetcher
 cyberduck
 dozer
 firefox
+gpg-suite-no-mail
 keepassxc
 nextcloud
 plex
