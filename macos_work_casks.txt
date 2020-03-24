@@ -2,6 +2,5 @@ docker
 teamviewer
 tor-browser
 tunnelblick
-visual-studio-code
 wireshark
 xca
