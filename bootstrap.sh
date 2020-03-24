@@ -239,6 +239,7 @@ mv ~/.vimrc ~/.old-dotfiles/vimrc > /dev/null 2>&1
 mv ~/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
 mv ~/.config/nvim/init.vim ~/.old-dotfiles/zshrc > /dev/null 2>&1
 mv ~/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
+mv ~/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
 
 #==============
 # Create symlinks in the home folder
@@ -256,6 +257,7 @@ ln -s ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc > /dev/null 2>&1
 ln -s ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc > /dev/null 2>&1
 ln -s ~/.vim ~/.config/nvim > /dev/null 2>&1
 ln -s ~/.vim/vimrc ~/.config/nvim/init.vim > /dev/null 2>&1
+ln -s ~/projects/dotfiles/config/wget ~/.config/wget > /dev/null 2>&1
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	rm ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
 	ln -s ~/projects/dotfiles/config/com.amethyst.Amethyst.plist ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
