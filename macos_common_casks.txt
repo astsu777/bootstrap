@@ -1,5 +1,6 @@
 amethyst
 balenaetcher
+cyberduck
 dozer
 firefox
 keepassxc
