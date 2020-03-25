@@ -258,9 +258,44 @@ ln -s ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc > /dev/null 2>&1
 ln -s ~/.vim ~/.config/nvim > /dev/null 2>&1
 ln -s ~/.vim/vimrc ~/.config/nvim/init.vim > /dev/null 2>&1
 ln -s ~/projects/dotfiles/config/wget ~/.config/wget > /dev/null 2>&1
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	rm ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
-	ln -s ~/projects/dotfiles/config/com.amethyst.Amethyst.plist ~/Library/Preferences/com.amethyst.Amethyst.plist > /dev/null 2>&1
+
+
+#==============
+# Amethyst Configuration
+#==============
+if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
+	# Set windows to always stay in floating mode
+	defaults write com.amethyst.Amethyst.plist floating '(
+	        {
+        id = "com.apple.systempreferences";
+        "window-titles" =         (
+        );
+    },
+        {
+        id = "com.tapbots.Tweetbot3Mac";
+        "window-titles" =         (
+        );
+    }
+	)'
+	defaults write com.amethyst.Amethyst.plist floating-is-blacklist 1
+	# Follow window when moved to different workspace
+	defaults write com.amethyst.Amethyst.plist follow-space-thrown-windows 1
+	# Configure layouts
+	defaults write com.amethyst.Amethyst.plist layouts '(
+		tall, wide, floating, fullscreen
+	)'
+	# Restore layouts when application starts
+	defaults write com.amethyst.Amethyst.plist restore-layouts-on-launch 1
+	# Set window margins
+	defaults write com.amethyst.Amethyst.plist window-margins 1
+	defaults write com.amethyst.Amethyst.plist window-margin-size 6
+	# Do not display layout names
+	defaults write com.amethyst.Amethyst.plist enables-layout-hud 0
+	defaults write com.amethyst.Amethyst.plist enables-layout-hud-on-space-change 0
+	# Disable automatic update check as it is done by Homebrew
+	defaults write com.amethyst.Amethyst.plist SUEnableAutomaticChecks 0
+	# Delete the plist cache
+	defaults read com.amethyst.Amethyst.plist > /dev/null 2>&1
 fi
 echo "New dotfiles installed"
 
