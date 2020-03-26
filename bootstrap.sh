@@ -231,7 +231,7 @@ mv ~/.bash_profile ~/.old-dotfiles/bash_profile > /dev/null 2>&1
 mv ~/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
 mv ~/.gitconfig ~/.old-dotfiles/gitconfig > /dev/null 2>&1
 mv ~/.iterm2 ~/.old-dotfiles/iterm2 > /dev/null 2>&1
-mv ~/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv ~/.config/msmtp/config ~/.old-dotfiles/msmtprc > /dev/null 2>&1
+mv ~/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv ~/.config/msmtp ~/.old-dotfiles/msmtp > /dev/null 2>&1
 mv ~/.p10k.zsh ~/.old-dotfiles/p10k.zsh > /dev/null 2>&1
 mv ~/.tmux.conf ~/.old-dotfiles/tmux.conf > /dev/null 2>&1
 mv ~/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
@@ -248,7 +248,7 @@ mv ~/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
 echo "Installing new dotfiles..."
 ln -s ~/projects/dotfiles/gitconfig ~/.gitconfig > /dev/null 2>&1
 ln -s ~/projects/dotfiles/iterm2 ~/.iterm2 > /dev/null 2>&1
-mkdir -p ~/.config/msmtp > /dev/null 2>&1 ; ln -s ~/projects/dotfiles/msmtprc ~/.config/msmtp/config > /dev/null 2>&1
+ln -s ~/projects/dotfiles/config/msmtp ~/.config/msmtp > /dev/null 2>&1
 ln -s ~/projects/dotfiles/shellconfig/p10k.zsh ~/.p10k.zsh > /dev/null 2>&1
 ln -s ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf > /dev/null 2>&1
 ln -s ~/projects/dotfiles/vim ~/.vim > /dev/null 2>&1
