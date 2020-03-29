@@ -1,6 +1,8 @@
 # Bootstrap
 This is a script that can be used to automate the setup of a workstation or a personal computer.
 
+:warning: **This script should not be used to setup a server!** Please use a proper automation framework such as Ansible to do so.
+
 # Compatibility
 This works on macOS and various flavors of Linux (mainly Debian based, Red Hat based and Arch based).
 It also been successfully tested on WSL (Windows Subsystem for Linux) with Ubuntu/Debian image.

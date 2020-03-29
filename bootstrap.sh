@@ -195,8 +195,8 @@ fi
 
 #===============================================================================
 #
-#             NOTES: For this to work you must have cloned the github
-#                    repo to your home folder as ~/dotfiles/
+#             NOTES: For this to work you must have cloned the Github
+#                 repo to your home folder as ~/projects/dotfiles
 #
 #===============================================================================
 
@@ -240,15 +240,13 @@ mv ~/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
 mv ~/.config/nvim/init.vim ~/.old-dotfiles/zshrc > /dev/null 2>&1
 mv ~/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
 mv ~/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
+mv ~/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
 
 #==============
 # Create symlinks in the home folder
-# Allow overriding with files of matching names in the custom-configs dir
 #==============
 echo "Installing new dotfiles..."
 ln -s ~/projects/dotfiles/gitconfig ~/.gitconfig > /dev/null 2>&1
-ln -s ~/projects/dotfiles/iterm2 ~/.iterm2 > /dev/null 2>&1
-ln -s ~/projects/dotfiles/config/msmtp ~/.config/msmtp > /dev/null 2>&1
 ln -s ~/projects/dotfiles/shellconfig/p10k.zsh ~/.p10k.zsh > /dev/null 2>&1
 ln -s ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf > /dev/null 2>&1
 ln -s ~/projects/dotfiles/vim ~/.vim > /dev/null 2>&1
@@ -257,8 +255,25 @@ ln -s ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc > /dev/null 2>&1
 ln -s ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc > /dev/null 2>&1
 ln -s ~/.vim ~/.config/nvim > /dev/null 2>&1
 ln -s ~/.vim/vimrc ~/.config/nvim/init.vim > /dev/null 2>&1
-ln -s ~/projects/dotfiles/config/wget ~/.config/wget > /dev/null 2>&1
-
+if command -v weechat > /dev/null 2>&1; then
+	mkdir ~/.config/weechat
+	ln -s ~/projects/dotfiles/config/weechat/irc.conf ~/.config/weechat/irc.conf > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/perl ~/.config/weechat/perl > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/python ~/.config/weechat/python > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/trigger.conf ~/.config/weechat/trigger.conf > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/weechat.conf ~/.config/weechat/weechat.conf > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/xfer.conf ~/.config/weechat/xfer.conf > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/buflist.conf ~/.config/weechat/buflist.conf > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/colorize_nicks.conf ~/.config/weechat/colorize_nicks.conf > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/fset.conf ~/.config/weechat/fset.conf > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/weechat/iset.conf ~/.config/weechat/iset.conf > /dev/null 2>&1
+fi
+if command -v msmtp > /dev/null 2>&1; then
+	ln -s ~/projects/dotfiles/config/msmtp ~/.config/msmtp > /dev/null 2>&1
+fi
+if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/iTerm.app ]]; then
+	ln -s ~/projects/dotfiles/iterm2 ~/.iterm2 > /dev/null 2>&1
+fi
 
 #==============
 # Amethyst Configuration

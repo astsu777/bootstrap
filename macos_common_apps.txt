@@ -22,6 +22,7 @@ shellcheck
 tmux
 tree
 watch
+weechat
 wget
 xz
 youtube-dl

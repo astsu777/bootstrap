@@ -25,4 +25,5 @@ unrar
 unzip
 vim
 vlc
+weechat
 youtube-dl
