@@ -6,6 +6,7 @@ coreutils
 curl
 ffmpeg
 findutils
+fzf
 git
 grep
 htop
