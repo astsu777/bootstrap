@@ -282,7 +282,7 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/iTerm.app ]]; then
 	ln -s ~/projects/dotfiles/iterm2 ~/.iterm2 > /dev/null 2>&1
 fi
 # If this is a SSH connection, install the server config of TMUX
-if [[ -z "SSH_CLIENT" ]] || [[ -z "SSH_TTY" ]]; then
+if [[ -n "SSH_CLIENT" ]] || [[ -n "SSH_TTY" ]]; then
 	ln -s ~/projects/dotfiles/tmux/tmux29-server.conf ~/.tmux.conf > /dev/null 2>&1
 else
 	ln -s ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf > /dev/null 2>&1
