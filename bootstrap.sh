@@ -241,6 +241,7 @@ mv ~/.config/nvim/init.vim ~/.old-dotfiles/zshrc > /dev/null 2>&1
 mv ~/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
 mv ~/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
 mv ~/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
+mv ~/.config/vifm ~/.old-dotfiles/vifm > /dev/null 2>&1
 
 #==============
 # Create symlinks in the home folder
@@ -268,6 +269,11 @@ if command -v weechat > /dev/null 2>&1; then
 	ln -s ~/projects/dotfiles/config/weechat/colorize_nicks.conf ~/.config/weechat/colorize_nicks.conf > /dev/null 2>&1
 	ln -s ~/projects/dotfiles/config/weechat/fset.conf ~/.config/weechat/fset.conf > /dev/null 2>&1
 	ln -s ~/projects/dotfiles/config/weechat/iset.conf ~/.config/weechat/iset.conf > /dev/null 2>&1
+fi
+if command -v vifm > /dev/null 2>&1; then
+	mkdir ~/.config/vifm
+	ln -s ~/projects/dotfiles/config/vifm/colors ~/.config/vifm/colors > /dev/null 2>&1
+	ln -s ~/projects/dotfiles/config/vifm/vifmrc ~/.config/vifm/vifmrc > /dev/null 2>&1
 fi
 if command -v msmtp > /dev/null 2>&1; then
 	ln -s ~/projects/dotfiles/config/msmtp ~/.config/msmtp > /dev/null 2>&1
