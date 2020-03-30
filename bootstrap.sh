@@ -257,6 +257,7 @@ ln -s ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc > /dev/null 2>&1
 ln -s ~/.vim ~/.config/nvim > /dev/null 2>&1
 ln -s ~/.vim/vimrc ~/.config/nvim/init.vim > /dev/null 2>&1
 ln -s ~/projects/dotfiles/config/wget ~/.config/wget > /dev/null 2>&1
+echo "source ~/.bashrc" > ~/.bash_profile > /dev/null 2>&1
 if command -v weechat > /dev/null 2>&1; then
 	mkdir ~/.config/weechat
 	ln -s ~/projects/dotfiles/config/weechat/irc.conf ~/.config/weechat/irc.conf > /dev/null 2>&1
