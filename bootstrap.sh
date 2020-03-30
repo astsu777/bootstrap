@@ -249,7 +249,6 @@ mv ~/.config/vifm ~/.old-dotfiles/vifm > /dev/null 2>&1
 echo "Installing new dotfiles..."
 ln -s ~/projects/dotfiles/gitconfig ~/.gitconfig > /dev/null 2>&1
 ln -s ~/projects/dotfiles/shellconfig/p10k.zsh ~/.p10k.zsh > /dev/null 2>&1
-ln -s ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf > /dev/null 2>&1
 ln -s ~/projects/dotfiles/vim ~/.vim > /dev/null 2>&1
 ln -s ~/projects/dotfiles/vim/vimrc ~/.vimrc > /dev/null 2>&1
 ln -s ~/projects/dotfiles/shellconfig/bashrc ~/.bashrc > /dev/null 2>&1
@@ -257,7 +256,7 @@ ln -s ~/projects/dotfiles/shellconfig/zshrc ~/.zshrc > /dev/null 2>&1
 ln -s ~/.vim ~/.config/nvim > /dev/null 2>&1
 ln -s ~/.vim/vimrc ~/.config/nvim/init.vim > /dev/null 2>&1
 ln -s ~/projects/dotfiles/config/wget ~/.config/wget > /dev/null 2>&1
-echo "source ~/.bashrc" > ~/.bash_profile > /dev/null 2>&1
+touch ~/.bash_profile && echo "source ~/.bashrc" > ~/.bash_profile
 if command -v weechat > /dev/null 2>&1; then
 	mkdir ~/.config/weechat
 	ln -s ~/projects/dotfiles/config/weechat/irc.conf ~/.config/weechat/irc.conf > /dev/null 2>&1
@@ -281,6 +280,12 @@ if command -v msmtp > /dev/null 2>&1; then
 fi
 if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/iTerm.app ]]; then
 	ln -s ~/projects/dotfiles/iterm2 ~/.iterm2 > /dev/null 2>&1
+fi
+# If this is a SSH connection, install the server config of TMUX
+if [[ -z "SSH_CLIENT" ]] || [[ -z "SSH_TTY" ]]; then
+	ln -s ~/projects/dotfiles/tmux/tmux29-server.conf ~/.tmux.conf > /dev/null 2>&1
+else
+	ln -s ~/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf > /dev/null 2>&1
 fi
 
 #==============
