@@ -1,5 +1,4 @@
 amethyst
-balenaetcher
 cyberduck
 dozer
 firefox
