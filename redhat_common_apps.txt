@@ -23,6 +23,7 @@ rsync
 tree
 unrar
 unzip
+vifm
 vim
 vlc
 weechat

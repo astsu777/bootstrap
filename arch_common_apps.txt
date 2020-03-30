@@ -21,6 +21,7 @@ python
 python-pip
 rsync
 tree
+vifm
 unrar
 unzip
 vim

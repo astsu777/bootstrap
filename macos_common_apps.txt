@@ -21,6 +21,7 @@ rsync
 shellcheck
 tmux
 tree
+vifm
 watch
 weechat
 wget
