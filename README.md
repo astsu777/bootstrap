@@ -2,6 +2,7 @@
 This is a script that can be used to automate the setup of a workstation or a personal computer.
 
 :warning: **This script should not be used to setup a server!** Please use a proper automation framework such as Ansible to do so.
+However, I use it to install my dotfiles and optionally (choice is provided) install certain useful tools.
 
 # Compatibility
 This works on macOS and various flavors of Linux (mainly Debian based, Red Hat based and Arch based).
@@ -16,8 +17,14 @@ curl -sLO https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap
 bash bootstrap.sh
 ```
 
+The script will not install any software without asking first. All software can be refused in order to only install the dotfiles.
+For a list of software, see the text files in this repository.
+
 # TODO
 There are still quite a few enhancements to be done. Here is a list of things required:
 
 - Fully automate the system preferences on macOS (some still require the GUI)
-- Automate installation of apps from the AppStore on macOS
+- ~~Automate installation of apps from the AppStore on macOS~~ :warning: The application **mas** displays wrong ID for apps
+- Validate the Linux software list to make sure all names are correct
+- Create a list of useful tools for servers
+- (Super Optional) Create a nice menu to actually select which software will be installed
