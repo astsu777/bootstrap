@@ -211,7 +211,7 @@ else
 	git -C ~/projects/dotfiles pull > /dev/null 2>&1
 fi
 
-if [[ ! -d ~/projects/scripts ]]; then
+if [[ ! -n "$SSH_CLIENT" ]] || [[ ! -n "$SSH_TTY" ]] && [[ ! -d ~/projects/scripts ]]; then
 	echo "Installing custom scripts..."
 	git clone --recurse-submodules https://github.com/gsquad934/scripts.git ~/projects/scripts > /dev/null 2>&1
 	git -C ~/projects/scripts submodule foreach --recursive git checkout master > /dev/null 2>&1
