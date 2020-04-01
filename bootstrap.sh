@@ -171,6 +171,16 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	echo "Setting up system preferences..."
 	sudo -v
 
+	# Allow running applications from anywhere
+	sudo spctl --master-disable
+
+	# Disable software quarantine that displays 'Are you sure you want to run...'
+	echo "" > ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
+	sudo chflags schg ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
+
+	# Generate the locate database
+	sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist > /dev/null 2>&1
+
 	# Keep-alive: update existing `sudo` time stamp until bootstrap has finished
 	while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 

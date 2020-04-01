@@ -23,8 +23,7 @@ For a list of software, see the text files in this repository.
 # TODO
 There are still quite a few enhancements to be done. Here is a list of things required:
 
-- Fully automate the system preferences on macOS (some still require the GUI)
 - ~~Automate installation of apps from the AppStore on macOS~~ :warning: The application **mas** displays wrong ID for apps
 - Validate the Linux software list to make sure all names are correct
-- Create a list of useful tools for servers
+- (Optional or Separate) Create a list of useful tools for servers
 - (Super Optional) Create a nice menu to actually select which software will be installed
