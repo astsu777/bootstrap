@@ -21,6 +21,8 @@ pwgen
 python
 python-pip
 rsync
+sxiv
+transmission-cli
 tree
 unrar
 unzip
@@ -29,3 +31,4 @@ vim
 vlc
 weechat
 youtube-dl
+zathura

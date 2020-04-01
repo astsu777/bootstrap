@@ -23,6 +23,7 @@ restic
 rsync
 shellcheck
 tmux
+transmission-cli
 tree
 vifm
 watch

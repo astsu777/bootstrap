@@ -21,11 +21,14 @@ pwgen
 python
 python-pip
 rsync
+sxiv
+transmission-cli
 tree
-vifm
 unrar
 unzip
+vifm
 vim
 vlc
 weechat
 youtube-dl
+zathura
