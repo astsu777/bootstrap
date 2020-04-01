@@ -13,11 +13,13 @@ htop
 imagemagick
 lame
 moreutils
+msmtp
 ncdu
 neovim
 ntfs-3g
 openssl
 pwgen
+restic
 rsync
 shellcheck
 tmux

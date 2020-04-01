@@ -2,6 +2,8 @@ ansible
 bro
 caddy
 dhcpdump
+docker-completion
+geoip
 hping
 ipcalc
 iperf3
@@ -11,6 +13,7 @@ mitmproxy
 nmap
 peco
 prettyping
+rtmpdump
 speedtest-cli
 ssh-audit
 telnet
