@@ -175,8 +175,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	sudo spctl --master-disable
 
 	# Disable software quarantine that displays 'Are you sure you want to run...'
-	echo "" > ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
-	sudo chflags schg ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
+	echo "" > ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 > /dev/null 2>&1
+	sudo chflags schg ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 > /dev/null 2>&1
 
 	# Generate the locate database
 	sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist > /dev/null 2>&1
