@@ -299,6 +299,11 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
         "window-titles" =         (
         );
     },
+	        {
+        id = "com.skitch.skitch";
+        "window-titles" =         (
+        );
+    },
         {
         id = "com.tapbots.Tweetbot3Mac";
         "window-titles" =         (
