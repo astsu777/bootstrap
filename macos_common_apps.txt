@@ -2,6 +2,7 @@ ansifilter
 bash
 bash-completion
 bat
+colordiff
 coreutils
 curl
 ffmpeg
