@@ -4,6 +4,7 @@ dozer
 firefox
 gpg-suite-no-mail
 keepassxc
+keycastr
 nextcloud
 plex
 rambox
