@@ -15,6 +15,7 @@ lame
 mplayer
 ncdu
 neovim
+net-tools
 ntfs-3g
 openssl
 pwgen

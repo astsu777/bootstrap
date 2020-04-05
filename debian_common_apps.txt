@@ -4,6 +4,7 @@ bash-completion
 colordiff
 coreutils
 curl
+dnsutils
 ffmpeg
 filezilla
 firefox
@@ -15,6 +16,7 @@ lame
 mplayer
 ncdu
 neovim
+net-tools
 ntfs-3g
 openssl
 pwgen

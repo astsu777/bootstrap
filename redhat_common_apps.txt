@@ -1,6 +1,7 @@
 audacity
 bash
 bash-completion
+bind-utils
 colordiff
 coreutils
 curl
@@ -15,6 +16,7 @@ lame
 mplayer
 ncdu
 neovim
+net-tools
 ntfs-3g
 openssl
 pwgen
