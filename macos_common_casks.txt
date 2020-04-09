@@ -3,6 +3,7 @@ cyberduck
 dozer
 firefox
 gpg-suite-no-mail
+iterm2
 keepassxc
 keycastr
 nextcloud
