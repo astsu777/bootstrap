@@ -254,6 +254,7 @@ mv "$HOME"/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
 mv "$HOME"/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
 mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
 mv "$HOME"/.config/vifm ~/.old-dotfiles/vifm > /dev/null 2>&1
+mv "$HOME"/.config/alacritty ~/.old-dotfiles/alacritty > /dev/null 2>&1
 
 #==============
 # Create symlinks in the home folder
@@ -289,6 +290,9 @@ if command -v vifm > /dev/null 2>&1; then
 fi
 if command -v msmtp > /dev/null 2>&1; then
 	ln -s "$HOME"/projects/dotfiles/config/msmtp ~/.config/msmtp > /dev/null 2>&1
+fi
+if command -v alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
+	ln -s "$HOME"/projects/dotfiles/config/alacritty ~/.config/alacritty > /dev/null 2>&1
 fi
 if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/iTerm.app ]]; then
 	ln -s "$HOME"/projects/dotfiles/iterm2 ~/.iterm2 > /dev/null 2>&1
