@@ -140,6 +140,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 		echo "Installing Nerd fonts..."
 		mkdir "$HOME"/fonts && cd "$HOME/fonts" || exit
 		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
+		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Regular/complete/JetBrainsMono%20Mono%20Regular%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
 		mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ > /dev/null 2>&1
 		rm -Rf "$HOME"/fonts > /dev/null 2>&1
 	fi
