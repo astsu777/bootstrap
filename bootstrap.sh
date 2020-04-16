@@ -140,8 +140,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 		echo "Installing Nerd fonts..."
 		mkdir "$HOME"/fonts && cd "$HOME/fonts" || exit
 		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
-		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Bold/complete/mononoki-Bold%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
-		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Italic/complete/mononoki-Italic%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
+		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Bold/complete/mononoki%20Bold%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
+		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Italic/complete/mononoki%20Italic%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
 		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Regular/complete/JetBrains%20Mono%20Regular%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
 		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Bold/complete/JetBrains%20Mono%20Bold%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
 		wget -c --content-disposition https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Italic/complete/JetBrains%20Mono%20Italic%20Nerd%20Font%20Complete.ttf > /dev/null 2>&1
