@@ -299,7 +299,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	ln -s "$HOME"/projects/dotfiles/config/wget ~/.config/wget > /dev/null 2>&1
 	touch "$HOME"/.bash_profile && echo "source ~/.bashrc" > ~/.bash_profile
 	if command -v weechat > /dev/null 2>&1; then
-		if [[ -d $"HOME"/.config/weechat ]]; then
+		if [[ ! -d $"HOME"/.config/weechat ]]; then
 			mkdir "$HOME"/.config/weechat
 		fi
 		ln -s "$HOME"/projects/dotfiles/config/weechat/irc.conf ~/.config/weechat/irc.conf > /dev/null 2>&1
