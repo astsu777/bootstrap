@@ -12,7 +12,6 @@ findutils
 fzf
 git
 grep
-gtop
 htop
 imagemagick
 lame
