@@ -5,11 +5,14 @@ bat
 colordiff
 coreutils
 curl
+exa
+fd
 ffmpeg
 findutils
 fzf
 git
 grep
+gtop
 htop
 imagemagick
 lame
@@ -21,6 +24,7 @@ ntfs-3g
 openssl
 pwgen
 restic
+ripgrep
 rsync
 shellcheck
 tmux

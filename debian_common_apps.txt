@@ -5,6 +5,8 @@ colordiff
 coreutils
 curl
 dnsutils
+exa
+fd
 ffmpeg
 filezilla
 firefox
@@ -17,11 +19,14 @@ mplayer
 ncdu
 neovim
 net-tools
+nethogs
+nmon
 ntfs-3g
 openssl
 pwgen
 python
 python-pip
+ripgrep
 rsync
 sxiv
 transmission-cli

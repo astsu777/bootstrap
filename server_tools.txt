@@ -1,0 +1,10 @@
+etckeeper
+fd
+gtop
+htop
+ncdu
+nethogs
+nmon
+peco
+tcpdump
+vim
