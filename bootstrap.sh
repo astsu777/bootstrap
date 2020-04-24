@@ -86,7 +86,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			rm "$HOME"/macos_common*.txt
 		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 			if command -v apt > /dev/null 2>&1; then
-				sudo apt update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				while IFS= read -r line
 				do
@@ -94,7 +94,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				done < <(grep -v '^ *#' < debian_common_apps.txt)
 				rm "$HOME"/debian_common*.txt
 			elif command -v apt-get > /dev/null 2>&1; then
-				sudo apt-get update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo apt-get update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				while IFS= read -r line
 				do
@@ -140,7 +140,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			rm "$HOME"/macos_work*.txt
 		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 			if command -v apt > /dev/null 2>&1; then
-				sudo apt update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				while IFS= read -r line
 				do
@@ -148,7 +148,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				done < <(grep -v '^ *#' < debian_work_apps.txt)
 				rm "$HOME"/debian_work*.txt
 			elif command -v apt-get > /dev/null 2>&1; then
-				sudo apt-get update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo apt-get update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				while IFS= read -r line
 				do
@@ -489,25 +489,37 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo -e "Installing useful server tools..."
-		if command -v apt-get > /dev/null 2>&1; then
-			sudo apt-get update 2>&1 | tee -a "$logfile"
+		if command -v apt > /dev/null 2>&1; then
+			sudo apt update 2>&1 | tee -a "$logfile"
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			< "$HOME"/server_tools.txt xargs sudo apt-get install -y 2>&1 | tee -a "$logfile"
+			while IFS= read -r line
+			do
+				sudo apt install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
-		elif command -v apt > /dev/null 2>&1; then
-			sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		elif command -v apt-get > /dev/null 2>&1; then
+			sudo apt-get update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			< "$HOME"/server_tools.txt xargs sudo apt install -y 2>&1 | tee -a "$logfile"
+			while IFS= read -r line
+			do
+				sudo apt-get install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		elif command -v yum > /dev/null 2>&1; then
-			sudo yum update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			sudo yum update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			< "$HOME"/server_tools.txt xargs sudo yum install -y 2>&1 | tee -a "$logfile"
+			while IFS= read -r line
+			do
+				sudo yum install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		elif command -v pacman > /dev/null 2>&1; then
-			sudo pacman -Syyu 2>&1 | tee -a "$logfile"
+			sudo pacman -Syyu --no-confirm 2>&1 | tee -a "$logfile"
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			< "$HOME"/server_tools.txt xargs sudo pacman -S --noconfirm 2>&1 | tee -a "$logfile"
+			while IFS= read -r line
+			do
+				sudo pacman -S --noconfirm "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		fi
 		echo -e "Useful server tools installed"
