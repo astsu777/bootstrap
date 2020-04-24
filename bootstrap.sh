@@ -494,7 +494,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			while IFS= read -r line
 			do
-				sudo apt install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo apt install -y "$line" 2>&1 | tee -a "$logfile"
 			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		elif command -v apt-get > /dev/null 2>&1; then
@@ -506,11 +506,11 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		elif command -v yum > /dev/null 2>&1; then
-			sudo yum update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			sudo yum update -y 2>&1 | tee -a "$logfile"
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			while IFS= read -r line
 			do
-				sudo yum install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo yum install -y "$line" 2>&1 | tee -a "$logfile"
 			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		elif command -v pacman > /dev/null 2>&1; then
@@ -518,7 +518,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			while IFS= read -r line
 			do
-				sudo pacman -S --noconfirm "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo pacman -S --noconfirm "$line" 2>&1 | tee -a "$logfile"
 			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		fi
