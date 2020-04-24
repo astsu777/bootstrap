@@ -1,6 +1,5 @@
 etckeeper
-fd
-gtop
+fd-find
 htop
 ncdu
 nethogs

@@ -72,7 +72,7 @@ fi
 #=============
 # Install common packages on workstation
 #=============
-if [[ ! -n "$SSH_CLIENT" ]] || [[ ! -n "$SSH_TTY" ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	read -p "Do you want to install common applications? (Y/n) " -n 1 -r
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -86,24 +86,36 @@ if [[ ! -n "$SSH_CLIENT" ]] || [[ ! -n "$SSH_TTY" ]]; then
 			rm "$HOME"/macos_common*.txt
 		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 			if command -v apt > /dev/null 2>&1; then
-				sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo apt update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				< "$HOME"/debian_common_apps.txt xargs sudo apt install -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				while IFS= read -r line
+				do
+					sudo apt install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				done < <(grep -v '^ *#' < debian_common_apps.txt)
 				rm "$HOME"/debian_common*.txt
 			elif command -v apt-get > /dev/null 2>&1; then
-				sudo apt-get update
+				sudo apt-get update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				< "$HOME"/debian_common_apps.txt xargs sudo apt-get install -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				while IFS= read -r line
+				do
+					sudo apt-get install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				done < <(grep -v '^ *#' < debian_common_apps.txt)
 				rm "$HOME"/debian_common*.txt
 			elif command -v yum > /dev/null 2>&1; then
-				sudo yum update
+				sudo yum update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$redhat_apps" --output "$HOME"/redhat_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				< "$HOME"/redhat_common_apps.txt xargs sudo yum install -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				while IFS= read -r line
+				do
+					sudo yum install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				done < <(grep -v '^ *#' < redhat_common_apps.txt)
 				rm "$HOME"/redhat_common*.txt
 			elif command -v pacman > /dev/null 2>&1; then
-				sudo pacman -Syyu
+				sudo pacman -Syyu --noconfirm 2>&1| tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$arch_apps" --output "$HOME"/arch_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				< "$HOME"/arch_common_apps.txt xargs sudo pacman -S --noconfirm install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				while IFS= read -r line
+				do
+					sudo pacman -S --noconfirm install "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				done < <(grep -v '^ *#' < arch_common_apps.txt)
 				rm "$HOME"/arch_common*.txt
 			fi
 		fi
@@ -115,7 +127,7 @@ fi
 #=============
 # Install work packages on workstation
 #=============
-if [[ ! -n "$SSH_CLIENT" ]] || [[ ! -n "$SSH_TTY" ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	read -p "Do you want to install work applications? (Y/n) " -n 1 -r
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -128,20 +140,36 @@ if [[ ! -n "$SSH_CLIENT" ]] || [[ ! -n "$SSH_TTY" ]]; then
 			rm "$HOME"/macos_work*.txt
 		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 			if command -v apt > /dev/null 2>&1; then
+				sudo apt update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				< debian_work_apps.txt xargs sudo apt install -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				while IFS= read -r line
+				do
+					sudo apt install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				done < <(grep -v '^ *#' < debian_work_apps.txt)
 				rm "$HOME"/debian_work*.txt
 			elif command -v apt-get > /dev/null 2>&1; then
+				sudo apt-get update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				< "$HOME"/debian_work_apps.txt xargs sudo apt-get install -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				while IFS= read -r line
+				do
+					sudo apt-get install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				done < <(grep -v '^ *#' < debian_work_apps.txt)
 				rm "$HOME"/debian_work*.txt
 			elif command -v yum > /dev/null 2>&1; then
+				sudo yum update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$redhat_work_apps" --output "$HOME"/redhat_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				< "$HOME"/redhat_work_apps.txt xargs sudo yum install -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				while IFS= read -r line
+				do
+					sudo yum install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				done < <(grep -v '^ *#' < redhat_work_apps.txt)
 				rm "$HOME"/redhat_work*.txt
 			elif command -v pacman > /dev/null 2>&1; then
+				sudo pacman -Syyu --noconfirm 2>&1| tee -a "$logfile" > /dev/null 2>&1
 				curl -fsSL "$arch_work_apps" --output "$HOME"/arch_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				< "$HOME"/arch_work_apps.txt xargs sudo pacman -S --noconfirm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				while IFS= read -r line
+				do
+					sudo pacman -S --noconfirm install "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				done < <(grep -v '^ *#' < arch_work_apps.txt)
 				rm "$HOME"/arch_work*.txt
 			fi
 		fi
@@ -153,7 +181,7 @@ fi
 #============
 # Install fonts on workstation
 #============
-if [[ ! -n "$SSH_CLIENT" ]] || [[ ! -n "$SSH_TTY" ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	read -p "Do you want to install custom fonts? (Y/n) " -n 1 -r
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -258,7 +286,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		git -C "$HOME"/projects/dotfiles pull 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 
-	if [[ ! -n "$SSH_CLIENT" ]] || [[ ! -n "$SSH_TTY" ]] && [[ ! -d "$HOME"/projects/scripts ]]; then
+	if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$HOME"/projects/scripts ]]; then
 		echo -e "Installing custom scripts..."
 		git clone --recurse-submodules https://github.com/gsquad934/scripts.git "$HOME"/projects/scripts 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		git -C "$HOME"/projects/scripts submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
@@ -313,13 +341,13 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		read -p "Do you want to reset the private Weechat configuration (sec.conf)? (Y/n) " -n 1 -r
 		echo -e
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			if [[ ! -z "$bkpdf" ]]; then
+			if [[ -n "$bkpdf" ]]; then
 				mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
 			else
 				rm -Rf "$HOME"/.config/weechat
 			fi
 		else
-			if [[ ! -z "$bkpdf" ]]; then
+			if [[ -n "$bkpdf" ]]; then
 				mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
 				mkdir "$HOME"/.config/weechat
 				mv "$HOME"/.old-dotfiles/weechat/sec.conf "$HOME"/.config/weechat/sec.conf
@@ -461,15 +489,15 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo -e "Installing useful server tools..."
-		if command -v apt > /dev/null 2>&1; then
+		if command -v apt-get > /dev/null 2>&1; then
+			sudo apt-get update 2>&1 | tee -a "$logfile"
+			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			< "$HOME"/server_tools.txt xargs sudo apt-get install -y 2>&1 | tee -a "$logfile"
+			rm "$HOME"/server_tools.txt
+		elif command -v apt > /dev/null 2>&1; then
 			sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			< "$HOME"/server_tools.txt xargs sudo apt install -y 2>&1 | tee -a "$logfile"
-			rm "$HOME"/server_tools.txt
-		elif command -v apt-get > /dev/null 2>&1; then
-			sudo apt-get update 2>&1 | tee -a "$logfile"
-			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			< "$HOME"/server_tools.txt xargs sudo apt-get install 2>&1 | tee -a "$logfile"
 			rm "$HOME"/server_tools.txt
 		elif command -v yum > /dev/null 2>&1; then
 			sudo yum update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
