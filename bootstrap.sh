@@ -253,38 +253,70 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	fi
 
 	# Remove and backup all original dotfiles
-	echo -e "Backup your current dotfiles to $HOME/.old-dotfiles..."
-	if [[ ! -d "$HOME"/.old-dotfiles ]]; then
-		mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
+	read -p "Do you want to backup your current dotfiles? (Y/n) " -n 1 -r
+	echo -e
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+		bkpdf=1
+		echo -e "Backup your current dotfiles to $HOME/.old-dotfiles..."
+		if [[ ! -d "$HOME"/.old-dotfiles ]]; then
+			mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
+		else
+			rm -Rf "$HOME"/.old-dotfiles > /dev/null 2>&1
+			mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
+		fi
+		mv "$HOME"/.bash_profile ~/.old-dotfiles/bash_profile > /dev/null 2>&1
+		mv "$HOME"/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
+		mv "$HOME"/.gitconfig ~/.old-dotfiles/gitconfig > /dev/null 2>&1
+		mv "$HOME"/.iterm2 ~/.old-dotfiles/iterm2 > /dev/null 2>&1
+		mv "$HOME"/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv ~/.config/msmtp ~/.old-dotfiles/msmtp > /dev/null 2>&1
+		mv "$HOME"/.p10k.zsh ~/.old-dotfiles/p10k.zsh > /dev/null 2>&1
+		mv "$HOME"/.tmux.conf ~/.old-dotfiles/tmux.conf > /dev/null 2>&1
+		mv "$HOME"/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
+		mv "$HOME"/.vimrc ~/.old-dotfiles/vimrc > /dev/null 2>&1
+		mv "$HOME"/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
+		mv "$HOME"/.config/nvim/init.vim ~/.old-dotfiles/zshrc > /dev/null 2>&1
+		mv "$HOME"/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
+		mv "$HOME"/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
+		mv "$HOME"/.config/vifm ~/.old-dotfiles/vifm > /dev/null 2>&1
+		mv "$HOME"/.config/alacritty ~/.old-dotfiles/alacritty > /dev/null 2>&1
 	else
-		rm -Rf "$HOME"/.old-dotfiles > /dev/null 2>&1
-		mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
+		rm -rf "$HOME"/.bash_profile
+		rm -rf "$HOME"/.bashrc
+		rm -rf "$HOME"/.gitconfig
+		rm -rf "$HOME"/.iterm2
+		rm -rf "$HOME"/.msmtprc
+		rm -rf "$HOME"/.p10k.zsh
+		rm -rf "$HOME"/.tmux.conf
+		rm -rf "$HOME"/.vim
+		rm -rf "$HOME"/.vimrc
+		rm -rf "$HOME"/.zshrc
+		rm -rf "$HOME"/.config/nvim/init.vim
+		rm -rf "$HOME"/.config/nvim
+		rm -rf "$HOME"/.config/wget
+		rm -rf "$HOME"/.config/vifm
+		rm -rf "$HOME"/.config/alacritty
 	fi
-	mv "$HOME"/.bash_profile ~/.old-dotfiles/bash_profile > /dev/null 2>&1
-	mv "$HOME"/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
-	mv "$HOME"/.gitconfig ~/.old-dotfiles/gitconfig > /dev/null 2>&1
-	mv "$HOME"/.iterm2 ~/.old-dotfiles/iterm2 > /dev/null 2>&1
-	mv "$HOME"/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv ~/.config/msmtp ~/.old-dotfiles/msmtp > /dev/null 2>&1
-	mv "$HOME"/.p10k.zsh ~/.old-dotfiles/p10k.zsh > /dev/null 2>&1
-	mv "$HOME"/.tmux.conf ~/.old-dotfiles/tmux.conf > /dev/null 2>&1
-	mv "$HOME"/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
-	mv "$HOME"/.vimrc ~/.old-dotfiles/vimrc > /dev/null 2>&1
-	mv "$HOME"/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
-	mv "$HOME"/.config/nvim/init.vim ~/.old-dotfiles/zshrc > /dev/null 2>&1
-	mv "$HOME"/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
-	mv "$HOME"/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
-	mv "$HOME"/.config/vifm ~/.old-dotfiles/vifm > /dev/null 2>&1
-	mv "$HOME"/.config/alacritty ~/.old-dotfiles/alacritty > /dev/null 2>&1
 	if [[ -f "$HOME"/.config/weechat/sec.conf ]]; then
 		echo -e "A Weechat private configuration has been detected (sec.conf)."
 		read -p "Do you want to reset the private Weechat configuration (sec.conf)? (Y/n) " -n 1 -r
 		echo -e
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
+			if [[ ! -z "$bkpdf" ]]; then
+				mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
+			else
+				rm -Rf "$HOME"/.config/weechat
+			fi
 		else
-			mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
-			mkdir "$HOME"/.config/weechat
-			mv "$HOME"/.old-dotfiles/weechat/sec.conf "$HOME"/.config/weechat/sec.conf
+			if [[ ! -z "$bkpdf" ]]; then
+				mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
+				mkdir "$HOME"/.config/weechat
+				mv "$HOME"/.old-dotfiles/weechat/sec.conf "$HOME"/.config/weechat/sec.conf
+			else
+				mv "$HOME"/.config/weechat/sec.conf "$HOME"/sec.conf
+				rm -Rf "$HOME"/.config/weechat
+				mkdir "$HOME"/.config/weechat
+				mv "$HOME"/sec.conf "$HOME"/.config/weechat/sec.conf
+			fi
 		fi
 	fi
 
@@ -302,7 +334,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	ln -s "$HOME"/projects/dotfiles/config/wget ~/.config/wget 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	touch "$HOME"/.bash_profile && echo -e "source ~/.bashrc" > ~/.bash_profile
 	if command -v weechat > /dev/null 2>&1; then
-		if [[ ! -d $"HOME"/.config/weechat ]]; then
+		if [[ ! -d "$HOME"/.config/weechat ]]; then
 			mkdir "$HOME"/.config/weechat
 		fi
 		ln -s "$HOME"/projects/dotfiles/config/weechat/irc.conf ~/.config/weechat/irc.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
@@ -317,7 +349,9 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		ln -s "$HOME"/projects/dotfiles/config/weechat/iset.conf ~/.config/weechat/iset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 	if command -v vifm > /dev/null 2>&1; then
-		mkdir "$HOME"/.config/vifm
+		if [[ ! -d "$HOME"/.config/vifm ]]; then
+			mkdir "$HOME"/.config/vifm
+		fi
 		ln -s "$HOME"/projects/dotfiles/config/vifm/colors ~/.config/vifm/colors 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		ln -s "$HOME"/projects/dotfiles/config/vifm/vifmrc ~/.config/vifm/vifmrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
