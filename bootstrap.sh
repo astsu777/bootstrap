@@ -498,11 +498,11 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		elif command -v apt-get > /dev/null 2>&1; then
-			sudo apt-get update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			sudo apt-get update 2>&1 | tee -a "$logfile"
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			while IFS= read -r line
 			do
-				sudo apt-get install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo apt-get install -y "$line" 2>&1 | tee -a "$logfile"
 			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		elif command -v yum > /dev/null 2>&1; then
