@@ -1,5 +1,4 @@
 etckeeper
-trldksjflskjflsdjkfds
 fd-find
 htop
 ncdu
