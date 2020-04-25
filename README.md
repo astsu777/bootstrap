@@ -22,9 +22,3 @@ For a list of software, see the text files in this repository.
 
 # Logs
 The output to the console is pretty empty in order to keep everything clean. However, a log file is always created in the $HOME folder and is unique for each run. This way, it is possible to review errors if required.
-
-# TODO
-There are still quite a few enhancements to be done. Here is a list of things required:
-
-- ~~Automate installation of apps from the AppStore on macOS~~ :warning: The application **mas** displays wrong ID for apps
-- (Super Optional) Create a nice menu to actually select which software will be installed
