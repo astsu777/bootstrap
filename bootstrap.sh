@@ -308,7 +308,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		mv "$HOME"/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
 		mv "$HOME"/.gitconfig ~/.old-dotfiles/gitconfig > /dev/null 2>&1
 		mv "$HOME"/.iterm2 ~/.old-dotfiles/iterm2 > /dev/null 2>&1
-		mv "$HOME"/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv ~/.config/msmtp ~/.old-dotfiles/msmtp > /dev/null 2>&1
+		mv "$HOME"/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv "$HOME"/.config/msmtp ~/.old-dotfiles/msmtp > /dev/null 2>&1
 		mv "$HOME"/.p10k.zsh ~/.old-dotfiles/p10k.zsh > /dev/null 2>&1
 		mv "$HOME"/.tmux.conf ~/.old-dotfiles/tmux.conf > /dev/null 2>&1
 		mv "$HOME"/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
@@ -324,7 +324,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		rm -rf "$HOME"/.bashrc
 		rm -rf "$HOME"/.gitconfig
 		rm -rf "$HOME"/.iterm2
-		rm -rf "$HOME"/.msmtprc
+		rm -rf "$HOME"/.msmtprc ; rm -Rf "$HOME"/.config/msmtp
 		rm -rf "$HOME"/.p10k.zsh
 		rm -rf "$HOME"/.tmux.conf
 		rm -rf "$HOME"/.vim
