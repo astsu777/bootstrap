@@ -440,6 +440,11 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
     	    "window-titles" =         (
     	    );
     	},
+		        {
+    	    id = "com.apple.Stickies";
+    	    "window-titles" =         (
+    	    );
+    	},
     	    {
     	    id = "com.tapbots.Tweetbot3Mac";
     	    "window-titles" =         (
