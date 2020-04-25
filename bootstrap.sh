@@ -229,8 +229,7 @@ if [[ "$OSTYPE" == "darwin"* ]] && command -v mas > /dev/null 2>&1; then
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo -e "Installing App Store applications..."
 		curl -fsSL "$macos_store_apps" --output "$HOME"/macos_store_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		storeapps=$(awk '{print $1}' "$HOME"/macos_store_apps.txt)
-		< "$storeapps" xargs mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		awk '{print $1}' "$HOME"/macos_store_apps.txt | xargs mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		rm "$HOME"/macos_store*.txt
 		echo -e "App Store applications installed"
 	fi
