@@ -15,7 +15,8 @@ logfile="$HOME/bootstrap_log_$date.txt"
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install"
 macos_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt"
 macos_casks="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt"
-macos_store_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_store_apps.txt"
+macos_store_common_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_store_common_apps.txt"
+macos_store_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_store_work_apps.txt"
 macos_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_apps.txt"
 macos_work_casks="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_casks.txt"
 debian_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt"
@@ -85,6 +86,16 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			< "$HOME"/macos_common_apps.txt xargs brew install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			< "$HOME"/macos_common_casks.txt xargs brew cask install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			rm "$HOME"/macos_common*.txt
+		elif [[ "$OSTYPE" == "darwin"* ]] && command -v mas > /dev/null 2>&1; then
+			read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r
+			echo -e
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Installing App Store applications..."
+				curl -fsSL "$macos_store_common_apps" --output "$HOME"/macos_store_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				awk '{print $1}' "$HOME"/macos_store_common_apps.txt | xargs mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				rm "$HOME"/macos_store*.txt
+				echo -e "Common App Store applications installed"
+			fi
 		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 			if command -v apt > /dev/null 2>&1; then
 				sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
@@ -133,12 +144,22 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo -e "Installing work software..."
-		if [[ "$OSTYPE" == "darwin"* ]]; then
+		if [[ "$OSTYPE" == "darwin"* ]] && command -v brew > /dev/null 2>&1; then
 			curl -fsSL "$macos_work_apps" --output "$HOME"/macos_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			curl -fsSL "$macos_work_casks" --output "$HOME"/macos_work_casks.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			< macos_work_apps.txt xargs brew install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			< macos_work_casks.txt xargs brew cask install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			rm "$HOME"/macos_work*.txt
+		elif [[ "$OSTYPE" == "darwin"* ]] && command -v mas > /dev/null 2>&1; then
+			read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r
+			echo -e
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Installing App Store applications..."
+				curl -fsSL "$macos_store_work_apps" --output "$HOME"/macos_store_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				awk '{print $1}' "$HOME"/macos_store_work_apps.txt | xargs mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				rm "$HOME"/macos_store*.txt
+				echo -e "Work App Store applications installed"
+			fi
 		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 			if command -v apt > /dev/null 2>&1; then
 				sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
@@ -217,21 +238,6 @@ if command -v tmux > /dev/null 2>&1; then
 		echo -e "TMUX Plugin Manager installed"
 		echo -e "In TMUX, press <PREFIX> + I to install plugins"
 		echo -e
-	fi
-fi
-
-#============
-# macOS - Install App Store Applications
-#============
-if [[ "$OSTYPE" == "darwin"* ]] && command -v mas > /dev/null 2>&1; then
-	read -p "Do you want to install App Store applications? (Y/n) " -n 1 -r
-	echo -e
-	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-		echo -e "Installing App Store applications..."
-		curl -fsSL "$macos_store_apps" --output "$HOME"/macos_store_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		awk '{print $1}' "$HOME"/macos_store_apps.txt | xargs mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		rm "$HOME"/macos_store*.txt
-		echo -e "App Store applications installed"
 	fi
 fi
 

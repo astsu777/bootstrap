@@ -15,6 +15,7 @@ grep
 htop
 imagemagick
 lame
+mas
 moreutils
 msmtp
 ncdu
