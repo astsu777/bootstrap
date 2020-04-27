@@ -17,6 +17,7 @@ imagemagick
 lame
 mas
 moreutils
+mpv
 msmtp
 ncdu
 neovim

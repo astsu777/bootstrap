@@ -16,6 +16,7 @@ htop
 keepassxc
 lame
 mplayer
+mpv
 ncdu
 neovim
 net-tools
