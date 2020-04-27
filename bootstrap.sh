@@ -220,6 +220,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			echo -e
 			git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | tee -a "$logfile" > /dev/null 2>&1 && "$HOME"/fonts/install.sh
 			rm -Rf "$HOME"/fonts > /dev/null 2>&1
+			exit
 		fi
 		echo -e "Custom fonts installed"
 		echo -e
@@ -230,14 +231,27 @@ fi
 # Install TMUX Plugin Manager
 #============
 if command -v tmux > /dev/null 2>&1; then
-	read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r
-	echo -e
-	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-		echo -e "Installing TMUX Plugin Manager..."
-		git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		echo -e "TMUX Plugin Manager installed"
-		echo -e "In TMUX, press <PREFIX> + I to install plugins"
+	if [[ -d "$HOME"/.tmux/plugins/tpm ]]; then
+		read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r
 		echo -e
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Reinstalling TMUX Plugin Manager..."
+			rm -Rf "$HOME"/.tmux/plugins/tpm
+			git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			echo -e "TMUX Plugin Manager installed"
+			echo -e "In TMUX, press <PREFIX> + I to install plugins"
+			echo -e
+		fi
+	else
+		read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r
+		echo -e
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Installing TMUX Plugin Manager..."
+			git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			echo -e "TMUX Plugin Manager installed"
+			echo -e "In TMUX, press <PREFIX> + I to install plugins"
+			echo -e
+		fi
 	fi
 fi
 
@@ -336,7 +350,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		mv "$HOME"/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
 		mv "$HOME"/.vimrc ~/.old-dotfiles/vimrc > /dev/null 2>&1
 		mv "$HOME"/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
-		mv "$HOME"/.config/nvim/init.vim ~/.old-dotfiles/zshrc > /dev/null 2>&1
+		mv "$HOME"/.config/nvim/init.vim ~/.old-dotfiles/init.vim > /dev/null 2>&1
 		mv "$HOME"/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
 		mv "$HOME"/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
 		mv "$HOME"/.config/vifm ~/.old-dotfiles/vifm > /dev/null 2>&1
