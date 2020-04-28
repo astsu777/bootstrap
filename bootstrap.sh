@@ -256,9 +256,9 @@ if command -v tmux > /dev/null 2>&1; then
 fi
 
 #============
-# macOS - Configure System Preferences
+# macOS Workstation - Configuration
 #============
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]; then
 	read -p "Do you want to setup System Preferences? (Y/n) " -n 1 -r
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -279,9 +279,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 			sudo chflags schg "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 > /dev/null 2>&1
 		fi
 
-		# Generate the locate database
-		sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist > /dev/null 2>&1
-
 		# Keep-alive: update existing `sudo` time stamp until bootstrap has finished
 		while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
@@ -301,8 +298,32 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 		defaults write NSGlobalDomain KeyRepeat -int 1
 		defaults write NSGlobalDomain InitialKeyRepeat -int 10
 
-	echo -e "System preferences configured"
+		# Build the 'locate' database
+		sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		sudo /usr/libexec/locate.updatedb 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+
+		echo -e "System preferences configured"
+		echo -e
+	fi
+fi
+
+#============
+# Linux Workstation - Configuration
+#============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]]; then
+	read -p "Do you want to configure preferences? (Y/n) " -n 1 -r
 	echo -e
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+
+		# Ask for the administrator password upfront
+		echo -e "Starting configuration process..."
+		sudo -v
+
+		# Build the 'locate' database
+		sudo updatedb
+
+		echo -e "Preferences configured"
+		echo -e
 	fi
 fi
 
@@ -454,7 +475,7 @@ fi
 #==============
 # macOS - Amethyst Configuration
 #==============
-if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
+if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
 	read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
