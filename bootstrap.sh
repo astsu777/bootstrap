@@ -9,6 +9,11 @@
 
 # Dotfiles location
 dfloc="$HOME/projects/dotfiles"
+dfrepo="https://github.com/gsquad934/dotfiles.git "
+
+# Custom scripts location
+scriptsloc="$HOME/scripts"
+scriptsrepo="https://github.com/gsquad934/scripts.git "
 
 # Logging
 date="$(date +%Y-%m-%d-%H%M%S)"
@@ -342,16 +347,16 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	if [[ ! -d "$dfloc" ]]; then
 		echo -e "Retrieving dotfiles..."
 		mkdir -pv "$dfloc"
-		git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git "$dfloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	else
 		git -C "$dfloc" pull 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 
-	if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$HOME"/projects/scripts ]]; then
+	if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
 		echo -e "Installing custom scripts..."
-		git clone --recurse-submodules https://github.com/gsquad934/scripts.git "$HOME"/projects/scripts 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		git -C "$HOME"/projects/scripts submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 
 	# Remove and backup all original dotfiles
@@ -376,6 +381,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
 		mv "$HOME"/.vimrc "$HOME"/.old-dotfiles/vimrc > /dev/null 2>&1
 		mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1
+		mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
 		mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
 		mv "$HOME"/.config/nvim "$HOME"/.old-dotfiles/nvim > /dev/null 2>&1
 		mv "$HOME"/.config/wget "$HOME"/.old-dotfiles/wget > /dev/null 2>&1
@@ -393,6 +399,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		rm -rf "$HOME"/.vim
 		rm -rf "$HOME"/.vimrc
 		rm -rf "$HOME"/.zshrc
+		rm -rf "$HOME"/.zprofile
 		rm -rf "$HOME"/.config/nvim/init.vim
 		rm -rf "$HOME"/.config/nvim
 		rm -rf "$HOME"/.config/wget
@@ -436,7 +443,8 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
+	touch "$HOME"/.bash_profile && echo -e "export DOTFILES=\"$dfloc\"" >> "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" >> "$HOME"/.bash_profile
+	touch "$HOME"/.zprofile && echo -e "export DOTFILES=\"$dfloc\"" >> "$HOME"/.zprofile && echo -e "source $HOME/.zshrc" >> "$HOME"/.zprofile
 	if command -v weechat > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/weechat ]]; then
 			mkdir "$HOME"/.config/weechat
