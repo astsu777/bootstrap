@@ -17,6 +17,8 @@ curl -sLO https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap
 bash bootstrap.sh
 ```
 
+It is possible to chose where the dotfiles will be located by changing the *$dfloc* variable at the top of the script.
+
 The script will not install any software without asking first. All software can be refused in order to only install the dotfiles.
 For a list of software, see the text files in this repository.
 

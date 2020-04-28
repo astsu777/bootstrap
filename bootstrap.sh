@@ -7,6 +7,9 @@
 # Global Variables
 #=============
 
+# Dotfiles location
+dfloc="$HOME/projects/dotfiles"
+
 # Logging
 date="$(date +%Y-%m-%d-%H%M%S)"
 logfile="$HOME/bootstrap_log_$date.txt"
@@ -262,6 +265,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 	read -p "Do you want to setup System Preferences? (Y/n) " -n 1 -r
 	echo -e
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+
 		# Close any open System Preferences panes, to prevent them from overriding
 		# settings we’re about to change
 		osascript -e 'tell application "System Preferences" to quit'
@@ -335,12 +339,13 @@ fi
 read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r
 echo -e
 if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-	if [[ ! -d "$HOME"/projects/dotfiles ]]; then
+	if [[ ! -d "$dfloc" ]]; then
 		echo -e "Retrieving dotfiles..."
-		git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git "$HOME"/projects/dotfiles 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		git -C "$HOME"/projects/dotfiles submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		mkdir -pv "$dfloc"
+		git clone --recurse-submodules https://github.com/gsquad934/dotfiles.git "$dfloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	else
-		git -C "$HOME"/projects/dotfiles pull 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		git -C "$dfloc" pull 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 
 	if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$HOME"/projects/scripts ]]; then
@@ -361,21 +366,22 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			rm -Rf "$HOME"/.old-dotfiles > /dev/null 2>&1
 			mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
 		fi
-		mv "$HOME"/.bash_profile ~/.old-dotfiles/bash_profile > /dev/null 2>&1
-		mv "$HOME"/.bashrc ~/.old-dotfiles/bashrc > /dev/null 2>&1
-		mv "$HOME"/.gitconfig ~/.old-dotfiles/gitconfig > /dev/null 2>&1
-		mv "$HOME"/.iterm2 ~/.old-dotfiles/iterm2 > /dev/null 2>&1
-		mv "$HOME"/.msmtprc ~/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv "$HOME"/.config/msmtp ~/.old-dotfiles/msmtp > /dev/null 2>&1
-		mv "$HOME"/.p10k.zsh ~/.old-dotfiles/p10k.zsh > /dev/null 2>&1
-		mv "$HOME"/.tmux.conf ~/.old-dotfiles/tmux.conf > /dev/null 2>&1
-		mv "$HOME"/.vim ~/.old-dotfiles/vim > /dev/null 2>&1
-		mv "$HOME"/.vimrc ~/.old-dotfiles/vimrc > /dev/null 2>&1
-		mv "$HOME"/.zshrc ~/.old-dotfiles/zshrc > /dev/null 2>&1
-		mv "$HOME"/.config/nvim/init.vim ~/.old-dotfiles/init.vim > /dev/null 2>&1
-		mv "$HOME"/.config/nvim ~/.old-dotfiles/nvim > /dev/null 2>&1
-		mv "$HOME"/.config/wget ~/.old-dotfiles/wget > /dev/null 2>&1
-		mv "$HOME"/.config/vifm ~/.old-dotfiles/vifm > /dev/null 2>&1
-		mv "$HOME"/.config/alacritty ~/.old-dotfiles/alacritty > /dev/null 2>&1
+		mv "$HOME"/.bash_profile "$HOME"/.old-dotfiles/bash_profile > /dev/null 2>&1
+		mv "$HOME"/.bashrc "$HOME"/.old-dotfiles/bashrc > /dev/null 2>&1
+		mv "$HOME"/.gitconfig "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1
+		mv "$HOME"/.iterm2 "$HOME"/.old-dotfiles/iterm2 > /dev/null 2>&1
+		mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1
+		mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1
+		mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1
+		mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
+		mv "$HOME"/.vimrc "$HOME"/.old-dotfiles/vimrc > /dev/null 2>&1
+		mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1
+		mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
+		mv "$HOME"/.config/nvim "$HOME"/.old-dotfiles/nvim > /dev/null 2>&1
+		mv "$HOME"/.config/wget "$HOME"/.old-dotfiles/wget > /dev/null 2>&1
+		mv "$HOME"/.config/vifm "$HOME"/.old-dotfiles/vifm > /dev/null 2>&1
+		mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
+		mv "$HOME"/.config/qutebrowser "$HOME"/.old-dotfiles/qutebrowser > /dev/null 2>&1
 	else
 		rm -rf "$HOME"/.bash_profile
 		rm -rf "$HOME"/.bashrc
@@ -392,6 +398,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		rm -rf "$HOME"/.config/wget
 		rm -rf "$HOME"/.config/vifm
 		rm -rf "$HOME"/.config/alacritty
+		rm -rf "$HOME"/.config/qutebrowser
 	fi
 	if [[ -f "$HOME"/.config/weechat/sec.conf ]]; then
 		echo -e "A Weechat private configuration has been detected (sec.conf)."
@@ -399,13 +406,13 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo -e
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			if [[ -n "$bkpdf" ]]; then
-				mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
+				mv "$HOME"/.config/weechat "$HOME"/.old-dotfiles/weechat > /dev/null 2>&1
 			else
 				rm -Rf "$HOME"/.config/weechat
 			fi
 		else
 			if [[ -n "$bkpdf" ]]; then
-				mv "$HOME"/.config/weechat ~/.old-dotfiles/weechat > /dev/null 2>&1
+				mv "$HOME"/.config/weechat "$HOME"/.old-dotfiles/weechat > /dev/null 2>&1
 				mkdir "$HOME"/.config/weechat
 				mv "$HOME"/.old-dotfiles/weechat/sec.conf "$HOME"/.config/weechat/sec.conf
 			else
@@ -420,53 +427,57 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	# Create symlinks in the home folder
 	echo -e "Installing new dotfiles..."
 	if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
-	ln -s "$HOME"/projects/dotfiles/gitconfig ~/.gitconfig 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/projects/dotfiles/shellconfig/p10k.zsh ~/.p10k.zsh 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/projects/dotfiles/vim ~/.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/projects/dotfiles/vim/vimrc ~/.vimrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/projects/dotfiles/shellconfig/bashrc ~/.bashrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/projects/dotfiles/shellconfig/zshrc ~/.zshrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/.vim ~/.config/nvim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/.vim/vimrc ~/.config/nvim/init.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/projects/dotfiles/config/wget ~/.config/wget 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	touch "$HOME"/.bash_profile && echo -e "source ~/.bashrc" > ~/.bash_profile
+	ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.p10k.zsh 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	ln -s "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.zshrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
 	if command -v weechat > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/weechat ]]; then
 			mkdir "$HOME"/.config/weechat
 		fi
-		ln -s "$HOME"/projects/dotfiles/config/weechat/irc.conf ~/.config/weechat/irc.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/perl ~/.config/weechat/perl 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/python ~/.config/weechat/python 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/trigger.conf ~/.config/weechat/trigger.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/weechat.conf ~/.config/weechat/weechat.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/xfer.conf ~/.config/weechat/xfer.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/buflist.conf ~/.config/weechat/buflist.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/colorize_nicks.conf ~/.config/weechat/colorize_nicks.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/fset.conf ~/.config/weechat/fset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/weechat/iset.conf ~/.config/weechat/iset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/irc.conf "$HOME"/.config/weechat/irc.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/perl "$HOME"/.config/weechat/perl 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/python "$HOME"/.config/weechat/python 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/trigger.conf "$HOME"/.config/weechat/trigger.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/weechat.conf "$HOME"/.config/weechat/weechat.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/xfer.conf "$HOME"/.config/weechat/xfer.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/buflist.conf "$HOME"/.config/weechat/buflist.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/colorize_nicks.conf "$HOME"/.config/weechat/colorize_nicks.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/fset.conf "$HOME"/.config/weechat/fset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/weechat/iset.conf "$HOME"/.config/weechat/iset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 	if command -v vifm > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/vifm ]]; then
 			mkdir "$HOME"/.config/vifm
 		fi
-		ln -s "$HOME"/projects/dotfiles/config/vifm/colors ~/.config/vifm/colors 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		ln -s "$HOME"/projects/dotfiles/config/vifm/vifmrc ~/.config/vifm/vifmrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 	if command -v msmtp > /dev/null 2>&1; then
-		ln -s "$HOME"/projects/dotfiles/config/msmtp ~/.config/msmtp 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 	if command -v alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
-		ln -s "$HOME"/projects/dotfiles/config/alacritty ~/.config/alacritty 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/alacritty "$HOME"/.config/alacritty 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
-	if [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/iTerm.app ]]; then
-		ln -s "$HOME"/projects/dotfiles/iterm2 ~/.iterm2 > /dev/null 2>&1
+	if [[ -d /Applications/iTerm.app ]]; then
+		ln -s "$dfloc"/iterm2 "$HOME"/.iterm2 > /dev/null 2>&1
+	fi
+
+	if command -v qutebrowser > /dev/null 2>&1 || [[ -d /Applications/qutebrowser.app ]]; then
+		ln -s "$dfloc"/config/qutebrowser "$HOME"/.config/qutebrowser 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 
 	# If this is a SSH connection, install the server config of TMUX
 	if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-		ln -s "$HOME"/projects/dotfiles/tmux/tmux29-server.conf ~/.tmux.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	else
-		ln -s "$HOME"/projects/dotfiles/tmux/tmux-workstation.conf ~/.tmux.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 	echo -e "New dotfiles installed"
 	echo -e
