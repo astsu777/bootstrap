@@ -33,6 +33,7 @@ transmission-cli
 tree
 unrar
 unzip
+urlview
 vifm
 vim
 vlc
