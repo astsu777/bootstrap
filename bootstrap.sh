@@ -439,8 +439,8 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$dfloc"/shellconfig/bash_profile "$HOME"/.bash_profile 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$dfloc"/shellconfig/zprofile "$HOME"/.zprofile 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
+	ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.zshrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | tee -a "$logfile" > /dev/null 2>&1
@@ -475,7 +475,6 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	if [[ -d /Applications/iTerm.app ]]; then
 		ln -s "$dfloc"/iterm2 "$HOME"/.iterm2 > /dev/null 2>&1
 	fi
-
 	if command -v qutebrowser > /dev/null 2>&1 || [[ -d /Applications/qutebrowser.app ]]; then
 		ln -s "$dfloc"/config/qutebrowser "$HOME"/.config/qutebrowser 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
