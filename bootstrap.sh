@@ -228,7 +228,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			echo -e
 			git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | tee -a "$logfile" > /dev/null 2>&1 && "$HOME"/fonts/install.sh
 			rm -Rf "$HOME"/fonts > /dev/null 2>&1
-			exit
 		fi
 		echo -e "Custom fonts installed"
 		echo -e
