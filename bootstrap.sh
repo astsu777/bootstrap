@@ -9,11 +9,11 @@
 
 # Dotfiles location
 dfloc="$HOME/projects/dotfiles"
-dfrepo="https://github.com/gsquad934/dotfiles.git "
+dfrepo="https://github.com/GSquad934/dotfiles.git "
 
 # Custom scripts location
 scriptsloc="$HOME/scripts"
-scriptsrepo="https://github.com/gsquad934/scripts.git "
+scriptsrepo="https://github.com/GSquad934/scripts.git"
 
 # Logging
 date="$(date +%Y-%m-%d-%H%M%S)"
@@ -355,8 +355,18 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 
 	if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
 		echo -e "Installing custom scripts..."
+		mkdir "$scriptsloc"
 		git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
+		read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r
+		echo -e
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Installing custom scripts..."
+			rm -Rf "$scriptsloc" && mkdir "$scriptsloc"
+			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		fi
 	fi
 
 	# Remove and backup all original dotfiles
