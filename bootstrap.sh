@@ -9,7 +9,7 @@
 
 # Dotfiles location
 dfloc="$HOME/projects/dotfiles"
-dfrepo="https://github.com/GSquad934/dotfiles.git "
+dfrepo="https://github.com/GSquad934/dotfiles.git"
 
 # Custom scripts location
 scriptsloc="$HOME/scripts"
