@@ -396,7 +396,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		mv "$HOME"/.config/wget "$HOME"/.old-dotfiles/wget > /dev/null 2>&1
 		mv "$HOME"/.config/vifm "$HOME"/.old-dotfiles/vifm > /dev/null 2>&1
 		mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
-		mv "$HOME"/.config/qutebrowser "$HOME"/.old-dotfiles/qutebrowser > /dev/null 2>&1
+		mv "$HOME"/.qutebrowser "$HOME"/.old-dotfiles/qutebrowser > /dev/null 2>&1
 	else
 		rm -rf "$HOME"/.bash_profile
 		rm -rf "$HOME"/.bashrc
@@ -414,7 +414,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		rm -rf "$HOME"/.config/wget
 		rm -rf "$HOME"/.config/vifm
 		rm -rf "$HOME"/.config/alacritty
-		rm -rf "$HOME"/.config/qutebrowser
+		rm -rf "$HOME"/.qutebrowser
 	fi
 	if [[ -f "$HOME"/.config/weechat/sec.conf ]]; then
 		echo -e "A Weechat private configuration has been detected (sec.conf)."
@@ -485,7 +485,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		ln -s "$dfloc"/iterm2 "$HOME"/.iterm2 > /dev/null 2>&1
 	fi
 	if command -v qutebrowser > /dev/null 2>&1 || [[ -d /Applications/qutebrowser.app ]]; then
-		ln -s "$dfloc"/config/qutebrowser "$HOME"/.config/qutebrowser 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/config/qutebrowser "$HOME"/.qutebrowser 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 
 	# If this is a SSH connection, install the server config of TMUX
