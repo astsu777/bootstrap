@@ -607,7 +607,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 			done < <(grep -v '^ *#' < server_tools.txt)
 			rm "$HOME"/server_tools.txt
 		elif command -v pacman > /dev/null 2>&1; then
-			sudo pacman -Syyu --no-confirm 2>&1 | tee -a "$logfile"
+			sudo pacman -Syyu --noconfirm 2>&1 | tee -a "$logfile"
 			curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			while IFS= read -r line
 			do
