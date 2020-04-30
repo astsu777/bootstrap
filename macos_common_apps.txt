@@ -11,6 +11,7 @@ ffmpeg
 findutils
 fzf
 git
+gotop
 grep
 htop
 imagemagick

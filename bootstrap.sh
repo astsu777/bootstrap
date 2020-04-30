@@ -68,18 +68,6 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]
 fi
 
 #=============
-# Install NPM software for macOS
-#=============
-if [[ "$OSTYPE" == "darwin"* ]] && ! command -v gtop > /dev/null 2>&1; then
-	read -p "Do you want to install Gtop (ncurses monitoring tool)? (Y/n) " -n 1 -r
-	echo -e
-	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-		brew install node 2>&1 | tee "$logfile" > /dev/null 2>&1
-		npm install gtop -g 2>&1 | tee "$logfile" > /dev/null 2>&1
-	fi
-fi
-
-#=============
 # Install common packages on workstation
 #=============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
