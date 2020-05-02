@@ -691,6 +691,11 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
     	    "window-titles" =         (
     	    );
     	},
+		        {
+    	    id = "cx.c3.theunarchiver";
+    	    "window-titles" =         (
+    	    );
+    	},
     	    {
     	    id = "com.tapbots.Tweetbot3Mac";
     	    "window-titles" =         (
