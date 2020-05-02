@@ -35,6 +35,13 @@ arch_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/arch_com
 arch_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/arch_work_apps.txt"
 aurhelper="https://aur.archlinux.org/yay.git"
 server_tools="https://raw.githubusercontent.com/GSquad934/bootstrap/master/server_tools.txt"
+zsh_tools=(
+	zsh
+	zsh-autosuggestions
+	zsh-completions
+	zsh-history-substring-search
+	zsh-syntax-highlighting
+)
 
 # Font lists
 mononoki_regular="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf"
@@ -363,6 +370,37 @@ if command -v tmux > /dev/null 2>&1; then
 			echo -e "TMUX Plugin Manager installed" 2>&1 | tee -a "$logfile"
 			echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | tee -a "$logfile"
 			echo -e 2>&1 | tee -a "$logfile"
+		fi
+	fi
+fi
+
+#============
+# Install ZSH on workstation
+#============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && ! command -v zsh > /dev/null 2>&1; then
+	echo -e "Your current shell is \"$SHELL\""
+	read -p "Do you want to use ZSH as your shell? (Y/n)" -n 1 -r
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+		if [[ "$OSTYPE" == "darwin"* ]] && command -v brew > /dev/null 2>&1; then
+			brew install "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+			if command -v apt > /dev/null 2>&1; then
+				sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				sudo apt install -y "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			elif command -v apt-get > /dev/null 2>&1; then
+				sudo apt-get install -y "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			elif command -v yum > /dev/null 2>&1; then
+				sudo yum install -y "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			elif command -v pacman > /dev/null 2>&1; then
+				sudo pacman -S --needed --noconfirm "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			fi
+		fi
+		if [[ "$EUID" = 0 ]]; then
+			echo -e "The shell of the root user should not be changed! (NOT RECOMMENDED)"
+			echo -e "Please run the script as root in order to install the requirements"
+			exit 1
+		else
+			chsh -s /bin/zsh 2>&1 | tee -a "$logfile"
 		fi
 	fi
 fi
