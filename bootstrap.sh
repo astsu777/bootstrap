@@ -384,7 +384,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		mv "$HOME"/.config/wget "$HOME"/.old-dotfiles/wget > /dev/null 2>&1
 		mv "$HOME"/.config/vifm "$HOME"/.old-dotfiles/vifm > /dev/null 2>&1
 		mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
-		mv "$HOME"/.qutebrowser "$HOME"/.old-dotfiles/qutebrowser > /dev/null 2>&1
+		mv "$HOME"/.w3m "$HOME"/.old-dotfiles/w3m > /dev/null 2>&1
 	else
 		rm -rf "$HOME"/.bash_profile
 		rm -rf "$HOME"/.bashrc
@@ -402,7 +402,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		rm -rf "$HOME"/.config/wget
 		rm -rf "$HOME"/.config/vifm
 		rm -rf "$HOME"/.config/alacritty
-		rm -rf "$HOME"/.qutebrowser
+		rm -rf "$HOME"/.w3m
 	fi
 	if [[ -f "$HOME"/.config/weechat/sec.conf ]]; then
 		echo -e "A Weechat private configuration has been detected (sec.conf)."
@@ -433,14 +433,9 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
 	ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.p10k.zsh 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
 	ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.zshrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-	ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	if command -v weechat > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/weechat ]]; then
 			mkdir "$HOME"/.config/weechat
@@ -455,6 +450,17 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		ln -s "$dfloc"/config/weechat/colorize_nicks.conf "$HOME"/.config/weechat/colorize_nicks.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		ln -s "$dfloc"/config/weechat/fset.conf "$HOME"/.config/weechat/fset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		ln -s "$dfloc"/config/weechat/iset.conf "$HOME"/.config/weechat/iset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	fi
+	if command -v wget > /dev/null 2>&1; then
+		ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	fi
+	if command -v vim > /dev/null 2>&1; then
+		ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	fi
+	if command -v nvim > /dev/null 2>&1; then
+		ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 	if command -v vifm > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/vifm ]]; then
@@ -472,8 +478,11 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 	if [[ -d /Applications/iTerm.app ]]; then
 		ln -s "$dfloc"/iterm2 "$HOME"/.iterm2 > /dev/null 2>&1
 	fi
-	if command -v qutebrowser > /dev/null 2>&1 || [[ -d /Applications/qutebrowser.app ]]; then
-		ln -s "$dfloc"/config/qutebrowser "$HOME"/.qutebrowser 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+	if command -v w3m > /dev/null 2>&1; then
+		if [[ ! -d "$HOME"/.w3m ]]; then
+			mkdir -pv "$HOME"/.w3m
+		fi
+		ln -s "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
 
 	# If this is a SSH connection, install the server config of TMUX
@@ -513,6 +522,11 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
     	},
 		        {
     	    id = "com.apple.Stickies";
+    	    "window-titles" =         (
+    	    );
+    	},
+		        {
+    	    id = "com.parallels.desktop.console";
     	    "window-titles" =         (
     	    );
     	},

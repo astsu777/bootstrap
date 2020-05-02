@@ -38,6 +38,7 @@ urlview
 vifm
 vim
 vlc
+w3m
 weechat
 youtube-dl
 zathura
