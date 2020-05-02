@@ -62,9 +62,23 @@ fi
 #=============
 # Install XCode Command Line Tools on macOS
 #=============
-if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
+if [[ "$OSTYPE" == "darwin"* ]] && [[ -n $(pgrep "Install Command Line Developer Tools") ]]; then
+	echo -e "============== XCODE COMMAND LINE TOOLS ARE INSTALLING =============="
+	echo -e "#"
+	echo -e "# ATTENTION: XCode Command Line Tools installation is in progress"
+	echo -e "# Launch the bootstrap script again when the installation is finished"
+	echo -e "#"
+	echo -e "====================================================================="
+	exit 1
+elif [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
+	echo -e "============== XCODE COMMAND LINE TOOLS NOT INSTALLED =============="
+	echo -e "#"
+	echo -e "# ATTENTION: XCode Command Line Tools installation will begin"
+	echo -e "# Launch the bootstrap script again when the installation is finished"
+	echo -e "#"
+	echo -e "====================================================================="
 	xcode-select --install
-	echo -e
+	exit 1
 fi
 
 #=============
