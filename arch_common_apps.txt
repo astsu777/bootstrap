@@ -29,6 +29,7 @@ python-pip
 ripgrep
 rsync
 sxiv
+tmux
 transmission-cli
 tree
 unrar

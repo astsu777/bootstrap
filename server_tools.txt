@@ -6,4 +6,5 @@ nethogs
 nmon
 peco
 tcpdump
+tmux
 vim
