@@ -60,14 +60,14 @@ tpm="https://github.com/tmux-plugins/tpm"
 # BEGINNING
 #=============
 echo -e
-echo -e "============================= BOOTSTRAP PROCESS BEGINNING ============================="
-echo -e "#"
-echo -e "# The file \"$logfile\" will be created to log all ongoing operations"
-echo -e "# If the script gives an error because of user rights, please follow the instructions"
-echo -e "#"
-echo -e "======================================================================================="
-echo -e
-echo -e
+echo -e "============================= BOOTSTRAP PROCESS BEGINNING =============================" 2>&1 | tee -a "$logfile"
+echo -e "#" 2>&1 | tee -a "$logfile"
+echo -e "# The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | tee -a "$logfile"
+echo -e "# If the script gives an error because of user rights, please follow the instructions" 2>&1 | tee -a "$logfile"
+echo -e "#" 2>&1 | tee -a "$logfile"
+echo -e "=======================================================================================" 2>&1 | tee -a "$logfile"
+echo -e 2>&1 | tee -a "$logfile"
+echo -e 2>&1 | tee -a "$logfile"
 
 #=============
 # Install XCode Command Line Tools on macOS
