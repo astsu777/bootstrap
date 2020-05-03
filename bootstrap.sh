@@ -194,16 +194,21 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 						< "$HOME"/macos_common_apps.txt xargs brew install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 						rm "$HOME"/macos_common*.txt
 					fi
-					if commnd -v mas > /dev/null 2>&1; then
-						read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r
-						echo -e 2>&1 | tee -a "$logfile"
-						if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-							echo -e "Installing App Store common applications..." 2>&1 | tee -a "$logfile"
-							curl -fsSL "$macos_store_common_apps" --output "$HOME"/macos_store_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-							awk '{print $1}' "$HOME"/macos_store_common_apps.txt | xargs mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-							rm "$HOME"/macos_store*.txt
-							echo -e "App Store common applications installed" 2>&1 | tee -a "$logfile"
-						fi
+					if commnd -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
+						while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
+							echo -e 2>&1 | tee -a "$logfile"
+							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+								echo -e "Installing App Store common applications..." 2>&1 | tee -a "$logfile"
+								curl -fsSL "$macos_store_common_apps" --output "$HOME"/macos_store_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+								awk '{print $1}' "$HOME"/macos_store_common_apps.txt | xargs /usr/local/bin/mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+								rm "$HOME"/macos_store*.txt
+								echo -e "App Store common applications installed" 2>&1 | tee -a "$logfile"
+								break
+							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+								echo -e
+								break
+							fi
+						done
 					fi
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -272,16 +277,21 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 						< macos_work_apps.txt xargs brew install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 						rm "$HOME"/macos_work*.txt
 					fi
-					if command -v mas > /dev/null 2>&1; then
-						read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r
-						echo -e 2>&1 | tee -a "$logfile"
-						if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-							echo -e "Installing App Store work applications..." 2>&1 | tee -a "$logfile"
-							curl -fsSL "$macos_store_work_apps" --output "$HOME"/macos_store_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-							awk '{print $1}' "$HOME"/macos_store_work_apps.txt | xargs mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-							rm "$HOME"/macos_store*.txt
-							echo -e "App Store work applications installed" 2>&1 | tee -a "$logfile"
-						fi
+					if command -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
+						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
+							echo -e 2>&1 | tee -a "$logfile"
+							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+								echo -e "Installing App Store work applications..." 2>&1 | tee -a "$logfile"
+								curl -fsSL "$macos_store_work_apps" --output "$HOME"/macos_store_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+								awk '{print $1}' "$HOME"/macos_store_work_apps.txt | xargs /usr/local/bin/mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+								rm "$HOME"/macos_store*.txt
+								echo -e "App Store work applications installed" 2>&1 | tee -a "$logfile"
+								break
+							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+								echo -e
+								break
+							fi
+						done
 					fi
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
