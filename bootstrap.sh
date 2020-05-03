@@ -421,6 +421,7 @@ fi
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; then
 	echo -e "Your current shell is \"$SHELL\""
 	while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | tee -a "$logfile"
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]] && command -v brew > /dev/null 2>&1; then
 				brew install "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
@@ -443,7 +444,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; th
 				exit 1
 			else
 				chsh -s /bin/zsh 2>&1 | tee -a "$logfile"
-				compaudit | xargs chmod g-w 2>&1 | tee -a "$logfile"
 			fi
 			echo -e "ZSH successfully installed" 2>&1 | tee -a "$logfile"
 			echo -e 2>&1 | tee -a "$logfile"
