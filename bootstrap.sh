@@ -155,7 +155,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! command -v 
 					sudo pacman -S git base-devel --needed --noconfirm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 					git clone "$aurhelper" "$HOME"/yay 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 					cd "$HOME"/yay && makepkg -si 2>&1 | tee -a "$logfile"
-					cd "$HOME"
+					cd "$HOME" || exit
 					rm -Rf "$HOME"/yay
 					echo -e "AUR Helper successfully installed" 2>&1 | tee -a "$logfile"
 					echo -e 2>&1 | tee -a "$logfile"
@@ -355,15 +355,26 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					exit 1
 				else
 					mkdir "$HOME"/fonts
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					if command -v wget > /dev/null 2>&1; then
+						wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					elif command -v curl > /dev/null 2>&1; then
+						cd "$HOME"/fonts || exit
+						curl -fsSLO "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fsSLO "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fsSLO "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fsSLO "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fsSLO "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fsSLO "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					fi
 					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 					echo -e 2>&1 | tee -a "$logfile"
 					git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | tee -a "$logfile" > /dev/null 2>&1 && "$HOME"/fonts/install.sh
+					cd "$HOME" || exit
 					rm -Rf "$HOME"/fonts > /dev/null 2>&1
 				fi
 			fi
