@@ -68,7 +68,6 @@ echo -e "#"
 echo -e "======================================================================================="
 echo -e
 echo -e
-echo -e
 
 #=============
 # Install XCode Command Line Tools on macOS
@@ -413,13 +412,75 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 	echo -e 2>&1 | tee -a "$logfile"
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 
+		# Configure computer's name
+		computername=$(scutil --get ComputerName)
+		echo -e "Your current computer's name is \"$computername\""
+		read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r
+		echo -e 2>&1 | tee -a "$logfile"
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			while read -p "What name your computer should use? " -r name; do
+				if [[ "$name" =~ ^[A-z0-9-]{0,15}$ ]]; then
+					sudo scutil --set ComputerName "$name"
+					sudo scutil --set LocalHostName "$name"
+					sudo scutil --set HostName "$name"
+					echo -e "Computer's name successfully changed"
+					break
+				else
+					echo -e "Invalid computer name! The name should be between 1 and 15 characters and must not contain special characters except \"-\""
+				fi
+			done
+		fi
+
 		# Close any open System Preferences panes, to prevent them from overriding
 		# settings we’re about to change
+		echo -e "Setting up system preferences..." 2>&1 | tee -a "$logfile"
 		osascript -e 'tell application "System Preferences" to quit'
 
-		# Ask for the administrator password upfront
-		echo -e "Setting up system preferences..." 2>&1 | tee -a "$logfile"
-		sudo -v
+		# General
+		defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark" # Enable Dark Mode
+		defaults write NSGlobalDomain AppleHighlightColor -string "0.847059 0.847059 0.862745 Graphite" # Choose Graphite as the highlight color
+		defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 # Set the sidebar icon size to small
+
+		# Disable screen saver
+		defaults -currentHost write com.apple.screensaver idleTime -int 0
+
+		# Dock
+		defaults write com.apple.dock autohide -int 1 # Auto-hide the dock
+		defaults write com.apple.dock largesize -int 55 # Dock size
+		defaults write com.apple.dock magnification -int 1 # Enable magnification
+		defaults write com.apple.dock mineffect -string "scale" # Set the window minimize effect to Scale
+		defaults write com.apple.dock launchanim -int 0 # Disable launch animation
+		defaults write com.apple.dock tilesize -int 38 # Set the icons size
+
+		# Trackpad
+		defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 # Click when tapping on the trackpad
+		defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -int 0 # Right-click in bottom-right corner of the trackpad
+		defaults -currentHost write NSGlobalDomain com.apple.trackpad.scrollBehavior -int 2 # Do not invert scrolling
+
+		# Firewall
+		sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1 # Enable the firewall
+		sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -int 1 # Do not respond to ICMP
+
+		# Disable UI sound effects
+		defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
+
+		# Keyboard
+		defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false # Disable automatic capitalization
+		defaults write NSGlobalDomain NSUserQuotesArray -array '"\""' '"\""' '"'\''"' '"'\''"' # Adjust smart quotes
+		defaults write NSGlobalDomain KeyRepeat -int 1 # Enable fast key repeat
+		defaults write NSGlobalDomain InitialKeyRepeat -int 10 # Very fast initial key repeat
+		defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false # Disable automatic spelling correction
+
+		# Configure the clock to be 24h and display the date
+		defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM  HH:mm"
+
+		# Finder
+		defaults write NSGlobalDomain AppleShowAllExtensions -bool true # Show all file extensions
+		defaults write com.apple.finder ShowPathbar -bool true # Show full path
+		defaults write com.apple.finder ShowStatusBar -bool true # Show status bar
+		defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv" # View as list
+		defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" # Search in current folder
+		defaults write com.apple.finder ShowMountedServersOnDesktop -bool true # Show connected servers on the desktop
 
 		# Allow running applications from anywhere
 		sudo spctl --master-disable
@@ -433,28 +494,22 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 		# Keep-alive: update existing `sudo` time stamp until bootstrap has finished
 		while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-		# Disable automatic spelling correction
-		defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-		# Disable automatic capitalization
-		defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-
-		# Adjust smart quotes
-		defaults write NSGlobalDomain NSUserQuotesArray -array '"\""' '"\""' '"'\''"' '"'\''"'
-
-		# Enable Dark mode
-		defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
-
-		# Set a blazingly fast keyboard repeat rate
-		defaults write NSGlobalDomain KeyRepeat -int 1
-		defaults write NSGlobalDomain InitialKeyRepeat -int 10
-
 		# Build the 'locate' database
 		sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		sudo /usr/libexec/locate.updatedb 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 
+		# Kill affected apps
+		for app in "Dock" "Finder"; do
+			killall "${app}" > /dev/null 2>&1
+		done
+
 		echo -e "System preferences configured" 2>&1 | tee -a "$logfile"
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e "You may want to configure these settings in System Preferences:" 2>&1 | tee -a "$logfile"
+		echo -e "- In the \"General\" section, change the number of recent items (for TextEdit)" 2>&1 | tee -a "$logfile"
+		echo -e "- In the \"Security \& Privacy\" section, enable requiring a password immediately after lock and enable FileVault (if laptop)" 2>&1 | tee -a "$logfile"
+		echo -e "- Configure Siri if you wish to use it" 2>&1 | tee -a "$logfile"
+		echo -e "- In the \"Keyboard\" section, you may want to adjust keyboard shortcuts to your liking" 2>&1 | tee -a "$logfile"
+		echo -e "- Certain Finder preferences cannot be set fully. You may wish to review these" 2>&1 | tee -a "$logfile"
 	fi
 fi
 
