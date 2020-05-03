@@ -72,6 +72,33 @@ echo -e 2>&1 | tee -a "$logfile"
 #=============
 # macOS - Install XCode Command Line Tools
 #=============
+
+# Attempt headless installation
+if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
+	TOUCH=$(which touch)
+	echo -e "Searching online for the Command Line Tools" 2>&1 | tee -a "$logfile"
+
+	# This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
+	clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+	sudo "$TOUCH" "$clt_placeholder" 2>&1 | tee -a "$logfile"
+
+	clt_label_command="/usr/sbin/softwareupdate -l |
+                  	  grep -B 1 -E 'Command Line Tools' |
+                  	  awk -F'*' '/^ *\\*/ {print \$2}' |
+                  	  sed -e 's/^ *Label: //' -e 's/^ *//' |
+                  	  sort -V |
+                  	  tail -n1"
+	clt_label="$(printf "%s" "${1/"$'\n'"/}" "$(/bin/bash -c "$clt_label_command")")"
+
+	if [[ -n "$clt_label" ]]; then
+		echo -e "Installing $clt_label"
+		sudo "/usr/sbin/softwareupdate" "-i" "$clt_label" 2>&1 | tee -a "$logfile"
+		sudo "/bin/rm" "-f" "$clt_placeholder" 2>&1 | tee -a "$logfile"
+		sudo "/usr/bin/xcode-select" "--switch" "/Library/Developer/CommandLineTools" 2>&1 | tee -a "$logfile"
+	fi
+fi
+
+# Graphical installation if headless failed
 if [[ "$OSTYPE" == "darwin"* ]] && [[ -n $(pgrep "Install Command Line Developer Tools") ]]; then
 	echo -e "============== XCODE COMMAND LINE TOOLS ARE INSTALLING =============="
 	echo -e "#"
