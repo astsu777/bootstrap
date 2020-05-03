@@ -374,6 +374,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v git > /dev/null 2
 				if [[ "$OSTYPE" == "darwin"* ]]; then
 					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 				elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+					if [[ ! -d /usr/share/fonts ]]; then
+						sudo mkdir /usr/share/fonts
+					fi
 					if command -v fc-cache > /dev/null 2>&1; then
 						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 					else
