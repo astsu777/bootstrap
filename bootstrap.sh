@@ -496,6 +496,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			defaults write com.apple.dock mineffect -string "scale" # Set the window minimize effect to Scale
 			defaults write com.apple.dock launchanim -int 0 # Disable launch animation
 			defaults write com.apple.dock tilesize -int 38 # Set the icons size
+			defaults write com.apple.dock show-recents -int 0 # Do not show recent apps
 
 			# Trackpad
 			defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 # Click when tapping on the trackpad
