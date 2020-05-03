@@ -364,12 +364,12 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 						wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 					elif command -v curl > /dev/null 2>&1; then
 						cd "$HOME"/fonts || exit
-						curl -fsSLO "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fsSLO "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fsSLO "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fsSLO "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fsSLO "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fsSLO "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fSLO "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fSLO "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fSLO "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fSLO "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fSLO "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fSLO "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 					fi
 					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 					echo -e 2>&1 | tee -a "$logfile"
