@@ -13,14 +13,15 @@ In order to execute this script, download this repository and execute the .boots
 Execute the following commands for easy setup:
 
 ```
-curl -sLO https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh
-bash bootstrap.sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh)
 ```
 
 It is possible to chose where the dotfiles will be located by changing the *$dfloc* variable at the top of the script.
 
 The script will not install any software without asking first. All software can be refused in order to only install the dotfiles.
 For a list of software, see the text files in this repository.
+
+:Note: If the dotfiles are installed, it is possible to invoke this bootstrap script with the command *bootstrap*.
 
 # Logs
 The output to the console is pretty empty in order to keep everything clean. However, a log file is always created in the $HOME folder and is unique for each run. This way, it is possible to review errors if required.
