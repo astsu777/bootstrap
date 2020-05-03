@@ -423,6 +423,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; th
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]] && command -v brew > /dev/null 2>&1; then
 				brew install "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				chmod go-w "$(brew --prefix)/share" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				if command -v apt > /dev/null 2>&1; then
 					sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
