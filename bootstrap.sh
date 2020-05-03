@@ -20,7 +20,7 @@ date="$(date +%Y-%m-%d-%H%M%S)"
 logfile="$HOME/bootstrap_log_$date.txt"
 
 # Software lists
-homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install"
+homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
 macos_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt"
 macos_casks="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt"
 macos_store_common_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_store_common_apps.txt"
