@@ -101,8 +101,7 @@ if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 	else
 		echo -e "Installing Homebrew..."
 		echo -e
-		sudo chown -R "$(whoami)":admin /usr/local
-		ruby -e "$(curl -fsSL $homebrew)" 2>&1 | tee -a "$logfile"
+		/bin/bash -c "$(curl -fsSL "$homebrew")" 2>&1 | tee -a "$logfile"
 		brew doctor 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		brew update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 	fi
