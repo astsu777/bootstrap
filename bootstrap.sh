@@ -417,9 +417,9 @@ fi
 #============
 # Install ZSH on workstation
 #============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && ! command -v zsh > /dev/null 2>&1; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; then
 	echo -e "Your current shell is \"$SHELL\""
-	while read -p "Do you want to use ZSH as your shell? (Y/n)" -n 1 -r; do
+	while read -p "Do you want to use ZSH as your default shell? (Y/n)" -n 1 -r; do
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]] && command -v brew > /dev/null 2>&1; then
 				brew install "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
@@ -606,7 +606,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		if [[ ! -d "$dfloc" ]]; then
 			echo -e "Retrieving dotfiles..." 2>&1 | tee -a "$logfile"
-			mkdir -pv "$dfloc" 2>&1 | tee -a "$logfile"
 			git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 			git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
 		else
@@ -792,7 +791,7 @@ done
 #==============
 # macOS - Amethyst Configuration
 #==============
-if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
 	while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | tee -a "$logfile"
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
