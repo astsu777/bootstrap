@@ -611,7 +611,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 			sudo -v
 
 			# Build the 'locate' database
-			sudo updatedb
+			if command -v updatedb > /dev/null 2>&1; then
+				sudo updatedb
+			fi
 
 			echo -e "Preferences configured" 2>&1 | tee -a "$logfile"
 			echo -e 2>&1 | tee -a "$logfile"
