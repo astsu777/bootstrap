@@ -32,6 +32,7 @@ sxiv
 tmux
 transmission-cli
 tree
+ttf-jetbrains-mono
 unrar
 unzip
 urlview

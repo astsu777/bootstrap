@@ -70,7 +70,7 @@ echo -e 2>&1 | tee -a "$logfile"
 echo -e 2>&1 | tee -a "$logfile"
 
 #=============
-# Install XCode Command Line Tools on macOS
+# macOS - Install XCode Command Line Tools
 #=============
 if [[ "$OSTYPE" == "darwin"* ]] && [[ -n $(pgrep "Install Command Line Developer Tools") ]]; then
 	echo -e "============== XCODE COMMAND LINE TOOLS ARE INSTALLING =============="
@@ -92,7 +92,7 @@ elif [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools
 fi
 
 #=============
-# Install Homebrew on macOS
+# macOS - Install Homebrew
 #=============
 if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 	if [[ "$EUID" = 0 ]]; then
@@ -108,7 +108,7 @@ if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 fi
 
 #=============
-# Install 'sudo' on Linux (requirement)
+# Linux - Install 'sudo' (Requirement)
 #=============
 if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
 	echo -e "The package 'sudo' is not installed on the system" 2>&1 | tee -a "$logfile"
@@ -139,7 +139,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
 fi
 
 #=============
-# Install AUR helper on Arch Linux
+# Arch Linux - Install AUR Helper
 #=============
 if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! command -v yay > /dev/null 2>&1; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
@@ -174,7 +174,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! command -v 
 fi
 
 #=============
-# Install common packages on workstation
+# Workstation - Install Common Packages
 #=============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	while read -p "Do you want to install common applications? (Y/n) " -n 1 -r; do
@@ -258,7 +258,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 fi
 
 #=============
-# Install work packages on workstation
+# Workstation - Install Work Packages
 #=============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	while read -p "Do you want to install work applications? (Y/n) " -n 1 -r; do
@@ -341,43 +341,50 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 fi
 
 #============
-# Install fonts on workstation
+# Workstation - Install Fonts
 #============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v git > /dev/null 2>&1; then
 	while read -p "Do you want to install custom fonts? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | tee -a "$logfile"
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing custom fonts..." 2>&1 | tee -a "$logfile"
-			if [[ "$OSTYPE" == "darwin"* ]]; then
-				if [[ "$EUID" = 0 ]]; then
-					echo -e "Custom fonts cannot be installed as root!" 2>&1 | tee -a "$logfile"
-					echo -e "Please run this script as a normal user" 2>&1 | tee -a "$logfile"
-					exit 1
-				else
-					mkdir "$HOME"/fonts
-					if command -v wget > /dev/null 2>&1; then
-						wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					elif command -v curl > /dev/null 2>&1; then
-						cd "$HOME"/fonts || exit
-						curl -fSLO "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fSLO "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fSLO "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fSLO "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fSLO "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fSLO "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						for i in *; do mv "$i" "$(echo $i | sed 's/%20/ /g')"; done
-					fi
-					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					echo -e 2>&1 | tee -a "$logfile"
-					git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | tee -a "$logfile" > /dev/null 2>&1 && "$HOME"/fonts/install.sh
-					cd "$HOME" || exit
-					rm -Rf "$HOME"/fonts > /dev/null 2>&1
+			if [[ "$EUID" = 0 ]]; then
+				echo -e "Custom fonts cannot be installed as root!" 2>&1 | tee -a "$logfile"
+				echo -e "Please run this script as a normal user" 2>&1 | tee -a "$logfile"
+				exit 1
+			else
+				mkdir "$HOME"/fonts
+				if command -v wget > /dev/null 2>&1; then
+					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				elif command -v curl > /dev/null 2>&1; then
+					cd "$HOME"/fonts || exit
+					curl -fSLO "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					curl -fSLO "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					curl -fSLO "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					curl -fSLO "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					curl -fSLO "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					curl -fSLO "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
 				fi
+				if [[ "$OSTYPE" == "darwin"* ]]; then
+					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+					if command -v fc-cache > /dev/null 2>&1; then
+						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					else
+						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | tee -a "$logfile"
+						exit 1
+					fi
+				fi
+				echo -e 2>&1 | tee -a "$logfile"
+				git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | tee -a "$logfile" > /dev/null 2>&1 && "$HOME"/fonts/install.sh
+				cd "$HOME" || exit
+				rm -Rf "$HOME"/fonts > /dev/null 2>&1
 			fi
 			echo -e "Custom fonts installed" 2>&1 | tee -a "$logfile"
 			echo -e 2>&1 | tee -a "$logfile"
@@ -428,7 +435,7 @@ if command -v tmux > /dev/null 2>&1; then
 fi
 
 #============
-# Install ZSH on workstation
+# Workstation - Install ZSH
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; then
 	echo -e "Your current shell is \"$SHELL\""
@@ -614,7 +621,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 fi
 
 #==============
-# Dotfiles Installation
+# Dotfiles
 #==============
 
 # Clone the GitHub repository with all wanted dotfiles
@@ -806,7 +813,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 done
 
 #==============
-# macOS - Amethyst Configuration
+# macOS Workstation - Amethyst Configuration
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
 	while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
