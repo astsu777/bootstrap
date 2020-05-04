@@ -55,17 +55,13 @@ powerline_fonts="https://github.com/powerline/fonts"
 # TMUX Plugins
 tpm="https://github.com/tmux-plugins/tpm"
 
-
 #=============
 # Global Functions
 #=============
-
-# Log output to both console and log file
 logc() {
 	tee -a "$logfile"
 }
 
-# Log output to log file only
 lognoc() {
 	tee -a "$logfile" > /dev/null 2>&1
 }
@@ -687,27 +683,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			git -C "$dfloc" pull 2>&1 | lognoc
 		fi
 
-		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
-			echo -e "Installing custom scripts..." 2>&1 | lognoc
-			mkdir "$scriptsloc"
-			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
-			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
-		elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
-			while read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | lognoc
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Installing custom scripts..." 2>&1 | lognoc
-					rm -Rf "$scriptsloc" && mkdir "$scriptsloc"
-					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
-					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
-					break
-				fi
-			done
-		fi
-
 		# Remove and backup all original dotfiles
 		while read -p "Do you want to backup your current dotfiles? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | lognoc
@@ -857,6 +832,28 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		echo -e "New dotfiles installed" 2>&1 | lognoc
 		echo -e 2>&1 | lognoc
 		break
+
+		# Install custom scripts if not a SSH connection
+		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
+			echo -e "Installing custom scripts..." 2>&1 | lognoc
+			mkdir "$scriptsloc"
+			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
+			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+		elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
+			while read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | lognoc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Installing custom scripts..." 2>&1 | lognoc
+					rm -Rf "$scriptsloc" && mkdir "$scriptsloc"
+					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
+					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
+		fi
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e
 		break
