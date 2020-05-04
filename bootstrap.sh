@@ -70,14 +70,14 @@ lognoc() {
 # BEGINNING
 #=============
 echo -e
-echo -e "============================= BOOTSTRAP PROCESS BEGINNING =============================" 2>&1 | lognoc
-echo -e "#" 2>&1 | lognoc
-echo -e "# The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | lognoc
-echo -e "# If the script gives an error because of user rights, please follow the instructions" 2>&1 | lognoc
-echo -e "#" 2>&1 | lognoc
-echo -e "=======================================================================================" 2>&1 | lognoc
-echo -e 2>&1 | lognoc
-echo -e 2>&1 | lognoc
+echo -e "============================= BOOTSTRAP PROCESS BEGINNING =============================" 2>&1 | logc
+echo -e "#" 2>&1 | logc
+echo -e "# The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | logc
+echo -e "# If the script gives an error because of user rights, please follow the instructions" 2>&1 | logc
+echo -e "#" 2>&1 | logc
+echo -e "=======================================================================================" 2>&1 | logc
+echo -e 2>&1 | logc
+echo -e 2>&1 | logc
 
 #=============
 # macOS - Install XCode Command Line Tools
@@ -86,11 +86,11 @@ echo -e 2>&1 | lognoc
 # Attempt headless installation
 if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
 	TOUCH=$(which touch)
-	echo -e "Searching online for the Command Line Tools" 2>&1 | lognoc
+	echo -e "Searching online for the Command Line Tools" 2>&1 | logc
 
 	# This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
 	clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
-	sudo "$TOUCH" "$clt_placeholder" 2>&1 | lognoc
+	sudo "$TOUCH" "$clt_placeholder" 2>&1 | logc
 
 	clt_label_command="/usr/sbin/softwareupdate -l |
                   	  grep -B 1 -E 'Command Line Tools' |
@@ -102,9 +102,9 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]
 
 	if [[ -n "$clt_label" ]]; then
 		echo -e "Installing $clt_label"
-		sudo "/usr/sbin/softwareupdate" "-i" "$clt_label" 2>&1 | lognoc
-		sudo "/bin/rm" "-f" "$clt_placeholder" 2>&1 | lognoc
-		sudo "/usr/bin/xcode-select" "--switch" "/Library/Developer/CommandLineTools" 2>&1 | lognoc
+		sudo "/usr/sbin/softwareupdate" "-i" "$clt_label" 2>&1 | logc
+		sudo "/bin/rm" "-f" "$clt_placeholder" 2>&1 | logc
+		sudo "/usr/bin/xcode-select" "--switch" "/Library/Developer/CommandLineTools" 2>&1 | logc
 	fi
 fi
 
@@ -133,12 +133,12 @@ fi
 #=============
 if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 	if [[ "$EUID" = 0 ]]; then
-		echo -e "Homebrew cannot be installed as root!" 2>&1 | lognoc
+		echo -e "Homebrew cannot be installed as root!" 2>&1 | logc
 		exit 1
 	else
-		echo -e "Installing Homebrew..." 2>&1 | lognoc
-		echo -e 2>&1 | lognoc
-		/bin/bash -c "$(curl -fsSL "$homebrew")" 2>&1 | lognoc
+		echo -e "Installing Homebrew..." 2>&1 | logc
+		echo -e 2>&1 | logc
+		/bin/bash -c "$(curl -fsSL "$homebrew")" 2>&1 | logc
 		brew doctor 2>&1 | lognoc
 		brew update 2>&1 | lognoc
 	fi
@@ -148,10 +148,10 @@ fi
 # Linux - Install 'sudo' (Requirement)
 #=============
 if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
-	echo -e "The package 'sudo' is not installed on the system" 2>&1 | lognoc
-	echo -e "Installing 'sudo'..." 2>&1 | lognoc
+	echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
+	echo -e "Installing 'sudo'..." 2>&1 | logc
 	if [[ "$EUID" != 0 ]]; then
-		echo -e "Please run the script as root in order to install the requirements" 2>&1 | lognoc
+		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
 		exit 1
 	else
 		if command -v apt > /dev/null 2>&1; then
@@ -167,10 +167,10 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
 			pacman -Sy 2>&1 | lognoc
 			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
 		fi
-		echo -e "Package 'sudo' is now installed" 2>&1 | lognoc
-		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | lognoc
-		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | lognoc
-		echo -e 2>&1 | lognoc
+		echo -e "Package 'sudo' is now installed" 2>&1 | logc
+		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | logc
+		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | logc
+		echo -e 2>&1 | logc
 		exit 0
 	fi
 fi
@@ -180,25 +180,25 @@ fi
 #=============
 if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! command -v yay > /dev/null 2>&1; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | lognoc
+		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			if [[ "$EUID" = 0 ]]; then
-				echo -e "This AUR helper cannot be installed as root!" 2>&1 | lognoc
+				echo -e "This AUR helper cannot be installed as root!" 2>&1 | logc
 				exit 1
 			else
 				if sudo -v > /dev/null 2>&1; then
-					echo -e "Installing 'yay', an AUR helper..." 2>&1 | lognoc
+					echo -e "Installing 'yay', an AUR helper..." 2>&1 | logc
 					sudo pacman -Sy 2>&1 | lognoc
 					sudo pacman -S git base-devel --needed --noconfirm 2>&1 | lognoc
 					git clone "$aurhelper" "$HOME"/yay 2>&1 | lognoc
-					cd "$HOME"/yay && makepkg -si 2>&1 | lognoc
+					cd "$HOME"/yay && makepkg -si 2>&1 | logc
 					cd "$HOME" || exit
 					rm -Rf "$HOME"/yay
-					echo -e "AUR Helper successfully installed" 2>&1 | lognoc
-					echo -e 2>&1 | lognoc
+					echo -e "AUR Helper successfully installed" 2>&1 | logc
+					echo -e 2>&1 | logc
 				else
-					echo -e "Your user is not a member of the sudoers group!" 2>&1 | lognoc
-					echo -e "Please run this script with a user with sudo rights" 2>&1 | lognoc
+					echo -e "Your user is not a member of the sudoers group!" 2>&1 | logc
+					echo -e "Please run this script with a user with sudo rights" 2>&1 | logc
 					exit 0
 				fi
 			fi
@@ -215,13 +215,13 @@ fi
 #=============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	while read -p "Do you want to install common applications? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | lognoc
+		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing common software..." 2>&1 | lognoc
+			echo -e "Installing common software..." 2>&1 | logc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
-					echo -e "Common applications cannot be installed as root!" 2>&1 | lognoc
-					echo -e "Please run this script as a normal user" 2>&1 | lognoc
+					echo -e "Common applications cannot be installed as root!" 2>&1 | logc
+					echo -e "Please run this script as a normal user" 2>&1 | logc
 					exit 1
 				else
 					if command -v brew > /dev/null 2>&1; then
@@ -234,13 +234,13 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					fi
 					if commnd -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
-							echo -e 2>&1 | lognoc
+							echo -e 2>&1 | logc
 							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-								echo -e "Installing App Store common applications..." 2>&1 | lognoc
+								echo -e "Installing App Store common applications..." 2>&1 | logc
 								curl -fsSL "$macos_store_common_apps" --output "$HOME"/macos_store_common_apps.txt 2>&1 | lognoc
 								awk '{print $1}' "$HOME"/macos_store_common_apps.txt | xargs /usr/local/bin/mas install 2>&1 | lognoc
 								rm "$HOME"/macos_store*.txt
-								echo -e "App Store common applications installed" 2>&1 | lognoc
+								echo -e "App Store common applications installed" 2>&1 | logc
 								break
 							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 								echo -e
@@ -284,8 +284,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					rm "$HOME"/arch_common*.txt
 				fi
 			fi
-			echo -e "Common software installed" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
+			echo -e "Common software installed" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -299,13 +299,13 @@ fi
 #=============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	while read -p "Do you want to install work applications? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | lognoc
+		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing work software..." 2>&1 | lognoc
+			echo -e "Installing work software..." 2>&1 | logc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
-					echo -e "Work applications cannot be installed as root!" 2>&1 | lognoc
-					echo -e "Please run this script as a normal user" 2>&1 | lognoc
+					echo -e "Work applications cannot be installed as root!" 2>&1 | logc
+					echo -e "Please run this script as a normal user" 2>&1 | logc
 					exit 1
 				else
 					if command -v brew > /dev/null 2>&1; then
@@ -317,13 +317,13 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					fi
 					if command -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
-							echo -e 2>&1 | lognoc
+							echo -e 2>&1 | logc
 							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-								echo -e "Installing App Store work applications..." 2>&1 | lognoc
+								echo -e "Installing App Store work applications..." 2>&1 | logc
 								curl -fsSL "$macos_store_work_apps" --output "$HOME"/macos_store_work_apps.txt 2>&1 | lognoc
 								awk '{print $1}' "$HOME"/macos_store_work_apps.txt | xargs /usr/local/bin/mas install 2>&1 | lognoc
 								rm "$HOME"/macos_store*.txt
-								echo -e "App Store work applications installed" 2>&1 | lognoc
+								echo -e "App Store work applications installed" 2>&1 | logc
 								break
 							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 								echo -e
@@ -367,8 +367,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					rm "$HOME"/arch_work*.txt
 				fi
 			fi
-			echo -e "Work software installed" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
+			echo -e "Work software installed" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -382,12 +382,12 @@ fi
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v git > /dev/null 2>&1; then
 	while read -p "Do you want to install custom fonts? (Y/n) " -n 1 -r; do
-	echo -e 2>&1 | lognoc
+	echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing custom fonts..." 2>&1 | lognoc
+			echo -e "Installing custom fonts..." 2>&1 | logc
 			if [[ "$EUID" = 0 ]]; then
-				echo -e "Custom fonts cannot be installed as root!" 2>&1 | lognoc
-				echo -e "Please run this script as a normal user" 2>&1 | lognoc
+				echo -e "Custom fonts cannot be installed as root!" 2>&1 | logc
+				echo -e "Please run this script as a normal user" 2>&1 | logc
 				exit 1
 			else
 				mkdir "$HOME"/fonts
@@ -417,17 +417,17 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v git > /dev/null 2
 					if command -v fc-cache > /dev/null 2>&1; then
 						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | lognoc
 					else
-						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | lognoc
+						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | logc
 						exit 1
 					fi
 				fi
-				echo -e 2>&1 | lognoc
+				echo -e 2>&1 | logc
 				git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | lognoc && "$HOME"/fonts/install.sh
 				cd "$HOME" || exit
 				rm -Rf "$HOME"/fonts > /dev/null 2>&1
 			fi
-			echo -e "Custom fonts installed" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
+			echo -e "Custom fonts installed" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -442,14 +442,14 @@ fi
 if command -v tmux > /dev/null 2>&1; then
 	if [[ -d "$HOME"/.tmux/plugins/tpm ]]; then
 		while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | lognoc
+			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | lognoc
+				echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | logc
 				rm -Rf "$HOME"/.tmux/plugins/tpm
 				git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | lognoc
-				echo -e "TMUX Plugin Manager installed" 2>&1 | lognoc
-				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | lognoc
-				echo -e 2>&1 | lognoc
+				echo -e "TMUX Plugin Manager installed" 2>&1 | logc
+				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
+				echo -e 2>&1 | logc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				echo -e
@@ -458,13 +458,13 @@ if command -v tmux > /dev/null 2>&1; then
 		done
 	else
 		while read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | lognoc
+			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Installing TMUX Plugin Manager..." 2>&1 | lognoc
+				echo -e "Installing TMUX Plugin Manager..." 2>&1 | logc
 				git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | lognoc
-				echo -e "TMUX Plugin Manager installed" 2>&1 | lognoc
-				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | lognoc
-				echo -e 2>&1 | lognoc
+				echo -e "TMUX Plugin Manager installed" 2>&1 | logc
+				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
+				echo -e 2>&1 | logc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				echo -e
@@ -480,7 +480,7 @@ fi
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; then
 	echo -e "Your current shell is \"$SHELL\""
 	while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | lognoc
+		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]] && command -v brew > /dev/null 2>&1; then
 				brew install "${zsh_tools[@]}" 2>&1 | lognoc
@@ -504,10 +504,10 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; th
 				echo -e "Please run the script as root in order to install the requirements"
 				exit 1
 			else
-				chsh -s /bin/zsh 2>&1 | lognoc
+				chsh -s /bin/zsh 2>&1 | logc
 			fi
-			echo -e "ZSH successfully installed" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
+			echo -e "ZSH successfully installed" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -521,26 +521,26 @@ fi
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]; then
 	while read -p "Do you want to setup System Preferences? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | lognoc
+		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 
 			# Configure computer's name
 			computername=$(scutil --get ComputerName)
-			echo -e "Your current computer's name is \"$computername\"" 2>&1 | lognoc
+			echo -e "Your current computer's name is \"$computername\"" 2>&1 | logc
 			while read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | lognoc
+				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					while read -p "What name your computer should use? " -r name; do
 						if [[ "$name" =~ ^[A-z0-9-]{0,15}$ ]]; then
 							sudo scutil --set ComputerName "$name"
 							sudo scutil --set LocalHostName "$name"
 							sudo scutil --set HostName "$name"
-							echo -e "Computer's name successfully changed" 2>&1 | lognoc
-							echo -e 2>&1 | lognoc
+							echo -e "Computer's name successfully changed" 2>&1 | logc
+							echo -e 2>&1 | logc
 							break
 						else
-							echo -e "Invalid computer name! The name should be between 1 and 15 characters and must not contain special characters except \"-\"" 2>&1 | lognoc
-							echo -e 2>&1 | lognoc
+							echo -e "Invalid computer name! The name should be between 1 and 15 characters and must not contain special characters except \"-\"" 2>&1 | logc
+							echo -e 2>&1 | logc
 						fi
 					done
 				break
@@ -552,7 +552,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 
 			# Close any open System Preferences panes, to prevent them from overriding
 			# settings we’re about to change
-			echo -e "Setting up system preferences..." 2>&1 | lognoc
+			echo -e "Setting up system preferences..." 2>&1 | logc
 			osascript -e 'tell application "System Preferences" to quit'
 
 			# General
@@ -619,15 +619,15 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | lognoc
 			sudo /usr/libexec/locate.updatedb 2>&1 | lognoc
 
-			echo -e "System preferences configured. Some settings require a reboot" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
-			echo -e "You may want to configure these settings in System Preferences:" 2>&1 | lognoc
-			echo -e "- In the \"General\" section, change the number of recent items (for TextEdit)" 2>&1 | lognoc
-			echo -e "- In the \"Security \& Privacy\" section, enable requiring a password immediately after lock and enable FileVault (if laptop)" 2>&1 | lognoc
-			echo -e "- Configure Siri if you wish to use it" 2>&1 | lognoc
-			echo -e "- In the \"Keyboard\" section, you may want to adjust keyboard shortcuts to your liking" 2>&1 | lognoc
-			echo -e "- Certain Finder preferences cannot be set fully. You may wish to review these" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
+			echo -e "System preferences configured. Some settings require a reboot" 2>&1 | logc
+			echo -e 2>&1 | logc
+			echo -e "You may want to configure these settings in System Preferences:" 2>&1 | logc
+			echo -e "- In the \"General\" section, change the number of recent items (for TextEdit)" 2>&1 | logc
+			echo -e "- In the \"Security \& Privacy\" section, enable requiring a password immediately after lock and enable FileVault (if laptop)" 2>&1 | logc
+			echo -e "- Configure Siri if you wish to use it" 2>&1 | logc
+			echo -e "- In the \"Keyboard\" section, you may want to adjust keyboard shortcuts to your liking" 2>&1 | logc
+			echo -e "- Certain Finder preferences cannot be set fully. You may wish to review these" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -641,11 +641,11 @@ fi
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]]; then
 	while read -p "Do you want to configure preferences? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | lognoc
+		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 
 			# Ask for the administrator password upfront
-			echo -e "Starting configuration process..." 2>&1 | lognoc
+			echo -e "Starting configuration process..." 2>&1 | logc
 			sudo -v
 
 			# Build the 'locate' database
@@ -653,8 +653,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 				sudo updatedb
 			fi
 
-			echo -e "Preferences configured" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
+			echo -e "Preferences configured" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -669,26 +669,47 @@ fi
 
 # Clone the GitHub repository with all wanted dotfiles
 while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
-	echo -e 2>&1 | lognoc
+	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		if ! command -v git > /dev/null 2>&1; then
 			echo -e "Git is required to install the dotfiles. Please install it before executing this script!"
 			exit 1
 		fi
 		if [[ ! -d "$dfloc" ]]; then
-			echo -e "Retrieving dotfiles..." 2>&1 | lognoc
+			echo -e "Retrieving dotfiles..." 2>&1 | logc
 			git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | lognoc
 			git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
 		else
 			git -C "$dfloc" pull 2>&1 | lognoc
 		fi
 
+		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
+			echo -e "Installing custom scripts..." 2>&1 | logc
+			mkdir "$scriptsloc"
+			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
+			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+		elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
+			while read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Installing custom scripts..." 2>&1 | logc
+					rm -Rf "$scriptsloc" && mkdir "$scriptsloc"
+					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
+					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
+		fi
+
 		# Remove and backup all original dotfiles
 		while read -p "Do you want to backup your current dotfiles? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | lognoc
+			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				bkpdf=1
-				echo -e "Backup your current dotfiles to $HOME/.old-dotfiles..." 2>&1 | lognoc
+				echo -e "Backup your current dotfiles to $HOME/.old-dotfiles..." 2>&1 | logc
 				if [[ ! -d "$HOME"/.old-dotfiles ]]; then
 					mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
 				else
@@ -735,9 +756,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 		done
 		if [[ -f "$HOME"/.config/weechat/sec.conf ]]; then
-			echo -e "A Weechat private configuration has been detected (sec.conf)." 2>&1 | lognoc
+			echo -e "A Weechat private configuration has been detected (sec.conf)." 2>&1 | logc
 			while read -p "Do you want to reset the private Weechat configuration (sec.conf)? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | lognoc
+				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					if [[ -n "$bkpdf" ]]; then
 						mv "$HOME"/.config/weechat "$HOME"/.old-dotfiles/weechat > /dev/null 2>&1
@@ -761,7 +782,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 
 		# Create symlinks in the home folder
-		echo -e "Installing new dotfiles..." 2>&1 | lognoc
+		echo -e "Installing new dotfiles..." 2>&1 | logc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
 		if command -v bash > /dev/null 2>&1; then
 			ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
@@ -829,31 +850,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		else
 			ln -s "$dfloc"/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 		fi
-		echo -e "New dotfiles installed" 2>&1 | lognoc
-		echo -e 2>&1 | lognoc
+		echo -e "New dotfiles installed" 2>&1 | logc
+		echo -e 2>&1 | logc
 		break
-
-		# Install custom scripts if not a SSH connection
-		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
-			echo -e "Installing custom scripts..." 2>&1 | lognoc
-			mkdir "$scriptsloc"
-			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
-			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
-		elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
-			while read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | lognoc
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Installing custom scripts..." 2>&1 | lognoc
-					rm -Rf "$scriptsloc" && mkdir "$scriptsloc"
-					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
-					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
-					break
-				fi
-			done
-		fi
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e
 		break
@@ -865,9 +864,9 @@ done
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
 	while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | lognoc
+		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Setting up Amethyst..." 2>&1 | lognoc
+			echo -e "Setting up Amethyst..." 2>&1 | logc
 			# Set windows to always stay in floating mode
 			defaults write com.amethyst.Amethyst.plist floating '(
 		        	{
@@ -933,8 +932,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			# Delete the plist cache
 			defaults read com.amethyst.Amethyst.plist > /dev/null 2>&1
 
-			echo -e "Amethyst configured" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
+			echo -e "Amethyst configured" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -956,83 +955,83 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 # Install server packages
 #=============
 	while read -p "[SERVER SESSION DETECTED] Do you want to install useful tools? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | lognoc
+		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing useful server tools..." 2>&1 | lognoc
+			echo -e "Installing useful server tools..." 2>&1 | logc
 			if [[ "$EUID" = 0 ]]; then
 				if command -v apt > /dev/null 2>&1; then
-					apt update 2>&1 | lognoc
+					apt update 2>&1 | logc
 					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						apt install -y "$line" 2>&1 | lognoc
+						apt install -y "$line" 2>&1 | logc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v apt-get > /dev/null 2>&1; then
-					apt-get update 2>&1 | lognoc
+					apt-get update 2>&1 | logc
 					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						apt-get install -y "$line" 2>&1 | lognoc
+						apt-get install -y "$line" 2>&1 | logc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v yum > /dev/null 2>&1; then
-					yum update -y 2>&1 | lognoc
+					yum update -y 2>&1 | logc
 					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						yum install -y "$line" 2>&1 | lognoc
+						yum install -y "$line" 2>&1 | logc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v pacman > /dev/null 2>&1; then
-					pacman -Syyu --noconfirm 2>&1 | lognoc
+					pacman -Syyu --noconfirm 2>&1 | logc
 					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						pacman -S --noconfirm --needed "$line" 2>&1 | lognoc
+						pacman -S --noconfirm --needed "$line" 2>&1 | logc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				fi
 			elif ! command -v sudo > /dev/null 2>&1; then
-				echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | lognoc
+				echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
 				exit 1
 			else
 				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | lognoc
+					sudo apt update 2>&1 | logc
 					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo apt install -y "$line" 2>&1 | lognoc
+						sudo apt install -y "$line" 2>&1 | logc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get update 2>&1 | lognoc
+					sudo apt-get update 2>&1 | logc
 					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo apt-get install -y "$line" 2>&1 | lognoc
+						sudo apt-get install -y "$line" 2>&1 | logc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v yum > /dev/null 2>&1; then
-					sudo yum update -y 2>&1 | lognoc
+					sudo yum update -y 2>&1 | logc
 					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo yum install -y "$line" 2>&1 | lognoc
+						sudo yum install -y "$line" 2>&1 | logc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -Syyu --noconfirm 2>&1 | lognoc
+					sudo pacman -Syyu --noconfirm 2>&1 | logc
 					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo pacman -S --needed --noconfirm "$line" 2>&1 | lognoc
+						sudo pacman -S --needed --noconfirm "$line" 2>&1 | logc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				fi
 			fi
-			echo -e "Useful server tools installed" 2>&1 | lognoc
-			echo -e 2>&1 | lognoc
+			echo -e "Useful server tools installed" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -1044,9 +1043,9 @@ fi
 #==============
 # DONE
 #==============
-echo -e 2>&1 | lognoc
-echo -e 2>&1 | lognoc
-echo -e "======= ALL DONE =======" 2>&1 | lognoc
-echo -e 2>&1 | lognoc
-echo -e "If anything has been modified, please reboot the computer for all the settings to be applied (not applicable to servers)." 2>&1 | lognoc
-echo -e "A log file called \"$logfile\" contains the details of all operations. Check if for errors." 2>&1 | lognoc
+echo -e 2>&1 | logc
+echo -e 2>&1 | logc
+echo -e "======= ALL DONE =======" 2>&1 | logc
+echo -e 2>&1 | logc
+echo -e "If anything has been modified, please reboot the computer for all the settings to be applied (not applicable to servers)." 2>&1 | logc
+echo -e "A log file called \"$logfile\" contains the details of all operations. Check if for errors." 2>&1 | logc
