@@ -57,17 +57,31 @@ tpm="https://github.com/tmux-plugins/tpm"
 
 
 #=============
+# Global Functions
+#=============
+
+# Log output to both console and log file
+logc() {
+	tee -a "$logfile"
+}
+
+# Log output to log file only
+lognoc() {
+	tee -a "$logfile" > /dev/null 2>&1
+}
+
+#=============
 # BEGINNING
 #=============
 echo -e
-echo -e "============================= BOOTSTRAP PROCESS BEGINNING =============================" 2>&1 | tee -a "$logfile"
-echo -e "#" 2>&1 | tee -a "$logfile"
-echo -e "# The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | tee -a "$logfile"
-echo -e "# If the script gives an error because of user rights, please follow the instructions" 2>&1 | tee -a "$logfile"
-echo -e "#" 2>&1 | tee -a "$logfile"
-echo -e "=======================================================================================" 2>&1 | tee -a "$logfile"
-echo -e 2>&1 | tee -a "$logfile"
-echo -e 2>&1 | tee -a "$logfile"
+echo -e "============================= BOOTSTRAP PROCESS BEGINNING =============================" 2>&1 | lognoc
+echo -e "#" 2>&1 | lognoc
+echo -e "# The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | lognoc
+echo -e "# If the script gives an error because of user rights, please follow the instructions" 2>&1 | lognoc
+echo -e "#" 2>&1 | lognoc
+echo -e "=======================================================================================" 2>&1 | lognoc
+echo -e 2>&1 | lognoc
+echo -e 2>&1 | lognoc
 
 #=============
 # macOS - Install XCode Command Line Tools
@@ -76,11 +90,11 @@ echo -e 2>&1 | tee -a "$logfile"
 # Attempt headless installation
 if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
 	TOUCH=$(which touch)
-	echo -e "Searching online for the Command Line Tools" 2>&1 | tee -a "$logfile"
+	echo -e "Searching online for the Command Line Tools" 2>&1 | lognoc
 
 	# This temporary file prompts the 'softwareupdate' utility to list the Command Line Tools
 	clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
-	sudo "$TOUCH" "$clt_placeholder" 2>&1 | tee -a "$logfile"
+	sudo "$TOUCH" "$clt_placeholder" 2>&1 | lognoc
 
 	clt_label_command="/usr/sbin/softwareupdate -l |
                   	  grep -B 1 -E 'Command Line Tools' |
@@ -92,9 +106,9 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]
 
 	if [[ -n "$clt_label" ]]; then
 		echo -e "Installing $clt_label"
-		sudo "/usr/sbin/softwareupdate" "-i" "$clt_label" 2>&1 | tee -a "$logfile"
-		sudo "/bin/rm" "-f" "$clt_placeholder" 2>&1 | tee -a "$logfile"
-		sudo "/usr/bin/xcode-select" "--switch" "/Library/Developer/CommandLineTools" 2>&1 | tee -a "$logfile"
+		sudo "/usr/sbin/softwareupdate" "-i" "$clt_label" 2>&1 | lognoc
+		sudo "/bin/rm" "-f" "$clt_placeholder" 2>&1 | lognoc
+		sudo "/usr/bin/xcode-select" "--switch" "/Library/Developer/CommandLineTools" 2>&1 | lognoc
 	fi
 fi
 
@@ -123,14 +137,14 @@ fi
 #=============
 if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 	if [[ "$EUID" = 0 ]]; then
-		echo -e "Homebrew cannot be installed as root!" 2>&1 | tee -a "$logfile"
+		echo -e "Homebrew cannot be installed as root!" 2>&1 | lognoc
 		exit 1
 	else
-		echo -e "Installing Homebrew..." 2>&1 | tee -a "$logfile"
-		echo -e 2>&1 | tee -a "$logfile"
-		/bin/bash -c "$(curl -fsSL "$homebrew")" 2>&1 | tee -a "$logfile"
-		brew doctor 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-		brew update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+		echo -e "Installing Homebrew..." 2>&1 | lognoc
+		echo -e 2>&1 | lognoc
+		/bin/bash -c "$(curl -fsSL "$homebrew")" 2>&1 | lognoc
+		brew doctor 2>&1 | lognoc
+		brew update 2>&1 | lognoc
 	fi
 fi
 
@@ -138,29 +152,29 @@ fi
 # Linux - Install 'sudo' (Requirement)
 #=============
 if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
-	echo -e "The package 'sudo' is not installed on the system" 2>&1 | tee -a "$logfile"
-	echo -e "Installing 'sudo'..." 2>&1 | tee -a "$logfile"
+	echo -e "The package 'sudo' is not installed on the system" 2>&1 | lognoc
+	echo -e "Installing 'sudo'..." 2>&1 | lognoc
 	if [[ "$EUID" != 0 ]]; then
-		echo -e "Please run the script as root in order to install the requirements" 2>&1 | tee -a "$logfile"
+		echo -e "Please run the script as root in order to install the requirements" 2>&1 | lognoc
 		exit 1
 	else
 		if command -v apt > /dev/null 2>&1; then
-			apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			apt install -y sudo 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			apt update 2>&1 | lognoc
+			apt install -y sudo 2>&1 | lognoc
 		elif command -v apt-get > /dev/null 2>&1; then
-			apt-get update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			apt-get install -y sudo 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			apt-get update 2>&1 | lognoc
+			apt-get install -y sudo 2>&1 | lognoc
 		elif command -v yum > /dev/null 2>&1; then
-			yum update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			yum install -y sudo 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			yum update -y 2>&1 | lognoc
+			yum install -y sudo 2>&1 | lognoc
 		elif command -v pacman > /dev/null 2>&1; then
-			pacman -Sy 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			pacman -S sudo --needed --noconfirm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			pacman -Sy 2>&1 | lognoc
+			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
 		fi
-		echo -e "Package 'sudo' is now installed" 2>&1 | tee -a "$logfile"
-		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | tee -a "$logfile"
-		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | tee -a "$logfile"
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e "Package 'sudo' is now installed" 2>&1 | lognoc
+		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | lognoc
+		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | lognoc
+		echo -e 2>&1 | lognoc
 		exit 0
 	fi
 fi
@@ -170,25 +184,25 @@ fi
 #=============
 if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! command -v yay > /dev/null 2>&1; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			if [[ "$EUID" = 0 ]]; then
-				echo -e "This AUR helper cannot be installed as root!" 2>&1 | tee -a "$logfile"
+				echo -e "This AUR helper cannot be installed as root!" 2>&1 | lognoc
 				exit 1
 			else
 				if sudo -v > /dev/null 2>&1; then
-					echo -e "Installing 'yay', an AUR helper..." 2>&1 | tee -a "$logfile"
-					sudo pacman -Sy 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					sudo pacman -S git base-devel --needed --noconfirm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					git clone "$aurhelper" "$HOME"/yay 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					cd "$HOME"/yay && makepkg -si 2>&1 | tee -a "$logfile"
+					echo -e "Installing 'yay', an AUR helper..." 2>&1 | lognoc
+					sudo pacman -Sy 2>&1 | lognoc
+					sudo pacman -S git base-devel --needed --noconfirm 2>&1 | lognoc
+					git clone "$aurhelper" "$HOME"/yay 2>&1 | lognoc
+					cd "$HOME"/yay && makepkg -si 2>&1 | lognoc
 					cd "$HOME" || exit
 					rm -Rf "$HOME"/yay
-					echo -e "AUR Helper successfully installed" 2>&1 | tee -a "$logfile"
-					echo -e 2>&1 | tee -a "$logfile"
+					echo -e "AUR Helper successfully installed" 2>&1 | lognoc
+					echo -e 2>&1 | lognoc
 				else
-					echo -e "Your user is not a member of the sudoers group!" 2>&1 | tee -a "$logfile"
-					echo -e "Please run this script with a user with sudo rights" 2>&1 | tee -a "$logfile"
+					echo -e "Your user is not a member of the sudoers group!" 2>&1 | lognoc
+					echo -e "Please run this script with a user with sudo rights" 2>&1 | lognoc
 					exit 0
 				fi
 			fi
@@ -205,32 +219,32 @@ fi
 #=============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	while read -p "Do you want to install common applications? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing common software..." 2>&1 | tee -a "$logfile"
+			echo -e "Installing common software..." 2>&1 | lognoc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
-					echo -e "Common applications cannot be installed as root!" 2>&1 | tee -a "$logfile"
-					echo -e "Please run this script as a normal user" 2>&1 | tee -a "$logfile"
+					echo -e "Common applications cannot be installed as root!" 2>&1 | lognoc
+					echo -e "Please run this script as a normal user" 2>&1 | lognoc
 					exit 1
 				else
 					if command -v brew > /dev/null 2>&1; then
-						brew update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fsSL "$macos_casks" --output "$HOME"/macos_common_casks.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fsSL "$macos_apps" --output "$HOME"/macos_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						< "$HOME"/macos_common_casks.txt xargs brew cask install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						< "$HOME"/macos_common_apps.txt xargs brew install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						brew update 2>&1 | lognoc
+						curl -fsSL "$macos_casks" --output "$HOME"/macos_common_casks.txt 2>&1 | lognoc
+						curl -fsSL "$macos_apps" --output "$HOME"/macos_common_apps.txt 2>&1 | lognoc
+						< "$HOME"/macos_common_casks.txt xargs brew cask install 2>&1 | lognoc
+						< "$HOME"/macos_common_apps.txt xargs brew install 2>&1 | lognoc
 						rm "$HOME"/macos_common*.txt
 					fi
 					if commnd -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
-							echo -e 2>&1 | tee -a "$logfile"
+							echo -e 2>&1 | lognoc
 							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-								echo -e "Installing App Store common applications..." 2>&1 | tee -a "$logfile"
-								curl -fsSL "$macos_store_common_apps" --output "$HOME"/macos_store_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-								awk '{print $1}' "$HOME"/macos_store_common_apps.txt | xargs /usr/local/bin/mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+								echo -e "Installing App Store common applications..." 2>&1 | lognoc
+								curl -fsSL "$macos_store_common_apps" --output "$HOME"/macos_store_common_apps.txt 2>&1 | lognoc
+								awk '{print $1}' "$HOME"/macos_store_common_apps.txt | xargs /usr/local/bin/mas install 2>&1 | lognoc
 								rm "$HOME"/macos_store*.txt
-								echo -e "App Store common applications installed" 2>&1 | tee -a "$logfile"
+								echo -e "App Store common applications installed" 2>&1 | lognoc
 								break
 							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 								echo -e
@@ -241,41 +255,41 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo apt update 2>&1 | lognoc
+					curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo apt install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo apt install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < debian_common_apps.txt)
 					rm "$HOME"/debian_common*.txt
 				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo apt-get update 2>&1 | lognoc
+					curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo apt-get install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo apt-get install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < debian_common_apps.txt)
 					rm "$HOME"/debian_common*.txt
 				elif command -v yum > /dev/null 2>&1; then
-					sudo yum update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fsSL "$redhat_apps" --output "$HOME"/redhat_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo yum update -y 2>&1 | lognoc
+					curl -fsSL "$redhat_apps" --output "$HOME"/redhat_common_apps.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo yum install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo yum install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < redhat_common_apps.txt)
 					rm "$HOME"/redhat_common*.txt
 				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -Syyu --noconfirm 2>&1| tee -a "$logfile" > /dev/null 2>&1
-					curl -fsSL "$arch_apps" --output "$HOME"/arch_common_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo pacman -Syyu --noconfirm 2>&1| lognoc
+					curl -fsSL "$arch_apps" --output "$HOME"/arch_common_apps.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo pacman -S --needed --noconfirm "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo pacman -S --needed --noconfirm "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < arch_common_apps.txt)
 					rm "$HOME"/arch_common*.txt
 				fi
 			fi
-			echo -e "Common software installed" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e "Common software installed" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -289,31 +303,31 @@ fi
 #=============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	while read -p "Do you want to install work applications? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing work software..." 2>&1 | tee -a "$logfile"
+			echo -e "Installing work software..." 2>&1 | lognoc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
-					echo -e "Work applications cannot be installed as root!" 2>&1 | tee -a "$logfile"
-					echo -e "Please run this script as a normal user" 2>&1 | tee -a "$logfile"
+					echo -e "Work applications cannot be installed as root!" 2>&1 | lognoc
+					echo -e "Please run this script as a normal user" 2>&1 | lognoc
 					exit 1
 				else
 					if command -v brew > /dev/null 2>&1; then
-						curl -fsSL "$macos_work_apps" --output "$HOME"/macos_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						curl -fsSL "$macos_work_casks" --output "$HOME"/macos_work_casks.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						< macos_work_casks.txt xargs brew cask install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-						< macos_work_apps.txt xargs brew install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						curl -fsSL "$macos_work_apps" --output "$HOME"/macos_work_apps.txt 2>&1 | lognoc
+						curl -fsSL "$macos_work_casks" --output "$HOME"/macos_work_casks.txt 2>&1 | lognoc
+						< macos_work_casks.txt xargs brew cask install 2>&1 | lognoc
+						< macos_work_apps.txt xargs brew install 2>&1 | lognoc
 						rm "$HOME"/macos_work*.txt
 					fi
 					if command -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
-							echo -e 2>&1 | tee -a "$logfile"
+							echo -e 2>&1 | lognoc
 							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-								echo -e "Installing App Store work applications..." 2>&1 | tee -a "$logfile"
-								curl -fsSL "$macos_store_work_apps" --output "$HOME"/macos_store_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-								awk '{print $1}' "$HOME"/macos_store_work_apps.txt | xargs /usr/local/bin/mas install 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+								echo -e "Installing App Store work applications..." 2>&1 | lognoc
+								curl -fsSL "$macos_store_work_apps" --output "$HOME"/macos_store_work_apps.txt 2>&1 | lognoc
+								awk '{print $1}' "$HOME"/macos_store_work_apps.txt | xargs /usr/local/bin/mas install 2>&1 | lognoc
 								rm "$HOME"/macos_store*.txt
-								echo -e "App Store work applications installed" 2>&1 | tee -a "$logfile"
+								echo -e "App Store work applications installed" 2>&1 | lognoc
 								break
 							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 								echo -e
@@ -324,41 +338,41 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo apt update 2>&1 | lognoc
+					curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo apt install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo apt install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < debian_work_apps.txt)
 					rm "$HOME"/debian_work*.txt
 				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo apt-get update 2>&1 | lognoc
+					curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo apt-get install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo apt-get install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < debian_work_apps.txt)
 					rm "$HOME"/debian_work*.txt
 				elif command -v yum > /dev/null 2>&1; then
-					sudo yum update -y 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fsSL "$redhat_work_apps" --output "$HOME"/redhat_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo yum update -y 2>&1 | lognoc
+					curl -fsSL "$redhat_work_apps" --output "$HOME"/redhat_work_apps.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo yum install -y "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo yum install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < redhat_work_apps.txt)
 					rm "$HOME"/redhat_work*.txt
 				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -Syyu --noconfirm 2>&1| tee -a "$logfile" > /dev/null 2>&1
-					curl -fsSL "$arch_work_apps" --output "$HOME"/arch_work_apps.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo pacman -Syyu --noconfirm 2>&1| lognoc
+					curl -fsSL "$arch_work_apps" --output "$HOME"/arch_work_apps.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo pacman -S --needed --noconfirm "$line" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo pacman -S --needed --noconfirm "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < arch_work_apps.txt)
 					rm "$HOME"/arch_work*.txt
 				fi
 			fi
-			echo -e "Work software installed" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e "Work software installed" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -372,52 +386,52 @@ fi
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v git > /dev/null 2>&1; then
 	while read -p "Do you want to install custom fonts? (Y/n) " -n 1 -r; do
-	echo -e 2>&1 | tee -a "$logfile"
+	echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing custom fonts..." 2>&1 | tee -a "$logfile"
+			echo -e "Installing custom fonts..." 2>&1 | lognoc
 			if [[ "$EUID" = 0 ]]; then
-				echo -e "Custom fonts cannot be installed as root!" 2>&1 | tee -a "$logfile"
-				echo -e "Please run this script as a normal user" 2>&1 | tee -a "$logfile"
+				echo -e "Custom fonts cannot be installed as root!" 2>&1 | lognoc
+				echo -e "Please run this script as a normal user" 2>&1 | lognoc
 				exit 1
 			else
 				mkdir "$HOME"/fonts
 				if command -v wget > /dev/null 2>&1; then
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | lognoc
 				elif command -v curl > /dev/null 2>&1; then
 					cd "$HOME"/fonts || exit
-					curl -fSLO "$mononoki_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fSLO "$mononoki_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fSLO "$mononoki_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fSLO "$jetbrainsmono_regular" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fSLO "$jetbrainsmono_bold" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					curl -fSLO "$jetbrainsmono_italic" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
+					curl -fSLO "$mononoki_bold" 2>&1 | lognoc
+					curl -fSLO "$mononoki_italic" 2>&1 | lognoc
+					curl -fSLO "$jetbrainsmono_regular" 2>&1 | lognoc
+					curl -fSLO "$jetbrainsmono_bold" 2>&1 | lognoc
+					curl -fSLO "$jetbrainsmono_italic" 2>&1 | lognoc
 					for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
 				fi
 				if [[ "$OSTYPE" == "darwin"* ]]; then
-					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | lognoc
 				elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 					if [[ ! -d /usr/share/fonts ]]; then
 						sudo mkdir /usr/share/fonts
 					fi
 					if command -v fc-cache > /dev/null 2>&1; then
-						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | lognoc
 					else
-						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | tee -a "$logfile"
+						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | lognoc
 						exit 1
 					fi
 				fi
-				echo -e 2>&1 | tee -a "$logfile"
-				git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | tee -a "$logfile" > /dev/null 2>&1 && "$HOME"/fonts/install.sh
+				echo -e 2>&1 | lognoc
+				git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | lognoc && "$HOME"/fonts/install.sh
 				cd "$HOME" || exit
 				rm -Rf "$HOME"/fonts > /dev/null 2>&1
 			fi
-			echo -e "Custom fonts installed" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e "Custom fonts installed" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -432,14 +446,14 @@ fi
 if command -v tmux > /dev/null 2>&1; then
 	if [[ -d "$HOME"/.tmux/plugins/tpm ]]; then
 		while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e 2>&1 | lognoc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | tee -a "$logfile"
+				echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | lognoc
 				rm -Rf "$HOME"/.tmux/plugins/tpm
-				git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				echo -e "TMUX Plugin Manager installed" 2>&1 | tee -a "$logfile"
-				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | tee -a "$logfile"
-				echo -e 2>&1 | tee -a "$logfile"
+				git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | lognoc
+				echo -e "TMUX Plugin Manager installed" 2>&1 | lognoc
+				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | lognoc
+				echo -e 2>&1 | lognoc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				echo -e
@@ -448,13 +462,13 @@ if command -v tmux > /dev/null 2>&1; then
 		done
 	else
 		while read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e 2>&1 | lognoc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Installing TMUX Plugin Manager..." 2>&1 | tee -a "$logfile"
-				git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				echo -e "TMUX Plugin Manager installed" 2>&1 | tee -a "$logfile"
-				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | tee -a "$logfile"
-				echo -e 2>&1 | tee -a "$logfile"
+				echo -e "Installing TMUX Plugin Manager..." 2>&1 | lognoc
+				git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | lognoc
+				echo -e "TMUX Plugin Manager installed" 2>&1 | lognoc
+				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | lognoc
+				echo -e 2>&1 | lognoc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				echo -e
@@ -470,23 +484,23 @@ fi
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; then
 	echo -e "Your current shell is \"$SHELL\""
 	while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]] && command -v brew > /dev/null 2>&1; then
-				brew install "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				chmod g-w "$(brew --prefix)/share" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-				chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+				brew install "${zsh_tools[@]}" 2>&1 | lognoc
+				chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
+				chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
+				chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					sudo apt install -y "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo apt update 2>&1 | lognoc
+					sudo apt install -y "${zsh_tools[@]}" 2>&1 | lognoc
 				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get install -y "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo apt-get install -y "${zsh_tools[@]}" 2>&1 | lognoc
 				elif command -v yum > /dev/null 2>&1; then
-					sudo yum install -y "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo yum install -y "${zsh_tools[@]}" 2>&1 | lognoc
 				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -S --needed --noconfirm "${zsh_tools[@]}" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo pacman -S --needed --noconfirm "${zsh_tools[@]}" 2>&1 | lognoc
 				fi
 			fi
 			if [[ "$EUID" = 0 ]]; then
@@ -494,10 +508,10 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; th
 				echo -e "Please run the script as root in order to install the requirements"
 				exit 1
 			else
-				chsh -s /bin/zsh 2>&1 | tee -a "$logfile"
+				chsh -s /bin/zsh 2>&1 | lognoc
 			fi
-			echo -e "ZSH successfully installed" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e "ZSH successfully installed" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -511,26 +525,26 @@ fi
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]; then
 	while read -p "Do you want to setup System Preferences? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 
 			# Configure computer's name
 			computername=$(scutil --get ComputerName)
-			echo -e "Your current computer's name is \"$computername\"" 2>&1 | tee -a "$logfile"
+			echo -e "Your current computer's name is \"$computername\"" 2>&1 | lognoc
 			while read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | tee -a "$logfile"
+				echo -e 2>&1 | lognoc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					while read -p "What name your computer should use? " -r name; do
 						if [[ "$name" =~ ^[A-z0-9-]{0,15}$ ]]; then
 							sudo scutil --set ComputerName "$name"
 							sudo scutil --set LocalHostName "$name"
 							sudo scutil --set HostName "$name"
-							echo -e "Computer's name successfully changed" 2>&1 | tee -a "$logfile"
-							echo -e 2>&1 | tee -a "$logfile"
+							echo -e "Computer's name successfully changed" 2>&1 | lognoc
+							echo -e 2>&1 | lognoc
 							break
 						else
-							echo -e "Invalid computer name! The name should be between 1 and 15 characters and must not contain special characters except \"-\"" 2>&1 | tee -a "$logfile"
-							echo -e 2>&1 | tee -a "$logfile"
+							echo -e "Invalid computer name! The name should be between 1 and 15 characters and must not contain special characters except \"-\"" 2>&1 | lognoc
+							echo -e 2>&1 | lognoc
 						fi
 					done
 				break
@@ -542,7 +556,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 
 			# Close any open System Preferences panes, to prevent them from overriding
 			# settings we’re about to change
-			echo -e "Setting up system preferences..." 2>&1 | tee -a "$logfile"
+			echo -e "Setting up system preferences..." 2>&1 | lognoc
 			osascript -e 'tell application "System Preferences" to quit'
 
 			# General
@@ -606,18 +620,18 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 			# Build the 'locate' database
-			sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			sudo /usr/libexec/locate.updatedb 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | lognoc
+			sudo /usr/libexec/locate.updatedb 2>&1 | lognoc
 
-			echo -e "System preferences configured. Some settings require a reboot" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
-			echo -e "You may want to configure these settings in System Preferences:" 2>&1 | tee -a "$logfile"
-			echo -e "- In the \"General\" section, change the number of recent items (for TextEdit)" 2>&1 | tee -a "$logfile"
-			echo -e "- In the \"Security \& Privacy\" section, enable requiring a password immediately after lock and enable FileVault (if laptop)" 2>&1 | tee -a "$logfile"
-			echo -e "- Configure Siri if you wish to use it" 2>&1 | tee -a "$logfile"
-			echo -e "- In the \"Keyboard\" section, you may want to adjust keyboard shortcuts to your liking" 2>&1 | tee -a "$logfile"
-			echo -e "- Certain Finder preferences cannot be set fully. You may wish to review these" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e "System preferences configured. Some settings require a reboot" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
+			echo -e "You may want to configure these settings in System Preferences:" 2>&1 | lognoc
+			echo -e "- In the \"General\" section, change the number of recent items (for TextEdit)" 2>&1 | lognoc
+			echo -e "- In the \"Security \& Privacy\" section, enable requiring a password immediately after lock and enable FileVault (if laptop)" 2>&1 | lognoc
+			echo -e "- Configure Siri if you wish to use it" 2>&1 | lognoc
+			echo -e "- In the \"Keyboard\" section, you may want to adjust keyboard shortcuts to your liking" 2>&1 | lognoc
+			echo -e "- Certain Finder preferences cannot be set fully. You may wish to review these" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -631,11 +645,11 @@ fi
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]]; then
 	while read -p "Do you want to configure preferences? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 
 			# Ask for the administrator password upfront
-			echo -e "Starting configuration process..." 2>&1 | tee -a "$logfile"
+			echo -e "Starting configuration process..." 2>&1 | lognoc
 			sudo -v
 
 			# Build the 'locate' database
@@ -643,8 +657,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 				sudo updatedb
 			fi
 
-			echo -e "Preferences configured" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e "Preferences configured" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -659,33 +673,33 @@ fi
 
 # Clone the GitHub repository with all wanted dotfiles
 while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
-	echo -e 2>&1 | tee -a "$logfile"
+	echo -e 2>&1 | lognoc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		if ! command -v git > /dev/null 2>&1; then
 			echo -e "Git is required to install the dotfiles. Please install it before executing this script!"
 			exit 1
 		fi
 		if [[ ! -d "$dfloc" ]]; then
-			echo -e "Retrieving dotfiles..." 2>&1 | tee -a "$logfile"
-			git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			echo -e "Retrieving dotfiles..." 2>&1 | lognoc
+			git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | lognoc
+			git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
 		else
-			git -C "$dfloc" pull 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			git -C "$dfloc" pull 2>&1 | lognoc
 		fi
 
 		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
-			echo -e "Installing custom scripts..." 2>&1 | tee -a "$logfile"
+			echo -e "Installing custom scripts..." 2>&1 | lognoc
 			mkdir "$scriptsloc"
-			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
+			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
 		elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
 			while read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | tee -a "$logfile"
+				echo -e 2>&1 | lognoc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Installing custom scripts..." 2>&1 | tee -a "$logfile"
+					echo -e "Installing custom scripts..." 2>&1 | lognoc
 					rm -Rf "$scriptsloc" && mkdir "$scriptsloc"
-					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
+					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
 					break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 					echo -e
@@ -696,10 +710,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 
 		# Remove and backup all original dotfiles
 		while read -p "Do you want to backup your current dotfiles? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e 2>&1 | lognoc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				bkpdf=1
-				echo -e "Backup your current dotfiles to $HOME/.old-dotfiles..." 2>&1 | tee -a "$logfile"
+				echo -e "Backup your current dotfiles to $HOME/.old-dotfiles..." 2>&1 | lognoc
 				if [[ ! -d "$HOME"/.old-dotfiles ]]; then
 					mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
 				else
@@ -746,9 +760,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 		done
 		if [[ -f "$HOME"/.config/weechat/sec.conf ]]; then
-			echo -e "A Weechat private configuration has been detected (sec.conf)." 2>&1 | tee -a "$logfile"
+			echo -e "A Weechat private configuration has been detected (sec.conf)." 2>&1 | lognoc
 			while read -p "Do you want to reset the private Weechat configuration (sec.conf)? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | tee -a "$logfile"
+				echo -e 2>&1 | lognoc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					if [[ -n "$bkpdf" ]]; then
 						mv "$HOME"/.config/weechat "$HOME"/.old-dotfiles/weechat > /dev/null 2>&1
@@ -772,57 +786,57 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 
 		# Create symlinks in the home folder
-		echo -e "Installing new dotfiles..." 2>&1 | tee -a "$logfile"
+		echo -e "Installing new dotfiles..." 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
 		if command -v bash > /dev/null 2>&1; then
-			ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
 			touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
 		fi
 		if command -v git > /dev/null 2>&1; then
-			ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
 		fi
 		if command -v zsh > /dev/null 2>&1; then
-			ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.p10k.zsh 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.zshrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.p10k.zsh 2>&1 | lognoc
+			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.zshrc 2>&1 | lognoc
 		fi
 		if command -v weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
 				mkdir "$HOME"/.config/weechat
 			fi
-			ln -s "$dfloc"/config/weechat/irc.conf "$HOME"/.config/weechat/irc.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/perl "$HOME"/.config/weechat/perl 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/python "$HOME"/.config/weechat/python 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/trigger.conf "$HOME"/.config/weechat/trigger.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/weechat.conf "$HOME"/.config/weechat/weechat.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/xfer.conf "$HOME"/.config/weechat/xfer.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/buflist.conf "$HOME"/.config/weechat/buflist.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/colorize_nicks.conf "$HOME"/.config/weechat/colorize_nicks.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/fset.conf "$HOME"/.config/weechat/fset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/weechat/iset.conf "$HOME"/.config/weechat/iset.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/config/weechat/irc.conf "$HOME"/.config/weechat/irc.conf 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/perl "$HOME"/.config/weechat/perl 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/python "$HOME"/.config/weechat/python 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/trigger.conf "$HOME"/.config/weechat/trigger.conf 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/weechat.conf "$HOME"/.config/weechat/weechat.conf 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/xfer.conf "$HOME"/.config/weechat/xfer.conf 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/buflist.conf "$HOME"/.config/weechat/buflist.conf 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/colorize_nicks.conf "$HOME"/.config/weechat/colorize_nicks.conf 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/fset.conf "$HOME"/.config/weechat/fset.conf 2>&1 | lognoc
+			ln -s "$dfloc"/config/weechat/iset.conf "$HOME"/.config/weechat/iset.conf 2>&1 | lognoc
 		fi
 		if command -v wget > /dev/null 2>&1; then
-			ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | lognoc
 		fi
 		if command -v vim > /dev/null 2>&1; then
-			ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | lognoc
+			ln -s "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | lognoc
 		fi
 		if command -v nvim > /dev/null 2>&1; then
-			ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | lognoc
+			ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
 		fi
 		if command -v vifm > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/vifm ]]; then
 				mkdir "$HOME"/.config/vifm
 			fi
-			ln -s "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | tee -a "$logfile" > /dev/null 2>&1
-			ln -s "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | lognoc
+			ln -s "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | lognoc
 		fi
 		if command -v msmtp > /dev/null 2>&1; then
-			ln -s "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | lognoc
 		fi
 		if command -v alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
-			ln -s "$dfloc"/config/alacritty "$HOME"/.config/alacritty 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/config/alacritty "$HOME"/.config/alacritty 2>&1 | lognoc
 		fi
 		if [[ -d /Applications/iTerm.app ]]; then
 			ln -s "$dfloc"/iterm2 "$HOME"/.iterm2 > /dev/null 2>&1
@@ -831,17 +845,17 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.w3m ]]; then
 				mkdir -pv "$HOME"/.w3m > /dev/null 2>&1
 			fi
-			ln -s "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
 		if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-			ln -s "$dfloc"/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 		else
-			ln -s "$dfloc"/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+			ln -s "$dfloc"/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 		fi
-		echo -e "New dotfiles installed" 2>&1 | tee -a "$logfile"
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e "New dotfiles installed" 2>&1 | lognoc
+		echo -e 2>&1 | lognoc
 		break
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e
@@ -854,9 +868,9 @@ done
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
 	while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Setting up Amethyst..." 2>&1 | tee -a "$logfile"
+			echo -e "Setting up Amethyst..." 2>&1 | lognoc
 			# Set windows to always stay in floating mode
 			defaults write com.amethyst.Amethyst.plist floating '(
 		        	{
@@ -922,8 +936,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			# Delete the plist cache
 			defaults read com.amethyst.Amethyst.plist > /dev/null 2>&1
 
-			echo -e "Amethyst configured" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e "Amethyst configured" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -945,83 +959,83 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 # Install server packages
 #=============
 	while read -p "[SERVER SESSION DETECTED] Do you want to install useful tools? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | tee -a "$logfile"
+		echo -e 2>&1 | lognoc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing useful server tools..." 2>&1 | tee -a "$logfile"
+			echo -e "Installing useful server tools..." 2>&1 | lognoc
 			if [[ "$EUID" = 0 ]]; then
 				if command -v apt > /dev/null 2>&1; then
-					apt update 2>&1 | tee -a "$logfile"
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					apt update 2>&1 | lognoc
+					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						apt install -y "$line" 2>&1 | tee -a "$logfile"
+						apt install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v apt-get > /dev/null 2>&1; then
-					apt-get update 2>&1 | tee -a "$logfile"
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					apt-get update 2>&1 | lognoc
+					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						apt-get install -y "$line" 2>&1 | tee -a "$logfile"
+						apt-get install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v yum > /dev/null 2>&1; then
-					yum update -y 2>&1 | tee -a "$logfile"
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					yum update -y 2>&1 | lognoc
+					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						yum install -y "$line" 2>&1 | tee -a "$logfile"
+						yum install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v pacman > /dev/null 2>&1; then
-					pacman -Syyu --noconfirm 2>&1 | tee -a "$logfile"
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					pacman -Syyu --noconfirm 2>&1 | lognoc
+					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						pacman -S --noconfirm --needed "$line" 2>&1 | tee -a "$logfile"
+						pacman -S --noconfirm --needed "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				fi
 			elif ! command -v sudo > /dev/null 2>&1; then
-				echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | tee -a "$logfile"
+				echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | lognoc
 				exit 1
 			else
 				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | tee -a "$logfile"
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo apt update 2>&1 | lognoc
+					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo apt install -y "$line" 2>&1 | tee -a "$logfile"
+						sudo apt install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get update 2>&1 | tee -a "$logfile"
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo apt-get update 2>&1 | lognoc
+					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo apt-get install -y "$line" 2>&1 | tee -a "$logfile"
+						sudo apt-get install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v yum > /dev/null 2>&1; then
-					sudo yum update -y 2>&1 | tee -a "$logfile"
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo yum update -y 2>&1 | lognoc
+					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo yum install -y "$line" 2>&1 | tee -a "$logfile"
+						sudo yum install -y "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -Syyu --noconfirm 2>&1 | tee -a "$logfile"
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | tee -a "$logfile" > /dev/null 2>&1
+					sudo pacman -Syyu --noconfirm 2>&1 | lognoc
+					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
 					while IFS= read -r line
 					do
-						sudo pacman -S --needed --noconfirm "$line" 2>&1 | tee -a "$logfile"
+						sudo pacman -S --needed --noconfirm "$line" 2>&1 | lognoc
 					done < <(grep -v '^ *#' < server_tools.txt)
 					rm "$HOME"/server_tools.txt
 				fi
 			fi
-			echo -e "Useful server tools installed" 2>&1 | tee -a "$logfile"
-			echo -e 2>&1 | tee -a "$logfile"
+			echo -e "Useful server tools installed" 2>&1 | lognoc
+			echo -e 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -1033,9 +1047,9 @@ fi
 #==============
 # DONE
 #==============
-echo -e 2>&1 | tee -a "$logfile"
-echo -e 2>&1 | tee -a "$logfile"
-echo -e "======= ALL DONE =======" 2>&1 | tee -a "$logfile"
-echo -e 2>&1 | tee -a "$logfile"
-echo -e "If anything has been modified, please reboot the computer for all the settings to be applied (not applicable to servers)." 2>&1 | tee -a "$logfile"
-echo -e "A log file called \"$logfile\" contains the details of all operations. Check if for errors." 2>&1 | tee -a "$logfile"
+echo -e 2>&1 | lognoc
+echo -e 2>&1 | lognoc
+echo -e "======= ALL DONE =======" 2>&1 | lognoc
+echo -e 2>&1 | lognoc
+echo -e "If anything has been modified, please reboot the computer for all the settings to be applied (not applicable to servers)." 2>&1 | lognoc
+echo -e "A log file called \"$logfile\" contains the details of all operations. Check if for errors." 2>&1 | lognoc
