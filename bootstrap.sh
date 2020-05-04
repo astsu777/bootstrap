@@ -591,6 +591,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv" # View as list
 			defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" # Search in current folder
 			defaults write com.apple.finder ShowMountedServersOnDesktop -bool true # Show connected servers on the desktop
+			defaults write com.apple.mail AttachAtEnd -int 1 # Fix attachments when sending emails read by Outlook clients
 
 			# Allow running applications from anywhere
 			sudo spctl --master-disable
