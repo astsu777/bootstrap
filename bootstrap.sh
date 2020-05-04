@@ -661,6 +661,10 @@ fi
 while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | tee -a "$logfile"
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+		if ! command -v git > /dev/null 2>&1; then
+			echo -e "Git is required to install the dotfiles. Please install it before executing this script!"
+			exit 1
+		fi
 		if [[ ! -d "$dfloc" ]]; then
 			echo -e "Retrieving dotfiles..." 2>&1 | tee -a "$logfile"
 			git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | tee -a "$logfile" > /dev/null 2>&1
