@@ -612,8 +612,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 				sudo chflags schg "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 > /dev/null 2>&1
 			fi
 
-			# Keep-alive: update existing `sudo` time stamp until bootstrap has finished
-			while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+			# Accessibility
+			defaults write com.apple.universalaccess reduceMotion -int 1 # Reduce animations
+			defaults write com.apple.universalaccess reduceTranssparency -int 1 # Disable transparency
 
 			# Build the 'locate' database
 			sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | lognoc
