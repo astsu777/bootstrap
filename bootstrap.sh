@@ -743,6 +743,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/vifm "$HOME"/.old-dotfiles/vifm > /dev/null 2>&1
 				mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
 				mv "$HOME"/.w3m "$HOME"/.old-dotfiles/w3m > /dev/null 2>&1
+				mv "$HOME"/.config/surfraw/conf "$HOME"/.old-dotfiles/surfraw > /dev/null 2>&1
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -rf "$HOME"/.bash_profile
@@ -762,6 +763,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/.config/vifm
 				rm -rf "$HOME"/.config/alacritty
 				rm -rf "$HOME"/.w3m
+				rm -rf "$HOME"/.config/surfraw/conf
 				break
 			fi
 		done
@@ -807,7 +809,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if command -v weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
-				mkdir "$HOME"/.config/weechat
+				mkdir "$HOME"/.config/weechat 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/config/weechat/irc.conf "$HOME"/.config/weechat/irc.conf 2>&1 | lognoc
 			ln -s "$dfloc"/config/weechat/perl "$HOME"/.config/weechat/perl 2>&1 | lognoc
@@ -833,7 +835,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if command -v vifm > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/vifm ]]; then
-				mkdir "$HOME"/.config/vifm
+				mkdir "$HOME"/.config/vifm 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | lognoc
 			ln -s "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | lognoc
@@ -849,9 +851,15 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if command -v w3m > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.w3m ]]; then
-				mkdir -pv "$HOME"/.w3m > /dev/null 2>&1
+				mkdir -pv "$HOME"/.w3m 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
+		fi
+		if command -v surfraw > /dev/null 2>&1 || command -v sr > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/surfraw ]]; then
+				mkdir "$HOME"/.config/surfraw 2>&1 | lognoc
+			fi
+			ln -s "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
