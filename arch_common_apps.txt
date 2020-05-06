@@ -29,6 +29,7 @@ python
 python-pip
 ripgrep
 rsync
+surfraw
 sxiv
 tmux
 transmission-cli

@@ -29,6 +29,7 @@ restic
 ripgrep
 rsync
 shellcheck
+surfraw
 tmux
 transmission-cli
 tree
