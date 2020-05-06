@@ -685,10 +685,19 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 
 		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
-			echo -e "Installing custom scripts..." 2>&1 | logc
-			mkdir "$scriptsloc"
-			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
-			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+			while read -p "Do you want to install custom scripts? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Installing custom scripts..." 2>&1 | logc
+					mkdir "$scriptsloc"
+					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
+					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
 		elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
 			while read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
