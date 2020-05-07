@@ -939,7 +939,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 
 			# Set window margins
 			defaults write com.amethyst.Amethyst.plist window-margins 1
-			defaults write com.amethyst.Amethyst.plist window-margin-size 6
+			defaults write com.amethyst.Amethyst.plist window-margin-size 2
 
 			# Do not display layout names
 			defaults write com.amethyst.Amethyst.plist enables-layout-hud 0
