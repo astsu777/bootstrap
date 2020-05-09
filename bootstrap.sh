@@ -573,6 +573,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			defaults write com.apple.dock tilesize -int 38 # Set the icons size
 			defaults write com.apple.dock show-recents -int 0 # Do not show recent apps
 
+			# Mission Control
+			defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces automatically by recent use
+
 			# Trackpad
 			defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 # Click when tapping on the trackpad
 			defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -int 0 # Right-click in bottom-right corner of the trackpad
