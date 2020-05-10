@@ -13,7 +13,7 @@ In order to execute this script, download this repository and execute the .boots
 Execute the following commands for easy setup:
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh)"
 ```
 
 It is possible to chose where the dotfiles will be located by changing the *$dfloc* variable at the top of the script.
