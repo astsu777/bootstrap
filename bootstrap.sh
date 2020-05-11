@@ -21,20 +21,8 @@ logfile="$HOME/bootstrap_log_$date.txt"
 
 # Software lists
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
-macos_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt"
-macos_casks="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt"
-macos_store_common_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_store_common_apps.txt"
-macos_store_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_store_work_apps.txt"
-macos_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_apps.txt"
-macos_work_casks="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_casks.txt"
-debian_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt"
-debian_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_work_apps.txt"
-redhat_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_common_apps.txt"
-redhat_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_work_apps.txt"
-arch_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/arch_common_apps.txt"
-arch_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/arch_work_apps.txt"
 aurhelper="https://aur.archlinux.org/yay.git"
-server_tools="https://raw.githubusercontent.com/GSquad934/bootstrap/master/server_tools.txt"
+applist="https://raw.githubusercontent.com/GSquad934/bootstrap/master/apps.csv"
 zsh_tools=(
 	zsh
 	zsh-autosuggestions
