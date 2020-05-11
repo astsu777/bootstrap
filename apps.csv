@@ -1,0 +1,124 @@
+# TAG, PROGRAM
+# Tags: C=Common, W=Work, M=MacOS brew, A=Arch, D=Debian, R=Red Hat, G=macOS Casks, S=macOS Store, I=Server Tools
+CA,ttf-jetbrains-mono
+CADR,audacity
+CADR,bash
+CADR,bash-completion
+CADR,colordiff
+CADR,coreutils
+CADR,curl
+CADR,exa
+CADR,fd
+CADR,ffmpeg
+CADR,fzf
+CADR,git
+CADR,lame
+CADR,mlocate
+CADR,mplayer
+CADR,mpv
+CADR,neovim
+CADR,net-tools
+CADR,nethogs
+CADR,ntfs-3g
+CADR,openssl
+CADR,pwgen
+CADR,python
+CADR,python-pip
+CADR,ripgrep
+CADR,rsync
+CADR,surfraw
+CADR,sxiv
+CADR,transmission-cli
+CADR,tree
+CADR,unrar
+CADR,unzip
+CADR,urlview
+CADR,vifm
+CADR,w3m
+CADR,weechat
+CADR,youtube-dl
+CADR,zathura
+CADRG,firefox
+CADRG,keepassxc
+CADRG,vlc
+CADRI,htop
+CADRI,ncdu
+CADRI,nmon
+CADRI,tmux
+CADRI,vim
+CD,dnsutils
+CG,amethyst
+CG,cyberduck
+CG,dozer
+CG,gpg-suite-no-mail
+CG,keycastr
+CG,nextcloud
+CG,osxfuse
+CG,plex
+CG,rambox
+CGA,alacritty
+CM,ansifilter
+CM,bat
+CM,findutils
+CM,gotop
+CM,grep
+CM,mas
+CM,msmtp
+CM,restic
+CM,shellcheck
+CM,watch
+CM,wget
+CM,xz
+CM,zsh
+CM,zsh-autosuggestions
+CM,zsh-completions
+CM,zsh-history-substring-search
+CM,zsh-syntax-highlighting
+CR,bind-utils
+CS,1043270657 GIF Keyboard
+CS,1116599239 NordVPN IKE
+CS,1295203466 Microsoft Remote Desktop
+CS,1384080005 Tweetbot
+CS,408981434 iMovie
+CS,425424353 The Unarchiver
+CS,425955336 Skitch
+CS,568494494 Pocket
+CS,865500966 feedly
+CS,876540291 Copy'em Paste
+CS,946798523 AntiSleep
+I,etckeeper
+I,fd-find
+I,nethogs
+I,peco
+I,tcpdump
+WADR,gns3
+WADR,speedtest-cli
+WADR,testssl.sh
+WADRG,docker
+WADRG,wireshark
+WADRG,xca
+WADRM,ansible
+WADRM,minicom
+WADRM,mitmproxy
+WADRM,peco
+WADRM,ssh-audit
+WADRM,telnet
+WADRM,tor
+WADRM,wakeonlan
+WG,teamviewer
+WG,tor-browser
+WG,tunnelblick
+WM,bro
+WM,docker-completion
+WM,geoip
+WM,testssl
+WMADR,hping
+WMADR,ipcalc
+WMADR,iperf3
+WMADR,masscan
+WMADR,nmap
+WMADR,rtmpdump
+WMADR,speedtest-cli
+WMAR,caddy
+WMD,dhcpdump
+WS,1422475219 ZenTermLite
