@@ -80,6 +80,37 @@ echo -e 2>&1 | logc
 echo -e 2>&1 | logc
 
 #=============
+# Linux - Install 'sudo' (Requirement)
+#=============
+if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
+	echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
+	echo -e "Installing 'sudo'..." 2>&1 | logc
+	if [[ "$EUID" != 0 ]]; then
+		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
+		exit 1
+	else
+		if command -v apt > /dev/null 2>&1; then
+			apt update 2>&1 | lognoc
+			apt install -y sudo 2>&1 | lognoc
+		elif command -v apt-get > /dev/null 2>&1; then
+			apt-get update 2>&1 | lognoc
+			apt-get install -y sudo 2>&1 | lognoc
+		elif command -v yum > /dev/null 2>&1; then
+			yum update -y 2>&1 | lognoc
+			yum install -y sudo 2>&1 | lognoc
+		elif command -v pacman > /dev/null 2>&1; then
+			pacman -Sy 2>&1 | lognoc
+			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
+		fi
+		echo -e "Package 'sudo' is now installed" 2>&1 | logc
+		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | logc
+		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | logc
+		echo -e 2>&1 | logc
+		exit 0
+	fi
+fi
+
+#=============
 # macOS - Install XCode Command Line Tools
 #=============
 
@@ -141,37 +172,6 @@ if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 		/bin/bash -c "$(curl -fsSL "$homebrew")" 2>&1 | logc
 		brew doctor 2>&1 | lognoc
 		brew update 2>&1 | lognoc
-	fi
-fi
-
-#=============
-# Linux - Install 'sudo' (Requirement)
-#=============
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
-	echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
-	echo -e "Installing 'sudo'..." 2>&1 | logc
-	if [[ "$EUID" != 0 ]]; then
-		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
-		exit 1
-	else
-		if command -v apt > /dev/null 2>&1; then
-			apt update 2>&1 | lognoc
-			apt install -y sudo 2>&1 | lognoc
-		elif command -v apt-get > /dev/null 2>&1; then
-			apt-get update 2>&1 | lognoc
-			apt-get install -y sudo 2>&1 | lognoc
-		elif command -v yum > /dev/null 2>&1; then
-			yum update -y 2>&1 | lognoc
-			yum install -y sudo 2>&1 | lognoc
-		elif command -v pacman > /dev/null 2>&1; then
-			pacman -Sy 2>&1 | lognoc
-			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
-		fi
-		echo -e "Package 'sudo' is now installed" 2>&1 | logc
-		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | logc
-		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | logc
-		echo -e 2>&1 | logc
-		exit 0
 	fi
 fi
 
