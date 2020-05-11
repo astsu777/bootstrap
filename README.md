@@ -1,3 +1,7 @@
+# WORK IN PROGRESS
+
+:warning: **DO NOT USE THE DEV BRANCH. THIS IS WORK IN PROGRESS ONLY!!**
+
 # Bootstrap
 This is a script that can be used to automate the setup of a workstation or a personal computer.
 
@@ -25,7 +29,3 @@ __Note__ If the dotfiles are installed, it is possible to invoke this bootstrap 
 
 # Logs
 The output to the console is pretty empty in order to keep everything clean. However, a log file is always created in the $HOME folder and is unique for each run. This way, it is possible to review errors if required.
-
-# TODO
-
-- Merge all application lists into a single one with tags
