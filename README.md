@@ -29,3 +29,4 @@ The output to the console is pretty empty in order to keep everything clean. How
 # TODO
 
 - Merge all application lists into a single one with tags
+- Include tools that need compiling (and keep the sources or not)
