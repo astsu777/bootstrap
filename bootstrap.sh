@@ -22,7 +22,7 @@ logfile="$HOME/bootstrap_log_$date.txt"
 # Software lists
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
 aurhelper="https://aur.archlinux.org/yay.git"
-applist="https://raw.githubusercontent.com/GSquad934/bootstrap/master/apps.csv"
+applist="https://raw.githubusercontent.com/GSquad934/bootstrap/dev/apps.csv"
 zsh_tools=(
 	zsh
 	zsh-autosuggestions
@@ -89,8 +89,8 @@ elif command -v pacman > /dev/null 2>&1; then
 fi
 
 if command -v mas > /dev/null 2>&1; then
-	grepapp="sed '/^#/d' ./apps.csv | eval grep \"[S][^,]*\" | sed 's/^.*,//g' | awk '{print $2}'"
-	grepworkapp="sed '/^#/d' ./apps.csv | eval grep \"^W[S][^,]*\" | sed 's/^.*,//g' | awk '{print $2}'"
+	grepapp="sed '/^#/d' ./apps.csv | eval grep \"[S][^,]*\" | sed 's/^.*,//g' | awk '{print $1}'"
+	grepworkapp="sed '/^#/d' ./apps.csv | eval grep \"^W[S][^,]*\" | sed 's/^.*,//g' | awk '{print $1}'"
 	installapp(){ < "$grepapp" xargs mas install 2>&1 | lognoc ;}
 	installworkapp(){ < "$grepworkapp" xargs mas install 2>&1 | lognoc ;}
 fi
