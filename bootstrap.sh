@@ -735,6 +735,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
 				mv "$HOME"/.w3m "$HOME"/.old-dotfiles/w3m > /dev/null 2>&1
 				mv "$HOME"/.config/surfraw/conf "$HOME"/.old-dotfiles/surfraw > /dev/null 2>&1
+				mv "$HOME"/.config/newsboat "$HOME"/.old-dotfiles/newsboat > /dev/null 2>&1
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -rf "$HOME"/.bash_profile
@@ -755,6 +756,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/.config/alacritty
 				rm -rf "$HOME"/.w3m
 				rm -rf "$HOME"/.config/surfraw/conf
+				rm -rf "$HOME"/.config/newsboat
 				break
 			fi
 		done
@@ -851,6 +853,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir "$HOME"/.config/surfraw 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
+		fi
+		if command -v newsboat > /dev/null 2>&1 || command -v sr > /dev/null 2>&1; then
+			ln -s "$dfloc"/config/newsboat "$HOME"/.config/newsboat 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
