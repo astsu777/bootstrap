@@ -132,10 +132,10 @@ installsrvpkg() {
 #=============
 echo -e
 echo -e "============================= BOOTSTRAP PROCESS BEGINNING =============================" 2>&1 | logc
-echo -e "#" 2>&1 | logc
-echo -e "# The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | logc
-echo -e "# If the script gives an error because of user rights, please follow the instructions" 2>&1 | logc
-echo -e "#" 2>&1 | logc
+echo -e "" 2>&1 | logc
+echo -e " The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | logc
+echo -e " If the script gives an error because of user rights, please follow the instructions" 2>&1 | logc
+echo -e "" 2>&1 | logc
 echo -e "=======================================================================================" 2>&1 | logc
 echo -e 2>&1 | logc
 echo -e 2>&1 | logc
@@ -172,18 +172,18 @@ fi
 # Graphical installation if headless failed
 if [[ "$OSTYPE" == "darwin"* ]] && [[ -n $(pgrep "Install Command Line Developer Tools") ]]; then
 	echo -e "============== XCODE COMMAND LINE TOOLS ARE INSTALLING =============="
-	echo -e "#"
-	echo -e "# ATTENTION: XCode Command Line Tools installation is in progress"
-	echo -e "# Launch the bootstrap script again when the installation is finished"
-	echo -e "#"
+	echo -e ""
+	echo -e " ATTENTION: XCode Command Line Tools installation is in progress"
+	echo -e " Launch the bootstrap script again when the installation is finished"
+	echo -e ""
 	echo -e "====================================================================="
 	exit 0
 elif [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
 	echo -e "============== XCODE COMMAND LINE TOOLS NOT INSTALLED =============="
-	echo -e "#"
-	echo -e "# ATTENTION: XCode Command Line Tools installation will begin"
-	echo -e "# Launch the bootstrap script again when the installation is finished"
-	echo -e "#"
+	echo -e ""
+	echo -e " ATTENTION: XCode Command Line Tools installation will begin"
+	echo -e " Launch the bootstrap script again when the installation is finished"
+	echo -e ""
 	echo -e "====================================================================="
 	xcode-select --install
 	exit 1
