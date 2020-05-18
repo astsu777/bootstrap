@@ -29,3 +29,7 @@ __Note__ If the dotfiles are installed, it is possible to invoke this bootstrap 
 
 # Logs
 The output to the console is pretty empty in order to keep everything clean. However, a log file is always created in the $HOME folder and is unique for each run. This way, it is possible to review errors if required.
+
+# TODO
+
+- Include tools that need compiling (and keep the sources or not)
