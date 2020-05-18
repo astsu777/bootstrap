@@ -267,7 +267,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing common software..." 2>&1 | logc
-			cd "$HOME" && curl -fSLO "$applist" 2>&1 | lognoc
+			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
 					echo -e "Common applications cannot be installed as root!" 2>&1 | logc
@@ -310,7 +310,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing work software..." 2>&1 | logc
-			cd "$HOME" && curl -fSLO "$applist" 2>&1 | lognoc
+			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
 					echo -e "Work applications cannot be installed as root!" 2>&1 | logc
@@ -934,7 +934,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing useful server tools..." 2>&1 | logc
-			curl -fSLO "$applist" 2>&1 | lognoc
+			curl -fsSLO "$applist" 2>&1 | lognoc
 			installsrvpkg
 			rm ./apps.csv 2>&1 | lognoc
 			echo -e "Useful server tools installed" 2>&1 | logc
