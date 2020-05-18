@@ -51,9 +51,9 @@ logc(){ tee -a "$logfile" ;}
 lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
 
 if command -v brew > /dev/null 2>&1; then
-	greppkg="sed '/^#/d' ./apps.csv | eval grep \"[M][^,]*\" | sed 's/^.*,//g'"
-	grepguipkg="sed '/^#/d' $applist | eval grep \"[G][^,]*\" | sed 's/^.*,//g'"
-	grepworkpkg="sed '/^#/d' ./apps.csv | eval grep \"^W[M][^,]*\" | sed 's/^.*,//g'"
+	greppkg="sed '/^#/d' $HOME/apps.csv | eval grep \"[M][^,]*\" | sed 's/^.*,//g'"
+	grepguipkg="sed '/^#/d' $HOME/apps.csv | eval grep \"[G][^,]*\" | sed 's/^.*,//g'"
+	grepworkpkg="sed '/^#/d' $HOME/apps.csv | eval grep \"^W[M][^,]*\" | sed 's/^.*,//g'"
 	grepworkguipkg="sed '/^#/d' $applist | eval grep \"^W[G][^,]*\" | sed 's/^.*,//g'"
 	installpkg(){ brew update 2>&1 | lognoc && < "$greppkg" xargs brew install 2>&1 | lognoc ;}
 	installguipkg(){ brew update 2>&1 | lognoc && < "$grepguipkg" xargs brew cask install 2>&1 | lognoc ;}
@@ -66,22 +66,22 @@ if command -v brew > /dev/null 2>&1; then
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
 	}
 elif command -v apt-get > /dev/null 2>&1; then
-	greppkg="sed '/^#/d' ./apps.csv | eval grep \"[D][^,]*\" | sed 's/^.*,//g'"
-	grepworkpkg="sed '/^#/d' ./apps.csv | eval grep \"^W[D][^,]*\" | sed 's/^.*,//g'"
+	greppkg="sed '/^#/d' $HOME/apps.csv | eval grep \"[D][^,]*\" | sed 's/^.*,//g'"
+	grepworkpkg="sed '/^#/d' $HOME/apps.csv | eval grep \"^W[D][^,]*\" | sed 's/^.*,//g'"
 	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < <("$greppkg") ;}
 	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < <("$grepworkpkg") ;}
 	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y "${zsh_tools[@]}" 2>&1 | lognoc ;}
 elif command -v yum > /dev/null 2>&1; then
-	greppkg="sed '/^#/d' ./apps.csv | eval grep \"[R][^,]*\" | sed 's/^.*,//g'"
-	grepworkpkg="sed '/^#/d' ./apps.csv | eval grep \"^W[R][^,]*\" | sed 's/^.*,//g'"
+	greppkg="sed '/^#/d' $HOME/apps.csv | eval grep \"[R][^,]*\" | sed 's/^.*,//g'"
+	grepworkpkg="sed '/^#/d' $HOME/apps.csv | eval grep \"^W[R][^,]*\" | sed 's/^.*,//g'"
 	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$greppkg") ;}
 	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$grepworkpkg") ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y "${zsh_tools[@]}" 2>&1 | lognoc ;}
 elif command -v pacman > /dev/null 2>&1; then
-	greppkg="sed '/^#/d' ./apps.csv | eval grep \"[A][^,]*\" | sed 's/^.*,//g'"
-	grepworkpkg="sed '/^#/d' ./apps.csv | eval grep \"^W[A][^,]*\" | sed 's/^.*,//g'"
+	greppkg="sed '/^#/d' $HOME/apps.csv | eval grep \"[A][^,]*\" | sed 's/^.*,//g'"
+	grepworkpkg="sed '/^#/d' $HOME/apps.csv | eval grep \"^W[A][^,]*\" | sed 's/^.*,//g'"
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < <("$greppkg") ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < <("$grepworkpkg") ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
@@ -89,14 +89,14 @@ elif command -v pacman > /dev/null 2>&1; then
 fi
 
 if command -v mas > /dev/null 2>&1; then
-	grepapp="sed '/^#/d' ./apps.csv | eval grep \"[S][^,]*\" | sed 's/^.*,//g' | awk '{print $1}'"
-	grepworkapp="sed '/^#/d' ./apps.csv | eval grep \"^W[S][^,]*\" | sed 's/^.*,//g' | awk '{print $1}'"
+	grepapp="sed '/^#/d' $HOME/apps.csv | eval grep \"[S][^,]*\" | sed 's/^.*,//g' | awk '{print $1}'"
+	grepworkapp="sed '/^#/d' $HOME/apps.csv | eval grep \"^W[S][^,]*\" | sed 's/^.*,//g' | awk '{print $1}'"
 	installapp(){ < "$grepapp" xargs mas install 2>&1 | lognoc ;}
 	installworkapp(){ < "$grepworkapp" xargs mas install 2>&1 | lognoc ;}
 fi
 
 installsrvpkg() {
-	grepsrvpkg="sed '/^#/d' ./apps.csv | eval grep \"[I][^,]*\" | sed 's/^.*,//g'"
+	grepsrvpkg="sed '/^#/d' $HOME/apps.csv | eval grep \"[I][^,]*\" | sed 's/^.*,//g'"
 	if command -v apt-get > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
 			installsrvpkg(){ apt-get update 2>&1 | lognoc && while IFS= read -r line; do apt-get install -y "$line" 2>&1 | lognoc; done < <("$grepsrvpkg") ;}
@@ -267,7 +267,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing common software..." 2>&1 | logc
-			curl -fSLO "$applist" | logc
+			cd "$HOME" && curl -fSLO "$applist" | lognoc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
 					echo -e "Common applications cannot be installed as root!" 2>&1 | logc
@@ -291,7 +291,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				installpkg
 			fi
-			rm ./apps.csv 2>&1 | lognoc
+			rm "$HOME"/apps.csv 2>&1 | lognoc
 			echo -e "Common software installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
@@ -310,7 +310,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing work software..." 2>&1 | logc
-			curl -fSLO "$applist" | logc
+			cd "$HOME" && curl -fSLO "$applist" | lognoc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
 					echo -e "Work applications cannot be installed as root!" 2>&1 | logc
@@ -336,7 +336,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				installworkpkg
 			fi
-			rm ./apps.csv 2>&1 | lognoc
+			rm "$HOME"/apps.csv 2>&1 | lognoc
 			echo -e "Work software installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
@@ -934,7 +934,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing useful server tools..." 2>&1 | logc
-			curl -fSLO "$applist" | logc
+			curl -fSLO "$applist" | lognoc
 			installsrvpkg
 			rm ./apps.csv 2>&1 | lognoc
 			echo -e "Useful server tools installed" 2>&1 | logc
