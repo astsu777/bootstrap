@@ -51,14 +51,14 @@ logc(){ tee -a "$logfile" ;}
 lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
 
 if command -v brew > /dev/null 2>&1; then
-	greppkg="sed '/^#/d' $HOME/apps.csv | grep \"[M][^,]*\" | sed 's/^.*,//g'"
-	grepguipkg="sed '/^#/d' $HOME/apps.csv | grep \"[G][^,]*\" | sed 's/^.*,//g'"
-	grepworkpkg="sed '/^#/d' $HOME/apps.csv | grep \"^W[M][^,]*\" | sed 's/^.*,//g'"
-	grepworkguipkg="sed '/^#/d' $applist | grep \"^W[G][^,]*\" | sed 's/^.*,//g'"
-	installpkg(){ brew update 2>&1 | lognoc && < "$greppkg" xargs brew install 2>&1 | lognoc ;}
-	installguipkg(){ brew update 2>&1 | lognoc && < "$grepguipkg" xargs brew cask install 2>&1 | lognoc ;}
-	installworkpkg(){ brew update 2>&1 | lognoc && < "$grepworkpkg" xargs brew install 2>&1 | lognoc ;}
-	installworkguipkg(){ brew update 2>&1 | lognoc && < "$grepworkguipkg" xargs brew cask install 2>&1 | lognoc ;}
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[G][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
+	installpkg(){ brew update 2>&1 | lognoc && < "$pkg" xargs brew install 2>&1 | lognoc ;}
+	installguipkg(){ brew update 2>&1 | lognoc && < "$guipkg" xargs brew cask install 2>&1 | lognoc ;}
+	installworkpkg(){ brew update 2>&1 | lognoc && < "$workpkg" xargs brew install 2>&1 | lognoc ;}
+	installworkguipkg(){ brew update 2>&1 | lognoc && < "$workguipkg" xargs brew cask install 2>&1 | lognoc ;}
 	installzsh() {
 		brew install "${zsh_tools[@]}" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
@@ -66,63 +66,63 @@ if command -v brew > /dev/null 2>&1; then
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
 	}
 elif command -v apt-get > /dev/null 2>&1; then
-	greppkg="sed '/^#/d' $HOME/apps.csv | grep \"[D][^,]*\" | sed 's/^.*,//g'"
-	grepworkpkg="sed '/^#/d' $HOME/apps.csv | grep \"^W[D][^,]*\" | sed 's/^.*,//g'"
-	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < <("$greppkg") ;}
-	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < <("$grepworkpkg") ;}
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < <("$pkg") ;}
+	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < <("$workpkg") ;}
 	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y "${zsh_tools[@]}" 2>&1 | lognoc ;}
 elif command -v yum > /dev/null 2>&1; then
-	greppkg="sed '/^#/d' $HOME/apps.csv | grep \"[R][^,]*\" | sed 's/^.*,//g'"
-	grepworkpkg="sed '/^#/d' $HOME/apps.csv | grep \"^W[R][^,]*\" | sed 's/^.*,//g'"
-	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$greppkg") ;}
-	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$grepworkpkg") ;}
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$pkg") ;}
+	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$workpkg") ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y "${zsh_tools[@]}" 2>&1 | lognoc ;}
 elif command -v pacman > /dev/null 2>&1; then
-	greppkg="sed '/^#/d' $HOME/apps.csv | grep \"[A][^,]*\" | sed 's/^.*,//g'"
-	grepworkpkg="sed '/^#/d' $HOME/apps.csv | grep \"^W[A][^,]*\" | sed 's/^.*,//g'"
-	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < <("$greppkg") ;}
-	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < <("$grepworkpkg") ;}
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < <("$pkg") ;}
+	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < <("$workpkg") ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S "${zsh_tools[@]}" 2>&1 | lognoc ;}
 fi
 
 if command -v mas > /dev/null 2>&1; then
-	grepapp="sed '/^#/d' $HOME/apps.csv | grep \"[S][^,]*\" | sed 's/^.*,//g' | awk '{print $1}'"
-	grepworkapp="sed '/^#/d' $HOME/apps.csv | grep \"^W[S][^,]*\" | sed 's/^.*,//g' | awk '{print $1}'"
-	installapp(){ < "$grepapp" xargs mas install 2>&1 | lognoc ;}
-	installworkapp(){ < "$grepworkapp" xargs mas install 2>&1 | lognoc ;}
+	grepstoreapp(){ storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp" ;}
+	grepworkstoreapp(){ workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp" ;}
+	installstoreapp(){ < "$storeapp" xargs mas install 2>&1 | lognoc ;}
+	installworkstoreapp(){ < "$workstoreapp" xargs mas install 2>&1 | lognoc ;}
 fi
 
 installsrvpkg() {
-	grepsrvpkg="sed '/^#/d' $HOME/apps.csv | grep \"[I][^,]*\" | sed 's/^.*,//g'"
+	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
 	if command -v apt-get > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
-			installsrvpkg(){ apt-get update 2>&1 | lognoc && while IFS= read -r line; do apt-get install -y "$line" 2>&1 | lognoc; done < <("$grepsrvpkg") ;}
+			installsrvpkg(){ apt-get update 2>&1 | lognoc && while IFS= read -r line; do apt-get install -y "$line" 2>&1 | lognoc; done < <("$srvpkg") ;}
 		elif ! command -v sudo > /dev/null 2>&1; then
 			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
 			exit 1
 		else
-			installsrvpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < <("$grepsrvpkg") ;}
+			installsrvpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < <("$srvpkg") ;}
 		fi
 	elif command -v yum > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
-			installsrvpkg(){ yum update -y 2>&1 | lognoc && while IFS= read -r line; do yum install -y "$line" 2>&1 | lognoc; done < <("$grepsrvpkg") ;}
+			installsrvpkg(){ yum update -y 2>&1 | lognoc && while IFS= read -r line; do yum install -y "$line" 2>&1 | lognoc; done < <("$srvpkg") ;}
 		elif ! command -v sudo > /dev/null 2>&1; then
 			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
 			exit 1
 		else
-			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$grepsrvpkg") ;}
+			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$srvpkg") ;}
 		fi
 	elif command -v pacman > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
-			installsrvpkg(){ pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < <("$grepsrvpkg") ;}
+			installsrvpkg(){ pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < <("$srvpkg") ;}
 		elif ! command -v sudo > /dev/null 2>&1; then
 			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
 			exit 1
 		else
-			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$grepsrvpkg") ;}
+			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < <("$srvpkg") ;}
 		fi
 	fi
 }
@@ -274,13 +274,13 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					echo -e "Please run this script as a normal user" 2>&1 | logc
 					exit 1
 				else
-					installpkg ; installguipkg
+					greppkg && installpkg && installguipkg
 				fi
 				while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
 					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 						echo -e "Installing App Store common applications..." 2>&1 | logc
-						installapp
+						grepstoreapp && installstoreapp
 						echo -e "App Store common applications installed" 2>&1 | logc
 						break
 					elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -289,7 +289,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					fi
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				installpkg
+				greppkg && installpkg
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
 			echo -e "Common software installed" 2>&1 | logc
@@ -317,13 +317,14 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					echo -e "Please run this script as a normal user" 2>&1 | logc
 					exit 1
 				else
-					installworkpkg ; installworkpkg
+					grepworkpkg && installworkpkg
+					grepworkguipkg && installworkguipkg
 					if command -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
 							echo -e 2>&1 | logc
 							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 								echo -e "Installing App Store work applications..." 2>&1 | logc
-								installworkapp
+								grepworkstoreapp && installworkstoreapp
 								echo -e "App Store work applications installed" 2>&1 | logc
 								break
 							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -334,7 +335,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					fi
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				installworkpkg
+				grepworkpkg && installworkpkg
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
 			echo -e "Work software installed" 2>&1 | logc
@@ -935,7 +936,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing useful server tools..." 2>&1 | logc
 			curl -fsSLO "$applist" 2>&1 | lognoc
-			installsrvpkg
+			grepsrvpkg && installsrvpkg
 			rm ./apps.csv 2>&1 | lognoc
 			echo -e "Useful server tools installed" 2>&1 | logc
 			echo -e 2>&1 | logc
