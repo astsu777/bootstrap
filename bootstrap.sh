@@ -22,7 +22,7 @@ logfile="$HOME/bootstrap_log_$date.txt"
 # Software lists
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
 aurhelper="https://aur.archlinux.org/yay.git"
-applist="https://raw.githubusercontent.com/GSquad934/bootstrap/dev/apps.csv"
+applist="https://raw.githubusercontent.com/GSquad934/bootstrap/master/apps.csv"
 zsh_tools=(
 	zsh
 	zsh-autosuggestions
