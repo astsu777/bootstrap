@@ -21,20 +21,8 @@ logfile="$HOME/bootstrap_log_$date.txt"
 
 # Software lists
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
-macos_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_apps.txt"
-macos_casks="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_common_casks.txt"
-macos_store_common_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_store_common_apps.txt"
-macos_store_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_store_work_apps.txt"
-macos_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_apps.txt"
-macos_work_casks="https://raw.githubusercontent.com/GSquad934/bootstrap/master/macos_work_casks.txt"
-debian_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_common_apps.txt"
-debian_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/debian_work_apps.txt"
-redhat_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_common_apps.txt"
-redhat_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/redhat_work_apps.txt"
-arch_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/arch_common_apps.txt"
-arch_work_apps="https://raw.githubusercontent.com/GSquad934/bootstrap/master/arch_work_apps.txt"
 aurhelper="https://aur.archlinux.org/yay.git"
-server_tools="https://raw.githubusercontent.com/GSquad934/bootstrap/master/server_tools.txt"
+applist="https://raw.githubusercontent.com/GSquad934/bootstrap/dev/apps.csv"
 zsh_tools=(
 	zsh
 	zsh-autosuggestions
@@ -58,12 +46,85 @@ tpm="https://github.com/tmux-plugins/tpm"
 #=============
 # Global Functions
 #=============
-logc() {
-	tee -a "$logfile"
-}
+logc(){ tee -a "$logfile" ;}
 
-lognoc() {
-	tee -a "$logfile" > /dev/null 2>&1
+lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
+
+if command -v brew > /dev/null 2>&1; then
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[G][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
+	installpkg(){ brew update 2>&1 | lognoc && < "$pkg" xargs brew install 2>&1 | lognoc ;}
+	installguipkg(){ brew update 2>&1 | lognoc && < "$guipkg" xargs brew cask install 2>&1 | lognoc ;}
+	installworkpkg(){ brew update 2>&1 | lognoc && < "$workpkg" xargs brew install 2>&1 | lognoc ;}
+	installworkguipkg(){ brew update 2>&1 | lognoc && < "$workguipkg" xargs brew cask install 2>&1 | lognoc ;}
+	installzsh() {
+		brew install "${zsh_tools[@]}" 2>&1 | lognoc
+		chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
+		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
+		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
+	}
+elif command -v apt-get > /dev/null 2>&1; then
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
+	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
+	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
+	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y "${zsh_tools[@]}" 2>&1 | lognoc ;}
+elif command -v yum > /dev/null 2>&1; then
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
+	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
+	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
+	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y "${zsh_tools[@]}" 2>&1 | lognoc ;}
+elif command -v pacman > /dev/null 2>&1; then
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
+	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
+	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S "${zsh_tools[@]}" 2>&1 | lognoc ;}
+fi
+
+if command -v mas > /dev/null 2>&1; then
+	grepstoreapp(){ storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp" ;}
+	grepworkstoreapp(){ workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp" ;}
+	installstoreapp(){ < "$storeapp" xargs mas install 2>&1 | lognoc ;}
+	installworkstoreapp(){ < "$workstoreapp" xargs mas install 2>&1 | lognoc ;}
+fi
+
+installsrvpkg() {
+	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
+	if command -v apt-get > /dev/null 2>&1; then
+		if [[ "$EUID" = 0 ]]; then
+			installsrvpkg(){ apt-get update 2>&1 | lognoc && while IFS= read -r line; do apt-get install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+		elif ! command -v sudo > /dev/null 2>&1; then
+			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
+			exit 1
+		else
+			installsrvpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+		fi
+	elif command -v yum > /dev/null 2>&1; then
+		if [[ "$EUID" = 0 ]]; then
+			installsrvpkg(){ yum update -y 2>&1 | lognoc && while IFS= read -r line; do yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+		elif ! command -v sudo > /dev/null 2>&1; then
+			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
+			exit 1
+		else
+			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+		fi
+	elif command -v pacman > /dev/null 2>&1; then
+		if [[ "$EUID" = 0 ]]; then
+			installsrvpkg(){ pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+		elif ! command -v sudo > /dev/null 2>&1; then
+			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
+			exit 1
+		else
+			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+		fi
+	fi
 }
 
 #=============
@@ -71,10 +132,10 @@ lognoc() {
 #=============
 echo -e
 echo -e "============================= BOOTSTRAP PROCESS BEGINNING =============================" 2>&1 | logc
-echo -e "#" 2>&1 | logc
-echo -e "# The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | logc
-echo -e "# If the script gives an error because of user rights, please follow the instructions" 2>&1 | logc
-echo -e "#" 2>&1 | logc
+echo -e "" 2>&1 | logc
+echo -e " The file \"$logfile\" will be created to log all ongoing operations" 2>&1 | logc
+echo -e " If the script gives an error because of user rights, please follow the instructions" 2>&1 | logc
+echo -e "" 2>&1 | logc
 echo -e "=======================================================================================" 2>&1 | logc
 echo -e 2>&1 | logc
 echo -e 2>&1 | logc
@@ -142,18 +203,18 @@ fi
 # Graphical installation if headless failed
 if [[ "$OSTYPE" == "darwin"* ]] && [[ -n $(pgrep "Install Command Line Developer Tools") ]]; then
 	echo -e "============== XCODE COMMAND LINE TOOLS ARE INSTALLING =============="
-	echo -e "#"
-	echo -e "# ATTENTION: XCode Command Line Tools installation is in progress"
-	echo -e "# Launch the bootstrap script again when the installation is finished"
-	echo -e "#"
+	echo -e ""
+	echo -e " ATTENTION: XCode Command Line Tools installation is in progress"
+	echo -e " Launch the bootstrap script again when the installation is finished"
+	echo -e ""
 	echo -e "====================================================================="
 	exit 0
 elif [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
 	echo -e "============== XCODE COMMAND LINE TOOLS NOT INSTALLED =============="
-	echo -e "#"
-	echo -e "# ATTENTION: XCode Command Line Tools installation will begin"
-	echo -e "# Launch the bootstrap script again when the installation is finished"
-	echo -e "#"
+	echo -e ""
+	echo -e " ATTENTION: XCode Command Line Tools installation will begin"
+	echo -e " Launch the bootstrap script again when the installation is finished"
+	echo -e ""
 	echo -e "====================================================================="
 	xcode-select --install
 	exit 1
@@ -172,6 +233,25 @@ if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 		/bin/bash -c "$(curl -fsSL "$homebrew")" 2>&1 | logc
 		brew doctor 2>&1 | lognoc
 		brew update 2>&1 | lognoc
+	fi
+fi
+
+#=============
+# Linux - Install 'sudo' (Requirement)
+#=============
+if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
+	echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
+	echo -e "Installing 'sudo'..." 2>&1 | logc
+	if [[ "$EUID" != 0 ]]; then
+		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
+		exit 1
+	else
+		installsudo
+		echo -e "Package 'sudo' is now installed" 2>&1 | logc
+		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | logc
+		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | logc
+		echo -e 2>&1 | logc
+		exit 0
 	fi
 fi
 
@@ -218,78 +298,38 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing common software..." 2>&1 | logc
+			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
 					echo -e "Common applications cannot be installed as root!" 2>&1 | logc
 					echo -e "Please run this script as a normal user" 2>&1 | logc
 					exit 1
 				else
-					if command -v brew > /dev/null 2>&1; then
-						brew update 2>&1 | lognoc
-						curl -fsSL "$macos_casks" --output "$HOME"/macos_common_casks.txt 2>&1 | lognoc
-						curl -fsSL "$macos_apps" --output "$HOME"/macos_common_apps.txt 2>&1 | lognoc
-						< "$HOME"/macos_common_casks.txt xargs brew cask install 2>&1 | lognoc
-						< "$HOME"/macos_common_apps.txt xargs brew install 2>&1 | lognoc
-						rm "$HOME"/macos_common*.txt
-					fi
-					if commnd -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
-						while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
-							echo -e 2>&1 | logc
-							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-								echo -e "Installing App Store common applications..." 2>&1 | logc
-								curl -fsSL "$macos_store_common_apps" --output "$HOME"/macos_store_common_apps.txt 2>&1 | lognoc
-								awk '{print $1}' "$HOME"/macos_store_common_apps.txt | xargs /usr/local/bin/mas install 2>&1 | lognoc
-								rm "$HOME"/macos_store*.txt
-								echo -e "App Store common applications installed" 2>&1 | logc
-								break
-							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-								echo -e
-								break
-							fi
-						done
-					fi
+					greppkg && installpkg
+					grepguipkg && installguipkg
 				fi
+				while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
+					echo -e 2>&1 | logc
+					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+						echo -e "Installing App Store common applications..." 2>&1 | logc
+						grepstoreapp && installstoreapp
+						echo -e "App Store common applications installed" 2>&1 | logc
+						break
+					elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+						echo -e
+						break
+					fi
+				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | lognoc
-					curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo apt install -y "$line" 2>&1 | lognoc
-					done < <(grep -v '^ *#' < debian_common_apps.txt)
-					rm "$HOME"/debian_common*.txt
-				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get update 2>&1 | lognoc
-					curl -fsSL "$debian_apps" --output "$HOME"/debian_common_apps.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo apt-get install -y "$line" 2>&1 | lognoc
-					done < <(grep -v '^ *#' < debian_common_apps.txt)
-					rm "$HOME"/debian_common*.txt
-				elif command -v yum > /dev/null 2>&1; then
-					sudo yum update -y 2>&1 | lognoc
-					curl -fsSL "$redhat_apps" --output "$HOME"/redhat_common_apps.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo yum install -y "$line" 2>&1 | lognoc
-					done < <(grep -v '^ *#' < redhat_common_apps.txt)
-					rm "$HOME"/redhat_common*.txt
-				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -Syyu --noconfirm 2>&1| lognoc
-					curl -fsSL "$arch_apps" --output "$HOME"/arch_common_apps.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo pacman -S --needed --noconfirm "$line" 2>&1 | lognoc
-					done < <(grep -v '^ *#' < arch_common_apps.txt)
-					rm "$HOME"/arch_common*.txt
-				fi
+				greppkg && installpkg
 			fi
+			rm "$HOME"/apps.csv 2>&1 | lognoc
 			echo -e "Common software installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
+				echo -e
+				break
 		fi
 	done
 fi
@@ -302,27 +342,21 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing work software..." 2>&1 | logc
+			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				if [[ "$EUID" = 0 ]]; then
 					echo -e "Work applications cannot be installed as root!" 2>&1 | logc
 					echo -e "Please run this script as a normal user" 2>&1 | logc
 					exit 1
 				else
-					if command -v brew > /dev/null 2>&1; then
-						curl -fsSL "$macos_work_apps" --output "$HOME"/macos_work_apps.txt 2>&1 | lognoc
-						curl -fsSL "$macos_work_casks" --output "$HOME"/macos_work_casks.txt 2>&1 | lognoc
-						< macos_work_casks.txt xargs brew cask install 2>&1 | lognoc
-						< macos_work_apps.txt xargs brew install 2>&1 | lognoc
-						rm "$HOME"/macos_work*.txt
-					fi
+					grepworkpkg && installworkpkg
+					grepworkguipkg && installworkguipkg
 					if command -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
 							echo -e 2>&1 | logc
 							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 								echo -e "Installing App Store work applications..." 2>&1 | logc
-								curl -fsSL "$macos_store_work_apps" --output "$HOME"/macos_store_work_apps.txt 2>&1 | lognoc
-								awk '{print $1}' "$HOME"/macos_store_work_apps.txt | xargs /usr/local/bin/mas install 2>&1 | lognoc
-								rm "$HOME"/macos_store*.txt
+								grepworkstoreapp && installworkstoreapp
 								echo -e "App Store work applications installed" 2>&1 | logc
 								break
 							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -333,40 +367,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					fi
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | lognoc
-					curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo apt install -y "$line" 2>&1 | lognoc
-					done < <(grep -v '^ *#' < debian_work_apps.txt)
-					rm "$HOME"/debian_work*.txt
-				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get update 2>&1 | lognoc
-					curl -fsSL "$debian_work_apps" --output "$HOME"/debian_work_apps.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo apt-get install -y "$line" 2>&1 | lognoc
-					done < <(grep -v '^ *#' < debian_work_apps.txt)
-					rm "$HOME"/debian_work*.txt
-				elif command -v yum > /dev/null 2>&1; then
-					sudo yum update -y 2>&1 | lognoc
-					curl -fsSL "$redhat_work_apps" --output "$HOME"/redhat_work_apps.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo yum install -y "$line" 2>&1 | lognoc
-					done < <(grep -v '^ *#' < redhat_work_apps.txt)
-					rm "$HOME"/redhat_work*.txt
-				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -Syyu --noconfirm 2>&1| lognoc
-					curl -fsSL "$arch_work_apps" --output "$HOME"/arch_work_apps.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo pacman -S --needed --noconfirm "$line" 2>&1 | lognoc
-					done < <(grep -v '^ *#' < arch_work_apps.txt)
-					rm "$HOME"/arch_work*.txt
-				fi
+				grepworkpkg && installworkpkg
 			fi
+			rm "$HOME"/apps.csv 2>&1 | lognoc
 			echo -e "Work software installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
@@ -482,23 +485,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; th
 	while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			if [[ "$OSTYPE" == "darwin"* ]] && command -v brew > /dev/null 2>&1; then
-				brew install "${zsh_tools[@]}" 2>&1 | lognoc
-				chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
-				chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
-				chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
-			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | lognoc
-					sudo apt install -y "${zsh_tools[@]}" 2>&1 | lognoc
-				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get install -y "${zsh_tools[@]}" 2>&1 | lognoc
-				elif command -v yum > /dev/null 2>&1; then
-					sudo yum install -y "${zsh_tools[@]}" 2>&1 | lognoc
-				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -S --needed --noconfirm "${zsh_tools[@]}" 2>&1 | lognoc
-				fi
-			fi
+			installzsh
 			if [[ "$EUID" = 0 ]]; then
 				echo -e "The shell of the root user should not be changed! (NOT RECOMMENDED)"
 				echo -e "Please run the script as root in order to install the requirements"
@@ -980,78 +967,9 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing useful server tools..." 2>&1 | logc
-			if [[ "$EUID" = 0 ]]; then
-				if command -v apt > /dev/null 2>&1; then
-					apt update 2>&1 | logc
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						apt install -y "$line" 2>&1 | logc
-					done < <(grep -v '^ *#' < server_tools.txt)
-					rm "$HOME"/server_tools.txt
-				elif command -v apt-get > /dev/null 2>&1; then
-					apt-get update 2>&1 | logc
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						apt-get install -y "$line" 2>&1 | logc
-					done < <(grep -v '^ *#' < server_tools.txt)
-					rm "$HOME"/server_tools.txt
-				elif command -v yum > /dev/null 2>&1; then
-					yum update -y 2>&1 | logc
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						yum install -y "$line" 2>&1 | logc
-					done < <(grep -v '^ *#' < server_tools.txt)
-					rm "$HOME"/server_tools.txt
-				elif command -v pacman > /dev/null 2>&1; then
-					pacman -Syyu --noconfirm 2>&1 | logc
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						pacman -S --noconfirm --needed "$line" 2>&1 | logc
-					done < <(grep -v '^ *#' < server_tools.txt)
-					rm "$HOME"/server_tools.txt
-				fi
-			elif ! command -v sudo > /dev/null 2>&1; then
-				echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
-				exit 1
-			else
-				if command -v apt > /dev/null 2>&1; then
-					sudo apt update 2>&1 | logc
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo apt install -y "$line" 2>&1 | logc
-					done < <(grep -v '^ *#' < server_tools.txt)
-					rm "$HOME"/server_tools.txt
-				elif command -v apt-get > /dev/null 2>&1; then
-					sudo apt-get update 2>&1 | logc
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo apt-get install -y "$line" 2>&1 | logc
-					done < <(grep -v '^ *#' < server_tools.txt)
-					rm "$HOME"/server_tools.txt
-				elif command -v yum > /dev/null 2>&1; then
-					sudo yum update -y 2>&1 | logc
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo yum install -y "$line" 2>&1 | logc
-					done < <(grep -v '^ *#' < server_tools.txt)
-					rm "$HOME"/server_tools.txt
-				elif command -v pacman > /dev/null 2>&1; then
-					sudo pacman -Syyu --noconfirm 2>&1 | logc
-					curl -fsSL "$server_tools" --output "$HOME"/server_tools.txt 2>&1 | lognoc
-					while IFS= read -r line
-					do
-						sudo pacman -S --needed --noconfirm "$line" 2>&1 | logc
-					done < <(grep -v '^ *#' < server_tools.txt)
-					rm "$HOME"/server_tools.txt
-				fi
-			fi
+			curl -fsSLO "$applist" 2>&1 | lognoc
+			grepsrvpkg && installsrvpkg
+			rm ./apps.csv 2>&1 | lognoc
 			echo -e "Useful server tools installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break

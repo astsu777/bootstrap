@@ -1,0 +1,119 @@
+# TAG, PROGRAM
+# Tags: W=Work, M=MacOS brew, A=Arch, D=Debian, R=Red Hat, G=macOS Casks, S=macOS Store, I=Server Tools
+A,ttf-jetbrains-mono
+ADR,audacity
+ADR,mlocate
+ADR,mplayer
+ADR,net-tools
+ADR,nethogs
+ADR,python
+ADR,python-pip
+ADR,sxiv
+ADR,unrar
+ADR,unzip
+ADR,zathura
+ADRG,firefox
+ADRG,keepassxc
+ADRG,vlc
+ADRI,nmon
+ADRI,vim
+ADRIM,htop
+ADRIM,ncdu
+ADRIM,tmux
+ADRM,bash
+ADRM,bash-completion
+ADRM,colordiff
+ADRM,coreutils
+ADRM,curl
+ADRM,exa
+ADRM,fd
+ADRM,ffmpeg
+ADRM,fzf
+ADRM,git
+ADRM,lame
+ADRM,mpv
+ADRM,neovim
+ADRM,ntfs-3g
+ADRM,openssl
+ADRM,pwgen
+ADRM,ripgrep
+ADRM,rsync
+ADRM,surfraw
+ADRM,transmission-cli
+ADRM,tree
+ADRM,urlview
+ADRM,vifm
+ADRM,w3m
+ADRM,weechat
+ADRM,youtube-dl
+D,dnsutils
+G,amethyst
+G,cyberduck
+G,dozer
+G,gpg-suite-no-mail
+G,keycastr
+G,nextcloud
+G,osxfuse
+G,plex
+G,rambox
+GA,alacritty
+I,etckeeper
+I,fd-find
+I,nethogs
+I,peco
+I,tcpdump
+M,ansifilter
+M,bat
+M,findutils
+M,gotop
+M,grep
+M,mas
+M,msmtp
+M,restic
+M,shellcheck
+M,watch
+M,wget
+M,xz
+R,bind-utils
+S,1043270657 gif keyboard
+S,1116599239 nordvpn ike
+S,1295203466 microsoft remote desktop
+S,1384080005 tweetbot
+S,408981434 imovie
+S,425424353 the unarchiver
+S,425955336 skitch
+S,568494494 pocket
+S,865500966 feedly
+S,876540291 copy'em paste
+S,946798523 antisleep
+WADR,gns3
+WADR,speedtest-cli
+WADR,testssl.sh
+WADRG,docker
+WADRG,wireshark
+WADRG,xca
+WADRM,ansible
+WADRM,minicom
+WADRM,mitmproxy
+WADRM,peco
+WADRM,ssh-audit
+WADRM,telnet
+WADRM,tor
+WADRM,wakeonlan
+WG,teamviewer
+WG,tor-browser
+WG,tunnelblick
+WM,bro
+WM,docker-completion
+WM,geoip
+WM,testssl
+WMADR,hping
+WMADR,ipcalc
+WMADR,iperf3
+WMADR,masscan
+WMADR,nmap
+WMADR,rtmpdump
+WMADR,speedtest-cli
+WMAR,caddy
+WMD,dhcpdump
+WS,1422475219 zentermlite
