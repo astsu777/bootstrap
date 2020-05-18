@@ -274,7 +274,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					echo -e "Please run this script as a normal user" 2>&1 | logc
 					exit 1
 				else
-					greppkg && installpkg && installguipkg
+					greppkg && installpkg
+					grepguipkg && installguipkg
 				fi
 				while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
