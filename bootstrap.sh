@@ -86,6 +86,11 @@ elif command -v pacman > /dev/null 2>&1; then
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S "${zsh_tools[@]}" 2>&1 | lognoc ;}
+elif command -v yay > /dev/null 2>&1; then
+	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
+	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
+	installaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
+	installworkaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 fi
 
 if command -v mas > /dev/null 2>&1; then
@@ -322,6 +327,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				greppkg && installpkg
+				if [[ -f /etc/arch-release ]] && command -v yay > /dev/null 2>&1; then
+					grepaurpkg && installaurpkg
+				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
 			echo -e "Common software installed" 2>&1 | logc
@@ -368,6 +376,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				grepworkpkg && installworkpkg
+				if [[ -f /etc/arch-release ]] && command -v yay > /dev/null 2>&1; then
+					grepworkaurpkg && installworkaurpkg
+				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
 			echo -e "Work software installed" 2>&1 | logc

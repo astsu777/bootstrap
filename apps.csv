@@ -1,5 +1,5 @@
 # TAG, PROGRAM
-# Tags: W=Work, M=MacOS brew, A=Arch, D=Debian, R=Red Hat, G=macOS Casks, S=macOS Store, I=Server Tools
+# Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, G=macOS Casks, S=macOS Store, I=Server Tools, Y=Yay
 A,ttf-jetbrains-mono
 ADR,audacity
 ADR,mlocate
@@ -65,6 +65,7 @@ I,peco
 I,tcpdump
 M,ansifilter
 M,bat
+M,brave-browser
 M,findutils
 M,gotop
 M,grep
@@ -118,3 +119,4 @@ WMADR,speedtest-cli
 WMAR,caddy
 WMD,dhcpdump
 WS,1422475219 zentermlite
+Y,brave
