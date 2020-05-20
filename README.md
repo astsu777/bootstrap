@@ -21,7 +21,7 @@ It is possible to chose where the dotfiles will be located by changing the *$dfl
 The script will not install any software without asking first. All software can be refused in order to only install the dotfiles.
 For a list of software, see the text files in this repository.
 
-__Note__ If the dotfiles are installed, it is possible to invoke this bootstrap script with the command *bootstrap*.
+__Note__ If the dotfiles are installed, it is possible to invoke this bootstrap script with the command *bootstrap*. If you just want to download the dotfiles but not have the GIT repository hosted on your computer, simply download a ZIP copy or fork this repo.
 
 # Logs
 The output to the console is pretty empty in order to keep everything clean. However, a log file is always created in the $HOME folder and is unique for each run. This way, it is possible to review errors if required.
