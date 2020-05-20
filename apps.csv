@@ -79,7 +79,6 @@ M,xz
 R,bind-utils
 S,1043270657 gif keyboard
 S,1116599239 nordvpn ike
-S,1295203466 microsoft remote desktop
 S,1384080005 tweetbot
 S,408981434 imovie
 S,425424353 the unarchiver
@@ -118,5 +117,6 @@ WMADR,rtmpdump
 WMADR,speedtest-cli
 WMAR,caddy
 WMD,dhcpdump
+WS,1295203466 microsoft remote desktop
 WS,1422475219 zentermlite
 Y,brave
