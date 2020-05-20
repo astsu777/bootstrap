@@ -515,7 +515,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			computername=$(scutil --get ComputerName)
 			echo -e "Your current computer's name is \"$computername\"" 2>&1 | logc
 			while read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					while read -p "What name your computer should use? " -r name; do
 						if [[ "$name" =~ ^[A-z0-9-]{0,15}$ ]]; then
@@ -691,7 +690,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			done
 		elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
 			while read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					echo -e "Installing custom scripts..." 2>&1 | logc
 					rm -Rf "$scriptsloc" && mkdir "$scriptsloc"
