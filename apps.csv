@@ -49,6 +49,7 @@ ADRM,weechat
 ADRM,youtube-dl
 D,dnsutils
 G,amethyst
+G,brave-browser
 G,cyberduck
 G,dozer
 G,gpg-suite-no-mail
@@ -65,7 +66,6 @@ I,peco
 I,tcpdump
 M,ansifilter
 M,bat
-M,brave-browser
 M,findutils
 M,gotop
 M,grep
