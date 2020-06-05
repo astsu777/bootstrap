@@ -454,13 +454,13 @@ fi
 # Install TMUX Plugin Manager
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v tmux > /dev/null 2>&1; then
-	if [[ -d "$HOME"/.tmux/plugins/tpm ]]; then
+	if [[ -d "$HOME"/.config/tmux/plugins/tmp ]]; then
 		while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | logc
-				rm -Rf "$HOME"/.tmux/plugins/tpm
-				git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | lognoc
+				rm -Rf "$HOME"/.config/tmux/plugins/tpm
+				git clone "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
 				echo -e "TMUX Plugin Manager installed" 2>&1 | logc
 				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
 				echo -e 2>&1 | logc
@@ -475,7 +475,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v tmux > /dev/null 
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Installing TMUX Plugin Manager..." 2>&1 | logc
-				git clone "$tpm" "$HOME"/.tmux/plugins/tpm 2>&1 | lognoc
+				git clone "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
 				echo -e "TMUX Plugin Manager installed" 2>&1 | logc
 				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
 				echo -e 2>&1 | logc
