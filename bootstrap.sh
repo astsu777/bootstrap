@@ -454,7 +454,7 @@ fi
 # Install TMUX Plugin Manager
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v tmux > /dev/null 2>&1; then
-	if [[ -d "$HOME"/.config/tmux/plugins/tmp ]]; then
+	if [[ -d "$HOME"/.config/tmux/plugins/tpm ]]; then
 		while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
