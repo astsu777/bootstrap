@@ -737,6 +737,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1 || mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1
 				mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1 || mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1
 				mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
+				mv "$HOME"/.zshenv "$HOME"/.old-dotfiles/zshenv > /dev/null 2>&1
 				mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
 				mv "$HOME"/.config/nvim "$HOME"/.old-dotfiles/nvim > /dev/null 2>&1
 				mv "$HOME"/.config/wget "$HOME"/.old-dotfiles/wget > /dev/null 2>&1
@@ -757,6 +758,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/.vimrc
 				rm -rf "$HOME"/.zshrc || rm -Rf "$HOME"/.config/zsh/.zshrc
 				rm -rf "$HOME"/.zprofile
+				rm -rf "$HOME"/.zshenv
 				rm -rf "$HOME"/.config/nvim/init.vim
 				rm -rf "$HOME"/.config/nvim
 				rm -rf "$HOME"/.config/wget
@@ -807,7 +809,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		if command -v zsh > /dev/null 2>&1; then
 			ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.config/zsh/.p10k.zsh 2>&1 | lognoc
 			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
-			ln -s "$dfloc"/shellconfig/zshenv "$HOME"/.zshrc 2>&1 | lognoc
+			ln -s "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
 		fi
 		if command -v weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
