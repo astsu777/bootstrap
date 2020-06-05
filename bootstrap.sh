@@ -556,7 +556,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark" # Enable Dark Mode
 			defaults write NSGlobalDomain AppleHighlightColor -string "0.847059 0.847059 0.862745 Graphite" # Choose Graphite as the highlight color
 			defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 # Set the sidebar icon size to small
-			defaults write NSGlobalDomain _HIHideMenuBar -bool true # Auto-hide the menu bar
+			# defaults write NSGlobalDomain _HIHideMenuBar -bool true # Auto-hide the menu bar
 
 			# Disable screen saver
 			defaults -currentHost write com.apple.screensaver idleTime -int 0
@@ -569,6 +569,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			defaults write com.apple.dock launchanim -int 0 # Disable launch animation
 			defaults write com.apple.dock tilesize -int 38 # Set the icons size
 			defaults write com.apple.dock show-recents -int 0 # Do not show recent apps
+			defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces
 
 			# Mission Control
 			defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces automatically by recent use
