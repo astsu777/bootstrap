@@ -807,6 +807,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
 		fi
 		if command -v zsh > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/zsh ]]; then
+				mkdir -pv "$HOME"/.config/zsh 2>&1 | lognoc
+			fi
 			ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.config/zsh/.p10k.zsh 2>&1 | lognoc
 			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
 			ln -s "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
