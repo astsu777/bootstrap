@@ -730,13 +730,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.bash_profile "$HOME"/.old-dotfiles/bash_profile > /dev/null 2>&1
 				mv "$HOME"/.bashrc "$HOME"/.old-dotfiles/bashrc > /dev/null 2>&1
 				mv "$HOME"/.gitconfig "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1
-				mv "$HOME"/.iterm2 "$HOME"/.old-dotfiles/iterm2 > /dev/null 2>&1
 				mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1
-				mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1
-				mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1
+				mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1 || mv "$HOME"/.config/tmux/tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1
 				mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
 				mv "$HOME"/.vimrc "$HOME"/.old-dotfiles/vimrc > /dev/null 2>&1
-				mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1
+				mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1 || mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1
+				mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1 || mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1
 				mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
 				mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
 				mv "$HOME"/.config/nvim "$HOME"/.old-dotfiles/nvim > /dev/null 2>&1
@@ -751,13 +750,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/.bash_profile
 				rm -rf "$HOME"/.bashrc
 				rm -rf "$HOME"/.gitconfig
-				rm -rf "$HOME"/.iterm2
 				rm -rf "$HOME"/.msmtprc ; rm -Rf "$HOME"/.config/msmtp
-				rm -rf "$HOME"/.p10k.zsh
-				rm -rf "$HOME"/.tmux.conf
+				rm -rf "$HOME"/.p10k.zsh || rm -Rf "$HOME"/.config/zsh/.p10k.zsh
+				rm -rf "$HOME"/.tmux.conf || rm -Rf "$HOME"/.config/tmux/tmux.conf
 				rm -rf "$HOME"/.vim
 				rm -rf "$HOME"/.vimrc
-				rm -rf "$HOME"/.zshrc
+				rm -rf "$HOME"/.zshrc || rm -Rf "$HOME"/.config/zsh/.zshrc
 				rm -rf "$HOME"/.zprofile
 				rm -rf "$HOME"/.config/nvim/init.vim
 				rm -rf "$HOME"/.config/nvim
@@ -807,8 +805,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
 		fi
 		if command -v zsh > /dev/null 2>&1; then
-			ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.p10k.zsh 2>&1 | lognoc
-			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.zshrc 2>&1 | lognoc
+			ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.config/zsh/.p10k.zsh 2>&1 | lognoc
+			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
+			ln -s "$dfloc"/shellconfig/zshenv "$HOME"/.zshrc 2>&1 | lognoc
 		fi
 		if command -v weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
@@ -860,7 +859,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if command -v surfraw > /dev/null 2>&1 || command -v sr > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/surfraw ]]; then
-				mkdir "$HOME"/.config/surfraw 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/surfraw 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
 		fi
@@ -869,11 +868,17 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
-		if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-			ln -s "$dfloc"/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
-		else
-			ln -s "$dfloc"/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | lognoc
+		if command -v tmux > /dev/null 2>&1; then
+			if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+				ln -s "$dfloc"/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
+			else
+				if [[ ! -d "$HOME"/.config/tmux ]]; then
+					mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
+				fi
+				ln -s "$dfloc"/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+			fi
 		fi
+
 		echo -e "New dotfiles installed" 2>&1 | logc
 		echo -e 2>&1 | logc
 		break
