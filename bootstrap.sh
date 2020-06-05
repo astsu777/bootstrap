@@ -686,35 +686,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			git -C "$dfloc" pull 2>&1 | lognoc
 		fi
 
-		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
-			while read -p "Do you want to install custom scripts? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | logc
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Installing custom scripts..." 2>&1 | logc
-					mkdir "$scriptsloc"
-					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
-					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
-					break
-				fi
-			done
-		elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
-			while read -p "[CUSTOM SCRIPTS DETECTED] Do you want to (re)install the scripts? (Y/n) " -n 1 -r; do
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Installing custom scripts..." 2>&1 | logc
-					rm -Rf "$scriptsloc" && mkdir "$scriptsloc"
-					git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
-					git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
-					break
-				fi
-			done
-		fi
-
 		# Remove and backup all original dotfiles
 		while read -p "Do you want to backup your current dotfiles? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
@@ -892,6 +863,37 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		break
 	fi
 done
+
+#==============
+# Custom scripts
+#==============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
+	while read -p "Do you want to install custom scripts? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Installing custom scripts..." 2>&1 | logc
+			mkdir "$scriptsloc"
+			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
+			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
+elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
+	while read -p "Custom scripts are already installed. Do you want to update custom scripts? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Updating custom scripts..." 2>&1 | logc
+			git -C "$scriptsloc" pull 2>&1 | lognoc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
+fi
 
 #==============
 # macOS Workstation - Amethyst Configuration
