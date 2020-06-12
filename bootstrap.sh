@@ -100,7 +100,7 @@ if command -v mas > /dev/null 2>&1; then
 	installworkstoreapp(){ < "$workstoreapp" xargs mas install 2>&1 | lognoc ;}
 fi
 
-installsrvpkg() {
+if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
 	if command -v apt-get > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
@@ -130,7 +130,7 @@ installsrvpkg() {
 			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
 		fi
 	fi
-}
+fi
 
 #=============
 # BEGINNING
@@ -280,11 +280,12 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! command -v 
 					cd "$HOME" || exit
 					rm -Rf "$HOME"/yay
 					echo -e "AUR Helper successfully installed" 2>&1 | logc
-					echo -e 2>&1 | logc
+					echo -e "Please run this script again to take AUR packages into account" 2>&1 | logc
+					exit 0
 				else
 					echo -e "Your user is not a member of the sudoers group!" 2>&1 | logc
 					echo -e "Please run this script with a user with sudo rights" 2>&1 | logc
-					exit 0
+					exit 1
 				fi
 			fi
 			break
