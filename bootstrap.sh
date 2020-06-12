@@ -515,6 +515,27 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; th
 	done
 fi
 
+#=============
+# Install server packages
+#=============
+if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
+	while read -p "[SERVER SESSION DETECTED] Do you want to install useful tools? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Installing useful server tools..." 2>&1 | logc
+			curl -fsSLO "$applist" 2>&1 | lognoc
+			grepsrvpkg && installsrvpkg
+			rm ./apps.csv 2>&1 | lognoc
+			echo -e "Useful server tools installed" 2>&1 | logc
+			echo -e 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
+fi
+
 #============
 # macOS Workstation - Configuration
 #============
@@ -970,35 +991,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			defaults read com.amethyst.Amethyst.plist > /dev/null 2>&1
 
 			echo -e "Amethyst configured" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
-
-
-#===============================================================================
-#
-#             NOTES: this next section will apply with any remote
-#                 connections. It is meant for Linux servers
-#
-#===============================================================================
-if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
-
-#=============
-# Install server packages
-#=============
-	while read -p "[SERVER SESSION DETECTED] Do you want to install useful tools? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing useful server tools..." 2>&1 | logc
-			curl -fsSLO "$applist" 2>&1 | lognoc
-			grepsrvpkg && installsrvpkg
-			rm ./apps.csv 2>&1 | lognoc
-			echo -e "Useful server tools installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
