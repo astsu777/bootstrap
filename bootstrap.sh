@@ -155,10 +155,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
 		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
 		exit 1
 	else
-		if command -v apt > /dev/null 2>&1; then
-			apt update 2>&1 | lognoc
-			apt install -y sudo 2>&1 | lognoc
-		elif command -v apt-get > /dev/null 2>&1; then
+		if command -v apt-get > /dev/null 2>&1; then
 			apt-get update 2>&1 | lognoc
 			apt-get install -y sudo 2>&1 | lognoc
 		elif command -v yum > /dev/null 2>&1; then
