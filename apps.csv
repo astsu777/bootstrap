@@ -49,7 +49,6 @@ ADRM,weechat
 ADRM,youtube-dl
 D,dnsutils
 G,amethyst
-G,brave-browser
 G,cyberduck
 G,dozer
 G,gpg-suite-no-mail
@@ -119,4 +118,3 @@ WMAR,caddy
 WMD,dhcpdump
 WS,1295203466 microsoft remote desktop
 WS,1422475219 zentermlite
-Y,brave
