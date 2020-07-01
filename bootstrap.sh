@@ -52,9 +52,9 @@ lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
 
 if command -v brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
+	grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[G][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
+	grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[C][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
 	installpkg(){ brew update 2>&1 | lognoc && < "$pkg" xargs brew install 2>&1 | lognoc ;}
 	installguipkg(){ brew update 2>&1 | lognoc && < "$guipkg" xargs brew cask install 2>&1 | lognoc ;}
 	installworkpkg(){ brew update 2>&1 | lognoc && < "$workpkg" xargs brew install 2>&1 | lognoc ;}
@@ -99,6 +99,16 @@ if command -v mas > /dev/null 2>&1; then
 	installstoreapp(){ < "$storeapp" xargs mas install 2>&1 | lognoc ;}
 	installworkstoreapp(){ < "$workstoreapp" xargs mas install 2>&1 | lognoc ;}
 fi
+
+if command -v git > /dev/null 2>&1; then
+	grepgitrepo(){ repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo" ;}
+	grepworkgitrepo(){ workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ;}
+	reponame(){ reponame=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}' > "$reponame" ;}
+	workreponame(){ workreponame=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}' > "$workreponame" ;}
+	installgitrepo(){ for i in $repo; do git clone "$i" "$scriptsloc/$reponame" 2>&1 | lognoc; done ;}
+	installworkgitrepo(){ for i in $workrepo; do git clone "$i" "$scriptsloc/$workreponame" 2>&1 | lognoc; done ;}
+fi
+
 
 if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
@@ -310,6 +320,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				else
 					greppkg && installpkg
 					grepguipkg && installguipkg
+					grepgitrepo && reponame && installgitrepo
 				fi
 				while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
@@ -357,6 +368,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				else
 					grepworkpkg && installworkpkg
 					grepworkguipkg && installworkguipkg
+					grepworkgitrepo && workreponame && installworkgitrepo
 					if command -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
 							echo -e 2>&1 | logc

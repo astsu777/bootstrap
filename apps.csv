@@ -1,5 +1,6 @@
-# TAG, PROGRAM
-# Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, G=macOS Casks, S=macOS Store, I=Server Tools, Y=Yay
+# TAC, PROCRAM
+# Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
+# Y=Yay, G=Git Repo
 A,ttf-jetbrains-mono
 ADR,audacity
 ADR,mlocate
@@ -12,9 +13,9 @@ ADR,sxiv
 ADR,unrar
 ADR,unzip
 ADR,zathura
-ADRG,firefox
-ADRG,keepassxc
-ADRG,vlc
+ADRC,firefox
+ADRC,keepassxc
+ADRC,vlc
 ADRI,nmon
 ADRI,vim
 ADRIM,htop
@@ -48,17 +49,17 @@ ADRM,w3m
 ADRM,weechat
 ADRM,youtube-dl
 D,dnsutils
-G,amethyst
-G,cyberduck
-G,dozer
-G,gpg-suite-no-mail
-G,keycastr
-G,nextcloud
-G,osxfuse
-G,plex
-G,rambox
-G,vivaldi
-GA,alacritty
+C,amethyst
+C,cyberduck
+C,dozer
+C,gpg-suite-no-mail
+C,keycastr
+C,nextcloud
+C,osxfuse
+C,plex
+C,rambox
+C,vivaldi
+CA,alacritty
 I,etckeeper
 I,fd-find
 I,nethogs
@@ -90,9 +91,9 @@ S,946798523 antisleep
 WADR,gns3
 WADR,speedtest-cli
 WADR,testssl.sh
-WADRG,docker
-WADRG,wireshark
-WADRG,xca
+WADRC,docker
+WADRC,wireshark
+WADRC,xca
 WADRM,ansible
 WADRM,minicom
 WADRM,mitmproxy
@@ -101,9 +102,9 @@ WADRM,ssh-audit
 WADRM,telnet
 WADRM,tor
 WADRM,wakeonlan
-WG,teamviewer
-WG,tor-browser
-WG,tunnelblick
+WC,teamviewer
+WC,tor-browser
+WC,tunnelblick
 WM,bro
 WM,docker-completion
 WM,geoip
@@ -119,3 +120,4 @@ WMAR,caddy
 WMD,dhcpdump
 WS,1295203466 microsoft remote desktop
 WS,1422475219 zentermlite
+G,https://github.com/raylee/tldr-sh-client tldr
