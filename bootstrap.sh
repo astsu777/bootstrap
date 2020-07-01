@@ -101,10 +101,10 @@ if command -v mas > /dev/null 2>&1; then
 fi
 
 if command -v git > /dev/null 2>&1; then
-	grepgitrepo(){ repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo" ;}
-	grepworkgitrepo(){ workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ;}
-	reponame(){ reponame=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}' > "$reponame" ;}
-	workreponame(){ workreponame=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}' > "$workreponame" ;}
+	grepgitrepo(){ repo=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}') ;}
+	grepworkgitrepo(){ workrepo=$(sed '/^#/d' "$HOME"/apps.csv | grep "^W[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}') ;}
+	reponame(){ reponame=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}') ;}
+	workreponame(){ workreponame=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}') ;}
 	installgitrepo(){ for i in $repo; do git clone "$i" "$scriptsloc/$reponame" 2>&1 | lognoc; done ;}
 	installworkgitrepo(){ for i in $workrepo; do git clone "$i" "$scriptsloc/$workreponame" 2>&1 | lognoc; done ;}
 fi

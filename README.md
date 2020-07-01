@@ -29,3 +29,4 @@ The output to the console is pretty empty in order to keep everything clean. How
 # TODO
 
 - Include tools that need compiling (and keep the sources or not)
+- Find a way to symlink Git repositories to a PATH location (maybe?)
