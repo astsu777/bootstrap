@@ -106,6 +106,7 @@ WADRM,wakeonlan
 WC,teamviewer
 WC,tor-browser
 WC,tunnelblick
+WG,https://github.com/PayloadSecurity/VxAPI vxapi
 WM,bro
 WM,docker-completion
 WM,geoip
