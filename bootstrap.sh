@@ -933,6 +933,16 @@ elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; th
 fi
 
 #==============
+# Git Repositories
+#==============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
+	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
+	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir "$gitrepoloc/bin"; fi
+	xfiles=$(find "$SOURCES" -maxdepth 3 -perm -111 -type f)
+	for i in "$xfiles"; do ln -s "$i" "$gitrepoloc/bin" 2>&1 | lognoc; done
+fi
+
+#==============
 # macOS Workstation - Amethyst Configuration
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
