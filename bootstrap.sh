@@ -936,10 +936,12 @@ fi
 # Git Repositories
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
+	echo -e 2>&1 | logc
 	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
 	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir "$gitrepoloc/bin"; fi
-	xfiles=$(find "$SOURCES" -maxdepth 3 -perm -111 -type f)
-	for i in "$xfiles"; do ln -s "$i" "$gitrepoloc/bin" 2>&1 | lognoc; done
+	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -s '{}' "$gitrepoloc/bin" ';'
+	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
+	echo -e
 fi
 
 #==============
