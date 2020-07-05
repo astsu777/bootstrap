@@ -16,7 +16,7 @@ Execute the following commands for easy setup:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh)"
 ```
 
-It is possible to chose where the dotfiles will be located by changing the *$dfloc* variable at the top of the script.
+It is possible to chose where the dotfiles, scripts and several applications will be located by changing the *$dfloc*, *$scriptsloc* and the other location variables at the top of the script.
 
 The script will not install any software without asking first. All software can be refused in order to only install the dotfiles.
 For a list of software, see the text files in this repository.
@@ -27,6 +27,4 @@ __Note__ If the dotfiles are installed, it is possible to invoke this bootstrap 
 The output to the console is pretty empty in order to keep everything clean. However, a log file is always created in the $HOME folder and is unique for each run. This way, it is possible to review errors if required.
 
 # TODO
-
 - Include tools that need compiling (and keep the sources or not)
-- Find a way to symlink Git repositories to a PATH location (maybe?)
