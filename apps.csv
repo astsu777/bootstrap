@@ -115,6 +115,7 @@ WMADR,hping
 WMADR,ipcalc
 WMADR,iperf3
 WMADR,masscan
+WMADR,nikto
 WMADR,nmap
 WMADR,rtmpdump
 WMADR,speedtest-cli
