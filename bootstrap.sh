@@ -114,7 +114,7 @@ installperldeps(){
 	if command -v cpanm > /dev/null 2>&1; then
 		perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
 		# Nikto
-		if [[ "$perlx" == "nikto.pl"* ]] && perldoc -t perllocal | grep -E 'Net::SSLeay' > /dev/null 2>&1; then
+		if [[ "$perlx" =~ nikto.pl ]] && perldoc -t perllocal | grep -E 'Net::SSLeay' > /dev/null 2>&1; then
 			if command -v apt-get > /dev/null 2>&1; then
 				sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y libnet-ssleay-perl 2>&1 | lognoc
 			else
