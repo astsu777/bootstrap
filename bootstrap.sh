@@ -111,13 +111,13 @@ installgitrepo(){ if command -v git > /dev/null 2>&1; then for i in $repo; do gi
 installworkgitrepo(){ if command -v git > /dev/null 2>&1; then for i in $workrepo; do git clone "$i" "$gitrepoloc/$workreponame" 2>&1 | lognoc; done; fi ;}
 
 installperldeps(){
-	if command -v cpanm > /dev/null 2>&1; then
-		perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
-		# Nikto
-		if [[ "$perlx" =~ nikto.pl ]] && perldoc -t perllocal | grep -E 'Net::SSLeay' > /dev/null 2>&1; then
+	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
+	# Nikto
+	if [[ "$perlx" =~ nikto.pl ]]; then
+		if ! perl -MNet::SSLeay -e 1 > /dev/null 2>&1; then
 			if command -v apt-get > /dev/null 2>&1; then
 				sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y libnet-ssleay-perl 2>&1 | lognoc
-			else
+			elif command -v cpanm > /dev/null 2>&1; then
 				cpanm --force Net::SSLeay 2>&1 | lognoc
 			fi
 		fi
@@ -951,7 +951,6 @@ fi
 # Git Repositories
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
-	echo -e 2>&1 | logc
 	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
 	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir "$gitrepoloc/bin"; fi
 	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -s '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
@@ -964,7 +963,6 @@ fi
 # Perl Dependencies
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && command -v perl > /dev/null 2>&1; then
-	echo -e 2>&1 | logc
 	echo -e "Installing Perl dependencies..." 2>&1 | logc
 	installperldeps
 	echo -e "Perl dependencies installed" 2>&1 | logc
