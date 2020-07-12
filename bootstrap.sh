@@ -98,35 +98,31 @@ elif command -v yay > /dev/null 2>&1; then
 	installworkaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 fi
 
-if command -v mas > /dev/null 2>&1; then
-	grepstoreapp(){ storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp" ;}
-	grepworkstoreapp(){ workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp" ;}
-	installstoreapp(){ < "$storeapp" xargs mas install 2>&1 | lognoc ;}
-	installworkstoreapp(){ < "$workstoreapp" xargs mas install 2>&1 | lognoc ;}
-fi
+grepstoreapp(){ if command -v mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
+grepworkstoreapp(){ if command -v mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "^W[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
+installstoreapp(){ if command -v mas > /dev/null 2>&1; then < "$storeapp" xargs mas install 2>&1 | lognoc; fi ;}
+installworkstoreapp(){ if command -v mas > /dev/null 2>&1; then < "$workstoreapp" xargs mas install 2>&1 | lognoc; fi ;}
 
-if command -v git > /dev/null 2>&1; then
-	grepgitrepo(){ repo=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}') ;}
-	grepworkgitrepo(){ workrepo=$(sed '/^#/d' "$HOME"/apps.csv | grep "^W[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}') ;}
-	reponame(){ reponame=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}') ;}
-	workreponame(){ workreponame=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}') ;}
-	installgitrepo(){ for i in $repo; do git clone "$i" "$gitrepoloc/$reponame" 2>&1 | lognoc; done ;}
-	installworkgitrepo(){ for i in $workrepo; do git clone "$i" "$gitrepoloc/$workreponame" 2>&1 | lognoc; done ;}
-fi
+grepgitrepo(){ if command -v git > /dev/null 2>&1; then repo=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}'); fi ;}
+grepworkgitrepo(){ if command -v git > /dev/null 2>&1; then	workrepo=$(sed '/^#/d' "$HOME"/apps.csv | grep "^W[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}'); fi ;}
+reponame(){ if command -v git > /dev/null 2>&1; then reponame=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}'); fi ;}
+workreponame(){ if command -v git > /dev/null 2>&1; then workreponame=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}'); fi ;}
+installgitrepo(){ if command -v git > /dev/null 2>&1; then for i in $repo; do git clone "$i" "$gitrepoloc/$reponame" 2>&1 | lognoc; done; fi ;}
+installworkgitrepo(){ if command -v git > /dev/null 2>&1; then for i in $workrepo; do git clone "$i" "$gitrepoloc/$workreponame" 2>&1 | lognoc; done; fi ;}
 
-if command -v cpanm > /dev/null 2>&1; then
-	installperldeps(){
+installperldeps(){
+	if command -v cpanm > /dev/null 2>&1; then
 		perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
 		# Nikto
-		if [[ "$perlx" == "nikto.pl"* ]]; then
+		if [[ "$perlx" == "nikto.pl"* ]] && perldoc -t perllocal | grep -E 'Net::SSLeay' > /dev/null 2>&1; then
 			if command -v apt-get > /dev/null 2>&1; then
 				sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y libnet-ssleay-perl 2>&1 | lognoc
 			else
 				cpanm --force Net::SSLeay 2>&1 | lognoc
 			fi
 		fi
-	}
-fi
+	fi
+}
 
 if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
@@ -202,7 +198,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
 fi
 
 #=============
-# macOS - Install XCode Command Line Tools
+# macOS - Install XCode Command Line Tools (Requirement)
 #=============
 
 # Attempt headless installation
@@ -251,7 +247,7 @@ elif [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools
 fi
 
 #=============
-# macOS - Install Homebrew
+# macOS - Install Homebrew (Requirement)
 #=============
 if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 	if [[ "$EUID" = 0 ]]; then
@@ -263,6 +259,9 @@ if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
 		/bin/bash -c "$(curl -fsSL "$homebrew")" 2>&1 | logc
 		brew doctor 2>&1 | lognoc
 		brew update 2>&1 | lognoc
+		echo -e "Homebrew is now installed" 2>&1 | logc
+		echo -e "Please run this script again to bootstrap your system" 2>&1 | logc
+		exit 0
 	fi
 fi
 
@@ -286,7 +285,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
 fi
 
 #=============
-# Arch Linux - Install AUR Helper
+# Arch Linux - Install AUR Helper (Requirement)
 #=============
 if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! command -v yay > /dev/null 2>&1; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
@@ -924,6 +923,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; th
 			mkdir "$scriptsloc"
 			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
 			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+			echo -e "Custom scripts installed" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -936,6 +937,8 @@ elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; th
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Updating custom scripts..." 2>&1 | logc
 			git -C "$scriptsloc" pull 2>&1 | lognoc
+			echo -e "Custom scripts updated" 2>&1 | logc
+			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -953,14 +956,19 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
 	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir "$gitrepoloc/bin"; fi
 	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -s '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
 	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
-	echo -e
+	echo -e "Git repos' binaries symlinked" 2>&1 | logc
+	echo -e 2>&1 | logc
 fi
 
 #==============
 # Perl Dependencies
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && command -v perl > /dev/null 2>&1; then
+	echo -e 2>&1 | logc
+	echo -e "Installing Perl dependencies..." 2>&1 | logc
 	installperldeps
+	echo -e "Perl dependencies installed" 2>&1 | logc
+	echo -e 2>&1 | logc
 fi
 
 #==============
