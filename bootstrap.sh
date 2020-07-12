@@ -116,7 +116,7 @@ fi
 
 if command -v cpanm > /dev/null 2>&1; then
 	installperldeps(){
-		perlx=$(find "$gitrepoloc" -maxdepth 4 -perm -111 -type f -name *.pl)
+		perlx=$(find "$gitrepoloc" -maxdepth 4 -perm -111 -type f -name '*.pl')
 		# Nikto
 		if [[ "$perlx" == "nikto.pl"* ]]; then
 			if command -v apt-get > /dev/null 2>&1; then
@@ -951,7 +951,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
 	echo -e 2>&1 | logc
 	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
 	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir "$gitrepoloc/bin"; fi
-	find "$gitrepoloc" -maxdepth 4 -perm -111 -type f -exec ln -s '{}' "$gitrepoloc/bin" ';'
+	find "$gitrepoloc" -maxdepth 4 -perm -111 -type f -exec ln -s '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
 	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
 	echo -e
 fi
@@ -959,7 +959,7 @@ fi
 #==============
 # Perl Dependencies
 #==============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && if command -v perl >> /dev/null 2>&1; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && command -v perl > /dev/null 2>&1; then
 	installperldeps
 fi
 
