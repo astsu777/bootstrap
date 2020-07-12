@@ -106,7 +106,8 @@ WADRM,wakeonlan
 WC,teamviewer
 WC,tor-browser
 WC,tunnelblick
-WG,https://github.com/PayloadSecurity/VxAPI vxapi
+WG,https://github.com/PayloadSecurity/VxAPI.git vxapi
+WG,https://github.com/sullo/nikto.git nikto
 WM,bro
 WM,docker-completion
 WM,geoip
@@ -115,7 +116,6 @@ WMADR,hping
 WMADR,ipcalc
 WMADR,iperf3
 WMADR,masscan
-WMADR,nikto
 WMADR,nmap
 WMADR,rtmpdump
 WMADR,speedtest-cli
