@@ -53,7 +53,6 @@ tpm="https://github.com/tmux-plugins/tpm"
 # Global Functions
 #=============
 logc(){ tee -a "$logfile" ;}
-
 lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
 
 if command -v brew > /dev/null 2>&1; then
@@ -115,6 +114,19 @@ if command -v git > /dev/null 2>&1; then
 	installworkgitrepo(){ for i in $workrepo; do git clone "$i" "$gitrepoloc/$workreponame" 2>&1 | lognoc; done ;}
 fi
 
+if command -v cpanm > /dev/null 2>&1; then
+	installperldeps(){
+		perlx=$(find "$gitrepoloc" -maxdepth 4 -perm -111 -type f -name *.pl)
+		# Nikto
+		if [[ "$perlx" == "nikto.pl"* ]]; then
+			if command -v apt-get > /dev/null 2>&1; then
+				sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y libnet-ssleay-perl 2>&1 | lognoc
+			else
+				cpanm --force Net::SSLeay 2>&1 | lognoc
+			fi
+		fi
+	}
+fi
 
 if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
@@ -942,6 +954,13 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
 	find "$gitrepoloc" -maxdepth 4 -perm -111 -type f -exec ln -s '{}' "$gitrepoloc/bin" ';'
 	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
 	echo -e
+fi
+
+#==============
+# Perl Dependencies
+#==============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && if command -v perl >> /dev/null 2>&1; then
+	installperldeps
 fi
 
 #==============
