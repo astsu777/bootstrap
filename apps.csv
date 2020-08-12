@@ -28,6 +28,7 @@ C,osxfuse
 C,plex
 C,rambox
 C,vivaldi
+C,xquartz
 CA,alacritty
 D,dnsutils
 G,https://github.com/raylee/tldr-sh-client tldr
