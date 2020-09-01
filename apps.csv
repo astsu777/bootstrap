@@ -49,7 +49,6 @@ M,watch
 M,wget
 M,xz
 MAD,cpanminus
-MAD,httpie
 MADR,bash
 MADR,bash-completion
 MADR,colordiff
@@ -108,6 +107,7 @@ WM,bro
 WM,docker-completion
 WM,geoip
 WM,testssl
+WMAD,httpie
 WMADR,ansible
 WMADR,hping
 WMADR,ipcalc
