@@ -49,6 +49,7 @@ M,watch
 M,wget
 M,xz
 MAD,cpanminus
+MAD,httpie
 MADR,bash
 MADR,bash-completion
 MADR,colordiff
