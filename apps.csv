@@ -112,6 +112,7 @@ WMADR,ansible
 WMADR,hping
 WMADR,ipcalc
 WMADR,iperf3
+WMADR,jq
 WMADR,masscan
 WMADR,minicom
 WMADR,mitmproxy
