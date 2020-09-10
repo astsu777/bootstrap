@@ -640,6 +640,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			defaults write NSGlobalDomain KeyRepeat -int 1 # Enable fast key repeat
 			defaults write NSGlobalDomain InitialKeyRepeat -int 10 # Very fast initial key repeat
 			defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false # Disable automatic spelling correction
+			defaults write -g ApplePressAndHoldEnabled -bool false # Enable key repeat
 
 			# Configure the clock to be 24h and display the date
 			defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM  HH:mm"
