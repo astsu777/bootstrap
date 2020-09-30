@@ -53,6 +53,7 @@ MADR,bash-completion
 MADR,colordiff
 MADR,coreutils
 MADR,curl
+MADR,dos2unix
 MADR,exa
 MADR,fd
 MADR,ffmpeg
