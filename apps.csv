@@ -98,6 +98,7 @@ WADR,testssl.sh
 WADRC,docker
 WADRC,wireshark
 WADRC,xca
+WBR,zeek
 WC,remote-desktop-manager-free
 WC,teamviewer
 WC,tor-browser
