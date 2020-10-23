@@ -98,8 +98,6 @@ WADR,testssl.sh
 WADRC,docker
 WADRC,wireshark
 WADRC,xca
-WBADI,tcptraceroute
-WBR,zeek
 WC,remote-desktop-manager-free
 WC,teamviewer
 WC,tor-browser
@@ -111,6 +109,7 @@ WM,docker-completion
 WM,geoip
 WM,testssl
 WMAD,httpie
+WMADI,tcptraceroute
 WMADR,ansible
 WMADR,hping
 WMADR,ipcalc
@@ -129,5 +128,6 @@ WMADR,tor
 WMADR,wakeonlan
 WMAR,caddy
 WMD,dhcpdump
+WMR,zeek
 WS,1295203466 microsoft remote desktop
 WS,1422475219 zentermlite
