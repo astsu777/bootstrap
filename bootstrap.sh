@@ -103,10 +103,10 @@ grepworkstoreapp(){ if command -v mas > /dev/null 2>&1; then workstoreapp=$(mkte
 installstoreapp(){ if command -v mas > /dev/null 2>&1; then < "$storeapp" xargs mas install 2>&1 | lognoc; fi ;}
 installworkstoreapp(){ if command -v mas > /dev/null 2>&1; then < "$workstoreapp" xargs mas install 2>&1 | lognoc; fi ;}
 
-grepgitrepo(){ if command -v git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}'; fi ;}
-grepworkgitrepo(){ if command -v git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}'; fi ;}
-installgitrepo(){ if command -v git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
-installworkgitrepo(){ if command -v git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
+grepgitrepo(){ if command -v git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
+grepworkgitrepo(){ if command -v git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
+installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -p "$gitrepoloc" > /dev/null 2>&1; fi && if command -v git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
+installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -p "$gitrepoloc" > /dev/null 2>&1; fi && if command -v git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
 
 installperldeps(){
 	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
@@ -121,6 +121,15 @@ installperldeps(){
 		fi
 	fi
 }
+
+installpythondeps(){
+	pythonx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.py')
+	# VxAPI
+	if [[ "$pythonx" =~ vxapi.py ]]; then
+		pip install requests colorama 2>&1 | lognoc
+	fi
+}
+
 
 if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
@@ -967,6 +976,17 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && co
 	echo -e "Perl dependencies installed" 2>&1 | logc
 	echo -e 2>&1 | logc
 fi
+
+#==============
+# Python Dependencies
+#==============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && command -v python > /dev/null 2>&1; then
+	echo -e "Installing Python dependencies..." 2>&1 | logc
+	installpythondeps
+	echo -e "Python dependencies installed" 2>&1 | logc
+	echo -e 2>&1 | logc
+fi
+
 
 #==============
 # macOS Workstation - Amethyst Configuration
