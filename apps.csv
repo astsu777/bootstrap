@@ -30,7 +30,7 @@ C,plex
 C,rambox
 CA,alacritty
 D,dnsutils
-G,https://github.com/raylee/tldr-sh-client tldr
+G,https://github.com/raylee/tldr-sh-client
 I,etckeeper
 I,fd-find
 I,nethogs
@@ -103,8 +103,8 @@ WC,remote-desktop-manager-free
 WC,teamviewer
 WC,tor-browser
 WC,tunnelblick
-WG,https://github.com/payloadsecurity/vxapi.git vxapi
-WG,https://github.com/sullo/nikto.git nikto
+WG,https://github.com/payloadsecurity/vxapi.git
+WG,https://github.com/sullo/nikto.git
 WM,bro
 WM,docker-completion
 WM,geoip

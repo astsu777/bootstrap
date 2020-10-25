@@ -103,12 +103,10 @@ grepworkstoreapp(){ if command -v mas > /dev/null 2>&1; then workstoreapp=$(mkte
 installstoreapp(){ if command -v mas > /dev/null 2>&1; then < "$storeapp" xargs mas install 2>&1 | lognoc; fi ;}
 installworkstoreapp(){ if command -v mas > /dev/null 2>&1; then < "$workstoreapp" xargs mas install 2>&1 | lognoc; fi ;}
 
-grepgitrepo(){ if command -v git > /dev/null 2>&1; then repo=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}'); fi ;}
-grepworkgitrepo(){ if command -v git > /dev/null 2>&1; then	workrepo=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}'); fi ;}
-reponame(){ if command -v git > /dev/null 2>&1; then reponame=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}'); fi ;}
-workreponame(){ if command -v git > /dev/null 2>&1; then workreponame=$(sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $2}'); fi ;}
-installgitrepo(){ if command -v git > /dev/null 2>&1; then for i in $repo; do git clone "$i" "$gitrepoloc/$reponame" 2>&1 | lognoc; done; fi ;}
-installworkgitrepo(){ if command -v git > /dev/null 2>&1; then for i in $workrepo; do git clone "$i" "$gitrepoloc/$workreponame" 2>&1 | lognoc; done; fi ;}
+grepgitrepo(){ if command -v git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}'; fi ;}
+grepworkgitrepo(){ if command -v git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}'; fi ;}
+installgitrepo(){ if command -v git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
+installworkgitrepo(){ if command -v git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
 
 installperldeps(){
 	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
@@ -337,7 +335,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				else
 					greppkg && installpkg
 					grepguipkg && installguipkg
-					grepgitrepo && reponame && installgitrepo
+					grepgitrepo && installgitrepo
 				fi
 				while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
@@ -385,7 +383,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				else
 					grepworkpkg && installworkpkg
 					grepworkguipkg && installworkguipkg
-					grepworkgitrepo && workreponame && installworkgitrepo
+					grepworkgitrepo && installworkgitrepo
 					if command -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
 							echo -e 2>&1 | logc
