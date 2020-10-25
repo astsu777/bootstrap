@@ -1,3 +1,4 @@
+# C,dozer
 # TAC, PROCRAM
 # Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
 # Y=Yay, G=Git Repo
@@ -20,7 +21,6 @@ ADRI,nmon
 ADRI,vim
 C,amethyst
 C,cyberduck
-C,dozer
 C,gpg-suite-no-mail
 C,keycastr
 C,lulu
@@ -49,6 +49,7 @@ M,watch
 M,wget
 M,xz
 MAD,cpanminus
+MAD,streamlink
 MADR,bash
 MADR,bash-completion
 MADR,colordiff
@@ -86,6 +87,7 @@ R,perl-App-cpanminus
 S,1043270657 gif keyboard
 S,1116599239 nordvpn ike
 S,1384080005 tweetbot
+S,1452453066 hidden bar
 S,408981434 imovie
 S,425424353 the unarchiver
 S,425955336 skitch
