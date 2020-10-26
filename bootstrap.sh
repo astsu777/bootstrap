@@ -671,8 +671,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			fi
 
 			# Accessibility
-			defaults write com.apple.universalaccess reduceMotion -int 1 # Reduce animations
-			defaults write com.apple.universalaccess reduceTranssparency -int 1 # Disable transparency
+			# defaults write com.apple.universalaccess reduceMotion -int 1 # Reduce animations
+			defaults write com.apple.universalaccess reduceMotion -int 0 # Enable animations
+			# defaults write com.apple.universalaccess reduceTranssparency -int 1 # Disable transparency
 
 			# Build the 'locate' database
 			sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | lognoc
