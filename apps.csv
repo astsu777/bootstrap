@@ -129,6 +129,7 @@ WMADR,ssh-audit
 WMADR,telnet
 WMADR,tor
 WMADR,wakeonlan
+WMADRI,mtr
 WMAR,caddy
 WMD,dhcpdump
 WMR,zeek
