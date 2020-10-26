@@ -37,7 +37,7 @@ I,nethogs
 I,peco
 I,tcpdump
 M,ansifilter
-M,bat
+M,ccat
 M,findutils
 M,gotop
 M,grep
