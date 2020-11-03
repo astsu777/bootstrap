@@ -80,6 +80,7 @@ MADR,vifm
 MADR,w3m
 MADR,weechat
 MADR,youtube-dl
+MADRI,glances
 MADRI,htop
 MADRI,ncdu
 MADRI,tmux
