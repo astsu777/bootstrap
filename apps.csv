@@ -4,6 +4,7 @@
 # Y=Yay, G=Git Repo
 A,ttf-jetbrains-mono
 ADR,audacity
+ADR,chromium
 ADR,mlocate
 ADR,mplayer
 ADR,net-tools
@@ -21,6 +22,7 @@ ADRI,nmon
 ADRI,vim
 C,amethyst
 C,cyberduck
+C,epic
 C,eqmac
 C,gpg-suite-no-mail
 C,keycastr
