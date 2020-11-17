@@ -9,6 +9,7 @@ ADR,mlocate
 ADR,mplayer
 ADR,net-tools
 ADR,nethogs
+ADR,ntfs-3g
 ADR,python
 ADR,python-pip
 ADR,sxiv
@@ -28,7 +29,6 @@ C,gpg-suite-no-mail
 C,keycastr
 C,lulu
 C,nextcloud
-C,osxfuse
 C,plex
 C,rambox
 CA,alacritty
@@ -68,7 +68,6 @@ MADR,lame
 MADR,mpv
 MADR,neovim
 MADR,newsboat
-MADR,ntfs-3g
 MADR,openssl
 MADR,perl
 MADR,pwgen
