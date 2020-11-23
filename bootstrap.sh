@@ -29,13 +29,6 @@ logfile="$HOME/bootstrap_log_$date.txt"
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
 aurhelper="https://aur.archlinux.org/yay.git"
 applist="https://raw.githubusercontent.com/GSquad934/bootstrap/master/apps.csv"
-zsh_tools=(
-	zsh
-	zsh-autosuggestions
-	zsh-completions
-	zsh-history-substring-search
-	zsh-syntax-highlighting
-)
 
 # Font lists
 mononoki_regular="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf"
@@ -65,10 +58,11 @@ if command -v brew > /dev/null 2>&1; then
 	installworkpkg(){ brew update 2>&1 | lognoc && < "$workpkg" xargs brew install 2>&1 | lognoc ;}
 	installworkguipkg(){ brew update 2>&1 | lognoc && < "$workguipkg" xargs brew install 2>&1 | lognoc ;}
 	installzsh() {
-		brew install "${zsh_tools[@]}" 2>&1 | lognoc
+		brew install zsh 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
+		git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug
 	}
 elif command -v apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -76,21 +70,21 @@ elif command -v apt-get > /dev/null 2>&1; then
 	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y "${zsh_tools[@]}" 2>&1 | lognoc ;}
+	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
 elif command -v yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y "${zsh_tools[@]}" 2>&1 | lognoc ;}
+	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
 elif command -v pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S "${zsh_tools[@]}" 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
 elif command -v yay > /dev/null 2>&1; then
 	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
 	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
