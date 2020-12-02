@@ -110,7 +110,6 @@ WC,tunnelblick
 WG,https://github.com/payloadsecurity/vxapi.git
 WG,https://github.com/sullo/nikto.git
 WM,bro
-WM,docker-completion
 WM,geoip
 WM,testssl
 WMAD,httpie
