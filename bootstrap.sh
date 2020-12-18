@@ -152,7 +152,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
 			exit 1
 		else
-			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+			installsrvpkg(){ sudo pacman --noconfirm --needed -Sy 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
 		fi
 	fi
 fi
