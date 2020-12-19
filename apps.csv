@@ -2,7 +2,6 @@
 # TAC, PROCRAM
 # Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
 # Y=Yay, G=Git Repo
-A,drill
 A,ttf-jetbrains-mono
 ADR,audacity
 ADR,chromium
@@ -22,6 +21,7 @@ ADRC,keepassxc
 ADRC,vlc
 ADRI,nmon
 ADRI,vim
+AI,drill
 C,amethyst
 C,cyberduck
 C,epic
