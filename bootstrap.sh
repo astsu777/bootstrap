@@ -873,7 +873,11 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | lognoc
 		fi
 		if command -v alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
-			ln -s "$dfloc"/config/alacritty "$HOME"/.config/alacritty 2>&1 | lognoc
+			if [[ "$OSTYPE" == "darwin"* ]]; then
+				mkdir "$HOME"/.config/alacritty && ln -s "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+				mkdir "$HOME"/.config/alacritty && ln -s "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+			fi
 		fi
 		if [[ -d /Applications/iTerm.app ]]; then
 			ln -s "$dfloc"/iterm2 "$HOME"/.iterm2 > /dev/null 2>&1
