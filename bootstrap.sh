@@ -78,6 +78,17 @@ elif command -v yum > /dev/null 2>&1; then
 	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
+elif command -v pacman yay > /dev/null 2>&1; then
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
+	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
+	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
+	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
+	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
+	installaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
+	installworkaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 elif command -v pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
@@ -85,11 +96,6 @@ elif command -v pacman > /dev/null 2>&1; then
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
-elif command -v yay > /dev/null 2>&1; then
-	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
-	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
-	installaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
-	installworkaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 fi
 
 grepstoreapp(){ if command -v mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
@@ -356,6 +362,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				greppkg && installpkg
 				if [[ -f /etc/arch-release ]] && command -v yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
+					grepgitrepo && installgitrepo
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
@@ -406,6 +413,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				grepworkpkg && installworkpkg
 				if [[ -f /etc/arch-release ]] && command -v yay > /dev/null 2>&1; then
 					grepworkaurpkg && installworkaurpkg
+					grepworkgitrepo && installworkgitrepo
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
