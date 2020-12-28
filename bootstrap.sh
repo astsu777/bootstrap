@@ -48,7 +48,7 @@ tpm="https://github.com/tmux-plugins/tpm"
 logc(){ tee -a "$logfile" ;}
 lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
 
-if command -v brew > /dev/null 2>&1; then
+if type brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
@@ -64,21 +64,21 @@ if command -v brew > /dev/null 2>&1; then
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
 		git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug
 	}
-elif command -v apt-get > /dev/null 2>&1; then
+elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
-elif command -v yum > /dev/null 2>&1; then
+elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
 	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
-elif command -v pacman yay > /dev/null 2>&1; then
+elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
@@ -89,7 +89,7 @@ elif command -v pacman yay > /dev/null 2>&1; then
 	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
 	installaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
 	installworkaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
-elif command -v pacman > /dev/null 2>&1; then
+elif type pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
@@ -98,24 +98,24 @@ elif command -v pacman > /dev/null 2>&1; then
 	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
 fi
 
-grepstoreapp(){ if command -v mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
-grepworkstoreapp(){ if command -v mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
-installstoreapp(){ if command -v mas > /dev/null 2>&1; then < "$storeapp" xargs mas install 2>&1 | lognoc; fi ;}
-installworkstoreapp(){ if command -v mas > /dev/null 2>&1; then < "$workstoreapp" xargs mas install 2>&1 | lognoc; fi ;}
+grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
+grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
+installstoreapp(){ if type mas > /dev/null 2>&1; then < "$storeapp" xargs mas install 2>&1 | lognoc; fi ;}
+installworkstoreapp(){ if type mas > /dev/null 2>&1; then < "$workstoreapp" xargs mas install 2>&1 | lognoc; fi ;}
 
-grepgitrepo(){ if command -v git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
-grepworkgitrepo(){ if command -v git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
-installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -p "$gitrepoloc" > /dev/null 2>&1; fi && if command -v git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
-installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -p "$gitrepoloc" > /dev/null 2>&1; fi && if command -v git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
+grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
+grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
+installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -p "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
+installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -p "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
 
 installperldeps(){
 	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
 	# Nikto
 	if [[ "$perlx" =~ nikto.pl ]]; then
 		if ! perl -MNet::SSLeay -e 1 > /dev/null 2>&1; then
-			if command -v apt-get > /dev/null 2>&1; then
+			if type apt-get > /dev/null 2>&1; then
 				sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y libnet-ssleay-perl 2>&1 | lognoc
-			elif command -v cpanm > /dev/null 2>&1; then
+			elif type cpanm > /dev/null 2>&1; then
 				cpanm --force Net::SSLeay 2>&1 | lognoc
 			fi
 		fi
@@ -133,28 +133,28 @@ installpythondeps(){
 
 if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
-	if command -v apt-get > /dev/null 2>&1; then
+	if type apt-get > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
 			installsrvpkg(){ apt-get update 2>&1 | lognoc && while IFS= read -r line; do apt-get install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-		elif ! command -v sudo > /dev/null 2>&1; then
+		elif ! type sudo > /dev/null 2>&1; then
 			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
 			exit 1
 		else
 			installsrvpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
 		fi
-	elif command -v yum > /dev/null 2>&1; then
+	elif type yum > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
 			installsrvpkg(){ yum update -y 2>&1 | lognoc && while IFS= read -r line; do yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-		elif ! command -v sudo > /dev/null 2>&1; then
+		elif ! type sudo > /dev/null 2>&1; then
 			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
 			exit 1
 		else
 			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
 		fi
-	elif command -v pacman > /dev/null 2>&1; then
+	elif type pacman > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
 			installsrvpkg(){ pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-		elif ! command -v sudo > /dev/null 2>&1; then
+		elif ! type sudo > /dev/null 2>&1; then
 			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
 			exit 1
 		else
@@ -179,20 +179,20 @@ echo -e 2>&1 | logc
 #=============
 # Linux - Install 'sudo' (Requirement)
 #=============
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
+if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 	echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
 	echo -e "Installing 'sudo'..." 2>&1 | logc
 	if [[ "$EUID" != 0 ]]; then
 		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
 		exit 1
 	else
-		if command -v apt-get > /dev/null 2>&1; then
+		if type apt-get > /dev/null 2>&1; then
 			apt-get update 2>&1 | lognoc
 			apt-get install -y sudo 2>&1 | lognoc
-		elif command -v yum > /dev/null 2>&1; then
+		elif type yum > /dev/null 2>&1; then
 			yum update -y 2>&1 | lognoc
 			yum install -y sudo 2>&1 | lognoc
-		elif command -v pacman > /dev/null 2>&1; then
+		elif type pacman > /dev/null 2>&1; then
 			pacman -Sy 2>&1 | lognoc
 			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
 		fi
@@ -256,7 +256,7 @@ fi
 #=============
 # macOS - Install Homebrew (Requirement)
 #=============
-if [[ "$OSTYPE" == "darwin"* ]] && ! command -v brew > /dev/null 2>&1; then
+if [[ "$OSTYPE" == "darwin"* ]] && ! type brew > /dev/null 2>&1; then
 	if [[ "$EUID" = 0 ]]; then
 		echo -e "Homebrew cannot be installed as root!" 2>&1 | logc
 		exit 1
@@ -275,7 +275,7 @@ fi
 #=============
 # Linux - Install 'sudo' (Requirement)
 #=============
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! command -v sudo > /dev/null 2>&1; then
+if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 	echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
 	echo -e "Installing 'sudo'..." 2>&1 | logc
 	if [[ "$EUID" != 0 ]]; then
@@ -294,7 +294,7 @@ fi
 #=============
 # Arch Linux - Install AUR Helper (Requirement)
 #=============
-if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! command -v yay > /dev/null 2>&1; then
+if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! type yay > /dev/null 2>&1; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -360,7 +360,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				greppkg && installpkg
-				if [[ -f /etc/arch-release ]] && command -v yay > /dev/null 2>&1; then
+				if [[ -f /etc/arch-release ]] && type yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
 					grepgitrepo && installgitrepo
 				fi
@@ -394,7 +394,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					grepworkpkg && installworkpkg
 					grepworkguipkg && installworkguipkg
 					grepworkgitrepo && installworkgitrepo
-					if command -v mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
+					if type mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
 							echo -e 2>&1 | logc
 							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -411,7 +411,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				grepworkpkg && installworkpkg
-				if [[ -f /etc/arch-release ]] && command -v yay > /dev/null 2>&1; then
+				if [[ -f /etc/arch-release ]] && type yay > /dev/null 2>&1; then
 					grepworkaurpkg && installworkaurpkg
 					grepworkgitrepo && installworkgitrepo
 				fi
@@ -430,7 +430,7 @@ fi
 #============
 # Workstation - Install Fonts
 #============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v git > /dev/null 2>&1; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; then
 	while read -p "Do you want to install custom fonts? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -441,14 +441,14 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v git > /dev/null 2
 				exit 1
 			else
 				mkdir "$HOME"/fonts
-				if command -v wget > /dev/null 2>&1; then
+				if type wget > /dev/null 2>&1; then
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | lognoc
-				elif command -v curl > /dev/null 2>&1; then
+				elif type curl > /dev/null 2>&1; then
 					cd "$HOME"/fonts || exit
 					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
 					curl -fSLO "$mononoki_bold" 2>&1 | lognoc
@@ -464,7 +464,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v git > /dev/null 2
 					if [[ ! -d /usr/share/fonts ]]; then
 						sudo mkdir /usr/share/fonts
 					fi
-					if command -v fc-cache > /dev/null 2>&1; then
+					if type fc-cache > /dev/null 2>&1; then
 						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | lognoc
 					else
 						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | logc
@@ -489,7 +489,7 @@ fi
 #============
 # Install TMUX Plugin Manager
 #============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && command -v tmux > /dev/null 2>&1; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type tmux > /dev/null 2>&1; then
 	if [[ -d "$HOME"/.config/tmux/plugins/tpm ]]; then
 		while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
@@ -711,7 +711,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 			sudo -v
 
 			# Build the 'locate' database
-			if command -v updatedb > /dev/null 2>&1; then
+			if type updatedb > /dev/null 2>&1; then
 				sudo updatedb
 			fi
 
@@ -733,7 +733,7 @@ fi
 while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-		if ! command -v git > /dev/null 2>&1; then
+		if ! type git > /dev/null 2>&1; then
 			echo -e "Git is required to install the dotfiles. Please install it before executing this script!"
 			exit 1
 		fi
@@ -829,14 +829,14 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		# Create symlinks in the home folder
 		echo -e "Installing new dotfiles..." 2>&1 | logc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
-		if command -v bash > /dev/null 2>&1; then
+		if type bash > /dev/null 2>&1; then
 			ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
 			touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
 		fi
-		if command -v git > /dev/null 2>&1; then
+		if type git > /dev/null 2>&1; then
 			ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
 		fi
-		if command -v zsh > /dev/null 2>&1; then
+		if type zsh > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/zsh ]]; then
 				mkdir -pv "$HOME"/.config/zsh 2>&1 | lognoc
 			fi
@@ -844,7 +844,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
 			ln -s "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
 		fi
-		if command -v weechat > /dev/null 2>&1; then
+		if type weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
 				mkdir "$HOME"/.config/weechat 2>&1 | lognoc
 			fi
@@ -859,28 +859,28 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/config/weechat/fset.conf "$HOME"/.config/weechat/fset.conf 2>&1 | lognoc
 			ln -s "$dfloc"/config/weechat/iset.conf "$HOME"/.config/weechat/iset.conf 2>&1 | lognoc
 		fi
-		if command -v wget > /dev/null 2>&1; then
+		if type wget > /dev/null 2>&1; then
 			ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | lognoc
 		fi
-		if command -v vim > /dev/null 2>&1; then
+		if type vim > /dev/null 2>&1; then
 			ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | lognoc
 			ln -s "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | lognoc
 		fi
-		if command -v nvim > /dev/null 2>&1; then
+		if type nvim > /dev/null 2>&1; then
 			ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | lognoc
 			# ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
 		fi
-		if command -v vifm > /dev/null 2>&1; then
+		if type vifm > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/vifm ]]; then
 				mkdir "$HOME"/.config/vifm 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | lognoc
 			ln -s "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | lognoc
 		fi
-		if command -v msmtp > /dev/null 2>&1; then
+		if type msmtp > /dev/null 2>&1; then
 			ln -s "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | lognoc
 		fi
-		if command -v alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
+		if type alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				mkdir "$HOME"/.config/alacritty && ln -s "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -890,21 +890,21 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		if [[ -d /Applications/iTerm.app ]]; then
 			ln -s "$dfloc"/iterm2 "$HOME"/.iterm2 > /dev/null 2>&1
 		fi
-		if command -v w3m > /dev/null 2>&1; then
+		if type w3m > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.w3m ]]; then
 				mkdir -pv "$HOME"/.w3m > /dev/null 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
 		fi
-		if command -v surfraw > /dev/null 2>&1 || command -v sr > /dev/null 2>&1; then
+		if type surfraw > /dev/null 2>&1 || type sr > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/surfraw ]]; then
 				mkdir -pv "$HOME"/.config/surfraw 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
 		fi
-		if command -v newsboat > /dev/null 2>&1 || command -v sr > /dev/null 2>&1; then
+		if type newsboat > /dev/null 2>&1 || type sr > /dev/null 2>&1; then
 			mkdir -pv "$HOME"/.config/newsboat > /dev/null 2>&1 | lognoc
-			if command -v tsp > /dev/null 2>&1; then
+			if type tsp > /dev/null 2>&1; then
 				ln -s "$dfloc"/config/newsboat/config-tsp "$HOME"/.config/newsboat/config 2>&1 | lognoc
 				ln -s "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
 			else
@@ -914,7 +914,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
-		if command -v tmux > /dev/null 2>&1; then
+		if type tmux > /dev/null 2>&1; then
 			if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 				ln -s "$dfloc"/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 			else
@@ -984,7 +984,7 @@ fi
 #==============
 # Perl Dependencies
 #==============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && command -v perl > /dev/null 2>&1; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && type perl > /dev/null 2>&1; then
 	echo -e "Installing Perl dependencies..." 2>&1 | logc
 	installperldeps
 	echo -e "Perl dependencies installed" 2>&1 | logc
@@ -994,7 +994,7 @@ fi
 #==============
 # Python Dependencies
 #==============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && command -v python > /dev/null 2>&1; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && type python > /dev/null 2>&1; then
 	echo -e "Installing Python dependencies..." 2>&1 | logc
 	installpythondeps
 	echo -e "Python dependencies installed" 2>&1 | logc
