@@ -752,12 +752,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.bash_profile "$HOME"/.old-dotfiles/bash_profile > /dev/null 2>&1
 				mv "$HOME"/.bashrc "$HOME"/.old-dotfiles/bashrc > /dev/null 2>&1
 				mv "$HOME"/.gitconfig "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1
-				mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1 || mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1
-				mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1 || mv "$HOME"/.config/tmux/tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1
+				if [[ -f "$HOME"/.msmtprc ]]; then mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1; else mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1; fi
+				if [[ -f "$HOME"/.tmux.conf ]]; then mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; else mv "$HOME"/.config/tmux/tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; fi
 				mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
 				mv "$HOME"/.vimrc "$HOME"/.old-dotfiles/vimrc > /dev/null 2>&1
-				mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1 || mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1
-				mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1 || mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1
+				if [[ -f "$HOME"/.p10k.zsh ]]; then mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; fi
+				if [[ -f "$HOME"/.zshrc ]]; then mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; fi
 				mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
 				mv "$HOME"/.zshenv "$HOME"/.old-dotfiles/zshenv > /dev/null 2>&1
 				mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
@@ -773,12 +773,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/.bash_profile
 				rm -rf "$HOME"/.bashrc
 				rm -rf "$HOME"/.gitconfig
-				rm -rf "$HOME"/.msmtprc ; rm -Rf "$HOME"/.config/msmtp
-				rm -rf "$HOME"/.p10k.zsh || rm -Rf "$HOME"/.config/zsh/.p10k.zsh
-				rm -rf "$HOME"/.tmux.conf || rm -Rf "$HOME"/.config/tmux/tmux.conf
+				if [[ -f "$HOME"/.msmtprc ]]; then rm -rf "$HOME"/.msmtprc; else rm -Rf "$HOME"/.config/msmtp; fi
+				if [[ -f "$HOME"/.p10k.zsh ]]; then rm -rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
+				if [[ -f "$HOME"/.tmux.conf ]]; then rm -rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
 				rm -rf "$HOME"/.vim
 				rm -rf "$HOME"/.vimrc
-				rm -rf "$HOME"/.zshrc || rm -Rf "$HOME"/.config/zsh/.zshrc
+				if [[ -f "$HOME"/.zshrc ]]; then rm -rf "$HOME"/.zshrc; else rm -Rf "$HOME"/.config/zsh/.zshrc; fi
 				rm -rf "$HOME"/.zprofile
 				rm -rf "$HOME"/.zshenv
 				rm -rf "$HOME"/.config/nvim/init.vim
@@ -860,7 +860,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if command -v nvim > /dev/null 2>&1; then
 			ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | lognoc
-			ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
+			# ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
 		fi
 		if command -v vifm > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/vifm ]]; then
@@ -884,7 +884,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if command -v w3m > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.w3m ]]; then
-				mkdir -pv "$HOME"/.w3m 2>&1 | lognoc
+				mkdir -pv "$HOME"/.w3m > /dev/null 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
 		fi
@@ -895,7 +895,14 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
 		fi
 		if command -v newsboat > /dev/null 2>&1 || command -v sr > /dev/null 2>&1; then
-			ln -s "$dfloc"/config/newsboat "$HOME"/.config/newsboat 2>&1 | lognoc
+			mkdir -pv "$HOME"/.config/newsboat > /dev/null 2>&1 | lognoc
+			if command -v tsp > /dev/null 2>&1; then
+				ln -s "$dfloc"/config/newsboat/config-tsp "$HOME"/.config/newsboat/config 2>&1 | lognoc
+				ln -s "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
+			else
+				ln -s "$dfloc"/config/newsboat/config-ts "$HOME"/.config/newsboat/config 2>&1 | lognoc
+				ln -s "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
+			fi
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
