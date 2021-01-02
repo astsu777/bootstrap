@@ -106,6 +106,7 @@ WADRM,wireshark
 WADRM,xca
 WG,https://github.com/payloadsecurity/vxapi.git
 WG,https://github.com/sullo/nikto.git
+WM,bria
 WM,bro
 WM,geoip
 WM,remote-desktop-manager-free
