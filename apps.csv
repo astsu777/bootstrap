@@ -34,6 +34,7 @@ M,ccat
 M,cyberduck
 M,epic
 M,eqmac
+M,ferdi
 M,findutils
 M,gotop
 M,gpg-suite-no-mail
@@ -42,7 +43,6 @@ M,mas
 M,msmtp
 M,nextcloud
 M,plex
-M,rambox
 MA,alacritty
 MAD,cpanminus
 MAD,streamlink
