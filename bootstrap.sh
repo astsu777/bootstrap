@@ -54,9 +54,9 @@ if type brew > /dev/null 2>&1; then
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	# grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
 	installpkg(){ brew update 2>&1 | lognoc && < "$pkg" xargs brew install 2>&1 | lognoc ;}
-	installguipkg(){ brew update 2>&1 | lognoc && < "$guipkg" xargs brew install 2>&1 | lognoc ;}
+	installguipkg(){ brew update 2>&1 | lognoc && < "$guipkg" xargs brew install --cask 2>&1 | lognoc ;}
 	installworkpkg(){ brew update 2>&1 | lognoc && < "$workpkg" xargs brew install 2>&1 | lognoc ;}
-	installworkguipkg(){ brew update 2>&1 | lognoc && < "$workguipkg" xargs brew install 2>&1 | lognoc ;}
+	installworkguipkg(){ brew update 2>&1 | lognoc && < "$workguipkg" xargs brew install --cask 2>&1 | lognoc ;}
 	installzsh() {
 		brew install zsh 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
