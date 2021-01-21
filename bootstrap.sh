@@ -37,6 +37,9 @@ mononoki_italic="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-font
 jetbrainsmono_regular="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Regular/complete/JetBrains%20Mono%20Regular%20Nerd%20Font%20Complete.ttf"
 jetbrainsmono_bold="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Bold/complete/JetBrains%20Mono%20Bold%20Nerd%20Font%20Complete.ttf"
 jetbrainsmono_italic="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Italic/complete/JetBrains%20Mono%20Italic%20Nerd%20Font%20Complete.ttf"
+sourcecodepro_regular="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf"
+sourcecodepro_bold="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/Bold/complete/Sauce%20Code%20Pro%20Bold%20Nerd%20Font%20Complete.ttf"
+sourcecodepro_italic="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/Italic/complete/Sauce%20Code%20Pro%20Italic%20Nerd%20Font%20Complete.ttf"
 powerline_fonts="https://github.com/powerline/fonts"
 
 # TMUX Plugins
@@ -448,6 +451,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$sourcecodepro_regular" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$sourcecodepro_bold" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$sourcecodepro_italic" 2>&1 | lognoc
 				elif type curl > /dev/null 2>&1; then
 					cd "$HOME"/fonts || exit
 					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
@@ -456,6 +462,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 					curl -fSLO "$jetbrainsmono_regular" 2>&1 | lognoc
 					curl -fSLO "$jetbrainsmono_bold" 2>&1 | lognoc
 					curl -fSLO "$jetbrainsmono_italic" 2>&1 | lognoc
+					curl -fSLO "$sourcecodepro_regular" 2>&1 | lognoc
+					curl -fSLO "$sourcecodepro_bold" 2>&1 | lognoc
+					curl -fSLO "$sourcecodepro_italic" 2>&1 | lognoc
 					for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
 				fi
 				if [[ "$OSTYPE" == "darwin"* ]]; then
