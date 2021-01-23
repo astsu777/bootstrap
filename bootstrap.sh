@@ -774,6 +774,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
 				mv "$HOME"/.vimrc "$HOME"/.old-dotfiles/vimrc > /dev/null 2>&1
 				if [[ -f "$HOME"/.p10k.zsh ]]; then mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; fi
+				if [[ -f "$HOME"/starship.toml ]]; then mv "$HOME"/starship.toml "$HOME"/.old-dotfiles/starship.toml > /dev/null 2>&1; else mv "$HOME"/.config/starship.toml "$HOME"/.old-dotfiles/starship.toml > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.zshrc ]]; then mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; fi
 				mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
 				mv "$HOME"/.zshenv "$HOME"/.old-dotfiles/zshenv > /dev/null 2>&1
@@ -792,6 +793,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/.gitconfig
 				if [[ -f "$HOME"/.msmtprc ]]; then rm -rf "$HOME"/.msmtprc; else rm -Rf "$HOME"/.config/msmtp; fi
 				if [[ -f "$HOME"/.p10k.zsh ]]; then rm -rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
+				if [[ -f "$HOME"/starship.toml ]]; then rm -rf "$HOME"/starship.toml else rm -Rf "$HOME"/.config/starship.toml; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then rm -rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
 				rm -rf "$HOME"/.vim
 				rm -rf "$HOME"/.vimrc
@@ -849,7 +851,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.config/zsh ]]; then
 				mkdir -pv "$HOME"/.config/zsh 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.config/zsh/.p10k.zsh 2>&1 | lognoc
+			ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+			# ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.config/zsh/.p10k.zsh 2>&1 | lognoc
 			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
 			ln -s "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
 		fi
