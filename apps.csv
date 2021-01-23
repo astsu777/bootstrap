@@ -1,5 +1,5 @@
 # TAG, PROGRAM
-# Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, S=macOS Store, I=Server Tools,
+# Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
 # Y=Yay, G=Git Repo
 A,ttf-jetbrains-mono
 ADR,audacity
@@ -15,12 +15,20 @@ ADR,sxiv
 ADR,unrar
 ADR,unzip
 ADR,zathura
+ADRC,keepassxc
+ADRC,vlc
 ADRI,nmon
 ADRI,vim
-ADRM,keepassxc
-ADRM,vlc
 AI,drill
 AR,nextcloud-client
+C,amethyst
+C,cyberduck
+C,ferdi
+C,gpg-suite-no-mail
+C,keycastr
+C,nextcloud
+C,plex
+CA,alacritty
 D,dnsutils
 G,https://github.com/raylee/tldr-sh-client
 I,etckeeper
@@ -28,21 +36,12 @@ I,fd-find
 I,nethogs
 I,peco
 I,tcpdump
-M,amethyst
 M,ansifilter
 M,ccat
-M,cyberduck
-M,epic
-M,ferdi
 M,findutils
 M,gotop
-M,gpg-suite-no-mail
-M,keycastr
 M,mas
 M,msmtp
-M,nextcloud
-M,plex
-MA,alacritty
 MAD,cpanminus
 MAD,streamlink
 MADR,bash
@@ -100,19 +99,18 @@ S,946798523 antisleep
 WADR,gns3
 WADR,speedtest-cli
 WADR,testssl.sh
-WADRM,docker
-WADRM,wireshark
-WADRM,xca
+WADRC,docker
+WADRC,wireshark
+WADRC,xca
+WC,teamviewer
+WC,tor-browser
+WC,tunnelblick
 WG,https://github.com/payloadsecurity/vxapi.git
 WG,https://github.com/sullo/nikto.git
 WM,bria
 WM,bro
 WM,geoip
-WM,remote-desktop-manager-free
-WM,teamviewer
 WM,testssl
-WM,tor-browser
-WM,tunnelblick
 WMAD,httpie
 WMADI,tcptraceroute
 WMADR,ansible

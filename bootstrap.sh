@@ -53,9 +53,9 @@ lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
 
 if type brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	# grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
+	grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	# grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
+	grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
 	installpkg(){ brew update 2>&1 | lognoc && < "$pkg" xargs brew install 2>&1 | lognoc ;}
 	installguipkg(){ brew update 2>&1 | lognoc && < "$guipkg" xargs brew install --cask 2>&1 | lognoc ;}
 	installworkpkg(){ brew update 2>&1 | lognoc && < "$workpkg" xargs brew install 2>&1 | lognoc ;}
@@ -346,7 +346,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					exit 1
 				else
 					greppkg && installpkg
-					# grepguipkg && installguipkg
+					grepguipkg && installguipkg
 					grepgitrepo && installgitrepo
 				fi
 				while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
