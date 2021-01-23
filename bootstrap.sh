@@ -808,6 +808,17 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/.w3m
 				rm -rf "$HOME"/.config/surfraw/conf
 				rm -rf "$HOME"/.config/newsboat
+				rm -rf "$HOME"/.config/weechat
+				rm -rf "$HOME"/config/weechat/irc.conf 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/perl 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/python 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/trigger.conf 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/weechat.conf 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/xfer.conf 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/buflist.conf 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/colorize_nicks.conf 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/fset.conf 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/iset.conf 2>&1 | lognoc
 				break
 			fi
 		done
@@ -851,10 +862,11 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.config/zsh ]]; then
 				mkdir -pv "$HOME"/.config/zsh 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-			# ln -s "$dfloc"/shellconfig/p10k.zsh "$HOME"/.config/zsh/.p10k.zsh 2>&1 | lognoc
 			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
 			ln -s "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
+		fi
+		if type starship > /dev/null 2>&1; then
+			ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 		fi
 		if type weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
