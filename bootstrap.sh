@@ -81,14 +81,14 @@ elif type yum > /dev/null 2>&1; then
 	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
 	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
 	installaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
@@ -99,7 +99,7 @@ elif type pacman > /dev/null 2>&1; then
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 fi
 
 grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
