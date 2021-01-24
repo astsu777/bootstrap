@@ -66,6 +66,7 @@ if type brew > /dev/null 2>&1; then
 		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
 		git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug
+		ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 	}
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -73,32 +74,32 @@ elif type apt-get > /dev/null 2>&1; then
 	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
+	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
+	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
 	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
-	installaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
-	installworkaurpkg(){ while IFS= read -r line; do yay ---answerclean All --answerdiff None --nocleanmenu --nodiffmenu -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
+	installaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
+	installworkaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 elif type pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 fi
 
 grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
@@ -119,7 +120,8 @@ installperldeps(){
 			if type apt-get > /dev/null 2>&1; then
 				sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y libnet-ssleay-perl 2>&1 | lognoc
 			elif type cpanm > /dev/null 2>&1; then
-				cpanm --force Net::SSLeay 2>&1 | lognoc
+				# sudo cpanm --force Net::SSLeay 2>&1 | lognoc
+				sudo cpanm Net::SSLeay 2>&1 | lognoc
 			fi
 		fi
 	fi
@@ -892,7 +894,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type nvim > /dev/null 2>&1; then
 			ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | lognoc
-			# ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
+			ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
 		fi
 		if type vifm > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/vifm ]]; then

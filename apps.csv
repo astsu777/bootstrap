@@ -1,9 +1,15 @@
 # TAG, PROGRAM
 # Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
 # Y=Yay, G=Git Repo
+A,code
+A,drill
+A,gnu-netcat
+A,hypnotix
+A,pritunl-client-electron
+A,signal-desktop
 A,ttf-jetbrains-mono
+A,wireshark-qt
 ADR,audacity
-ADR,chromium
 ADR,mlocate
 ADR,mplayer
 ADR,net-tools
@@ -19,7 +25,6 @@ ADRC,keepassxc
 ADRC,vlc
 ADRI,nmon
 ADRI,vim
-AI,drill
 AR,nextcloud-client
 C,amethyst
 C,cyberduck
@@ -34,7 +39,6 @@ G,https://github.com/raylee/tldr-sh-client
 I,etckeeper
 I,fd-find
 I,nethogs
-I,peco
 I,tcpdump
 M,ansifilter
 M,ccat
@@ -70,7 +74,6 @@ MADR,shellcheck
 MADR,surfraw
 MADR,transmission-cli
 MADR,tree
-MADR,urlview
 MADR,vifm
 MADR,w3m
 MADR,watch
@@ -82,6 +85,7 @@ MADRI,glances
 MADRI,htop
 MADRI,ncdu
 MADRI,tmux
+MDRY,urlview
 R,bind-utils
 R,perl-App-cpanminus
 S,1043270657 gif keyboard
@@ -96,15 +100,15 @@ S,568494494 pocket
 S,865500966 feedly
 S,876540291 copy'em paste
 S,946798523 antisleep
-WADR,gns3
 WADR,speedtest-cli
 WADR,testssl.sh
 WADRC,docker
-WADRC,wireshark
 WADRC,xca
-WC,teamviewer
-WC,tor-browser
 WC,tunnelblick
+WCY,teamviewer
+WCY,tor-browser
+WDR,gns3
+WDRC,wireshark
 WG,https://github.com/payloadsecurity/vxapi.git
 WG,https://github.com/sullo/nikto.git
 WM,bria
@@ -112,7 +116,6 @@ WM,bro
 WM,geoip
 WM,testssl
 WMAD,httpie
-WMADI,tcptraceroute
 WMADR,ansible
 WMADR,hping
 WMADR,ipcalc
@@ -122,16 +125,24 @@ WMADR,masscan
 WMADR,minicom
 WMADR,mitmproxy
 WMADR,nmap
-WMADR,peco
 WMADR,rtmpdump
 WMADR,speedtest-cli
-WMADR,ssh-audit
-WMADR,telnet
 WMADR,tor
-WMADR,wakeonlan
 WMADRI,mtr
 WMAR,caddy
 WMD,dhcpdump
+WMDIY,tcptraceroute
+WMDR,telnet
+WMDRIY,peco
+WMDRY,ssh-audit
+WMDRY,wakeonlan
 WMR,zeek
 WS,1295203466 microsoft remote desktop
 WS,1422475219 zentermlite
+WY,gns3-converter
+WY,gns3-gui
+WY,gns3-server
+Y,brave-bin
+Y,ferdi-bin
+Y,plex-media-player
+Y,pocket-qdesktop

@@ -28,3 +28,6 @@ The output to the console is pretty empty in order to keep everything clean. How
 
 # TODO
 - Include tools that need compiling (and keep the sources or not)
+- Add some IPTV applications
+- Add all AUR packages
+- Test with different Linux distributions (Arch/Manjaro, Ubuntu, RHEL based desktop)
