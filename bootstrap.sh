@@ -135,6 +135,17 @@ installpythondeps(){
 	fi
 }
 
+if type pacman > /dev/null 2>&1; then
+	setupcustomrepos(){
+		# Pritunl
+		sudo tee -a /etc/pacman.conf << EOF
+		[pritunl]
+		Server = https://repo.pritunl.com/stable/pacman
+EOF
+		sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A
+		sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A
+	}
+fi
 
 if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
@@ -330,6 +341,16 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! type yay > 
 			break
 		fi
 	done
+fi
+
+#==============
+# Workstation - Configure Custom Repositories
+#==============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+	echo -e "Configuring custom repositories..." 2>&1 | logc
+	setupcustomrepos
+	echo -e "Custom repositories configured" 2>&1 | logc
+	echo -e 2>&1 | logc
 fi
 
 #=============
