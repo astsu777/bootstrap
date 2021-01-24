@@ -7,9 +7,10 @@ However, I use it to install my dotfiles and optionally (choice is provided) ins
 # Compatibility
 This script has been fully validated with the following systems:
 
-[X] macOS (up until Catalina)
-[X] Manjaro Linux (last tested on 24th January 2021)
-[X] Arch Linux (last tested on 24th January 2021)
+- [x] macOS (up until Catalina)
+- [x] Manjaro Linux (last tested on 24th January 2021)
+- [x] Arch Linux (last tested on 24th January 2021)
+- [ ] Other Linux distributions and WSL2
 
 It should work with other Linux distributions too as this script if built to work with distros based on Debian, Red Hat, Arch Linux and macOS. The only issue you may encounter is that some packages may be missing from your package manager.
 The script has been tested on WSL2 and works well enough except for the software installation (obviously).
