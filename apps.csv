@@ -1,14 +1,11 @@
 # TAG, PROGRAM
 # Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
 # Y=Yay, G=Git Repo
-A,code
 A,drill
-A,gnu-netcat
 A,hypnotix
 A,pritunl-client-electron
 A,signal-desktop
 A,ttf-jetbrains-mono
-A,wireshark-qt
 ADR,audacity
 ADR,mlocate
 ADR,mplayer
@@ -100,6 +97,9 @@ S,568494494 pocket
 S,865500966 feedly
 S,876540291 copy'em paste
 S,946798523 antisleep
+WA,code
+WA,gnu-netcat
+WA,wireshark-qt
 WADR,speedtest-cli
 WADR,testssl.sh
 WADRC,docker
