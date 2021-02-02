@@ -143,9 +143,9 @@ if type pacman > /dev/null 2>&1; then
 			[pritunl]
 			Server = https://repo.pritunl.com/stable/pacman
 			EOF
+		sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
+		sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
 		fi
-		sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A
-		sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A
 	}
 fi
 
@@ -349,10 +349,18 @@ fi
 # Workstation - Configure Custom Repositories
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
-	echo -e "Configuring custom repositories..." 2>&1 | logc
-	setupcustomrepos
-	echo -e "Custom repositories configured" 2>&1 | logc
-	echo -e 2>&1 | logc
+	while read -p "Do you want to configure 3rd party/custom repositories? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Configuring custom repositories..." 2>&1 | logc
+			setupcustomrepos
+			echo -e "Custom repositories configured" 2>&1 | logc
+			echo -e 2>&1 | logc
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
 fi
 
 #=============
@@ -796,6 +804,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.gitconfig "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1
 				if [[ -f "$HOME"/.msmtprc ]]; then mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1; else mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; else mv "$HOME"/.config/tmux/tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; fi
+				if [[ -f "$HOME"/.screenrc ]]; then mv "$HOME"/.screenrc "$HOME"/.old-dotfiles/screenrc > /dev/null 2>&1; else mv "$HOME"/.config/screen/screenrc "$HOME"/.old-dotfiles/screenrc > /dev/null 2>&1; fi
 				mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
 				mv "$HOME"/.vimrc "$HOME"/.old-dotfiles/vimrc > /dev/null 2>&1
 				if [[ -f "$HOME"/.p10k.zsh ]]; then mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; fi
@@ -820,6 +829,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/.p10k.zsh ]]; then rm -rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
 				if [[ -f "$HOME"/starship.toml ]]; then rm -rf "$HOME"/starship.toml else rm -Rf "$HOME"/.config/starship.toml; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then rm -rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
+				if [[ -f "$HOME"/screenrc ]]; then rm -rf "$HOME"/screenrc else rm -Rf "$HOME"/.config/screen/screenrc; fi
 				rm -rf "$HOME"/.vim
 				rm -rf "$HOME"/.vimrc
 				if [[ -f "$HOME"/.zshrc ]]; then rm -rf "$HOME"/.zshrc; else rm -Rf "$HOME"/.config/zsh/.zshrc; fi
@@ -834,16 +844,16 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/.config/surfraw/conf
 				rm -rf "$HOME"/.config/newsboat
 				rm -rf "$HOME"/.config/weechat
-				rm -rf "$HOME"/config/weechat/irc.conf 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/perl 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/python 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/trigger.conf 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/weechat.conf 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/xfer.conf 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/buflist.conf 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/colorize_nicks.conf 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/fset.conf 2>&1 | lognoc
-				rm -rf "$HOME"/config/weechat/iset.conf 2>&1 | lognoc
+				rm -rf "$HOME"/config/weechat/irc.conf
+				rm -rf "$HOME"/config/weechat/perl
+				rm -rf "$HOME"/config/weechat/python
+				rm -rf "$HOME"/config/weechat/trigger.conf
+				rm -rf "$HOME"/config/weechat/weechat.conf
+				rm -rf "$HOME"/config/weechat/xfer.conf
+				rm -rf "$HOME"/config/weechat/buflist.conf
+				rm -rf "$HOME"/config/weechat/colorize_nicks.conf
+				rm -rf "$HOME"/config/weechat/fset.conf
+				rm -rf "$HOME"/config/weechat/iset.conf
 				break
 			fi
 		done
@@ -909,7 +919,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/config/weechat/iset.conf "$HOME"/.config/weechat/iset.conf 2>&1 | lognoc
 		fi
 		if type wget > /dev/null 2>&1; then
-			ln -s "$dfloc"/config/wget "$HOME"/.config/wget 2>&1 | lognoc
+			if [[ ! -d "$HOME"/.config/wget ]]; then
+				mkdir "$HOME"/.config/wget 2>&1 | lognoc
+			fi
+			ln -s "$dfloc"/config/wget/wgetrc "$HOME"/.config/wget/wgetrc 2>&1 | lognoc
 		fi
 		if type vim > /dev/null 2>&1; then
 			ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | lognoc
@@ -951,7 +964,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			ln -s "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
 		fi
-		if type newsboat > /dev/null 2>&1 || type sr > /dev/null 2>&1; then
+		if type newsboat > /dev/null 2>&1 > /dev/null 2>&1; then
 			mkdir -pv "$HOME"/.config/newsboat > /dev/null 2>&1 | lognoc
 			if type tsp > /dev/null 2>&1; then
 				ln -s "$dfloc"/config/newsboat/config-tsp "$HOME"/.config/newsboat/config 2>&1 | lognoc
@@ -960,6 +973,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				ln -s "$dfloc"/config/newsboat/config-ts "$HOME"/.config/newsboat/config 2>&1 | lognoc
 				ln -s "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
 			fi
+		fi
+		if type screen > /dev/null 2>&1; then
+			mkdir -pv "$HOME"/.config/screen > /dev/null 2>&1 | lognoc
+			ln -s "$dfloc"/config/screen/screenrc "$HOME"/.config/screen/screenrc 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
