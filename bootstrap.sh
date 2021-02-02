@@ -820,6 +820,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.w3m "$HOME"/.old-dotfiles/w3m > /dev/null 2>&1
 				mv "$HOME"/.config/surfraw/conf "$HOME"/.old-dotfiles/surfraw > /dev/null 2>&1
 				mv "$HOME"/.config/newsboat "$HOME"/.old-dotfiles/newsboat > /dev/null 2>&1
+				mv "$HOME"/.config/redshift.conf "$HOME"/.old-dotfiles/redshift.conf > /dev/null 2>&1
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -rf "$HOME"/.bash_profile
@@ -854,6 +855,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/config/weechat/colorize_nicks.conf
 				rm -rf "$HOME"/config/weechat/fset.conf
 				rm -rf "$HOME"/config/weechat/iset.conf
+				rm -rf "$HOME"/config/redshift.conf
 				break
 			fi
 		done
@@ -965,7 +967,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
 		fi
 		if type newsboat > /dev/null 2>&1 > /dev/null 2>&1; then
-			mkdir -pv "$HOME"/.config/newsboat > /dev/null 2>&1 | lognoc
+			if [[ ! -d "$HOME"/.config/newsboat ]]; then
+				mkdir -pv "$HOME"/.config/newsboat 2>&1 | lognoc
+			fi
 			if type tsp > /dev/null 2>&1; then
 				ln -s "$dfloc"/config/newsboat/config-tsp "$HOME"/.config/newsboat/config 2>&1 | lognoc
 				ln -s "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
@@ -975,8 +979,13 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 		fi
 		if type screen > /dev/null 2>&1; then
-			mkdir -pv "$HOME"/.config/screen > /dev/null 2>&1 | lognoc
+			if [[ ! -d "$HOME"/.config/screen ]]; then
+				mkdir -pv "$HOME"/.config/screen 2>&1 | lognoc
+			fi
 			ln -s "$dfloc"/config/screen/screenrc "$HOME"/.config/screen/screenrc 2>&1 | lognoc
+		fi
+		if type redshift > /dev/null 2>&1; then
+			ln -s "$dfloc"/config/redshift/redshift.conf "$HOME"/.config/redshift/redshift.conf 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
