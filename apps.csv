@@ -2,6 +2,7 @@
 # Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
 # Y=Yay, G=Git Repo
 A,drill
+A,flameshot
 A,hypnotix
 A,pritunl-client-electron
 A,signal-desktop
