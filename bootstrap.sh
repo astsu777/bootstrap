@@ -985,6 +985,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -s "$dfloc"/config/screen/screenrc "$HOME"/.config/screen/screenrc 2>&1 | lognoc
 		fi
 		if type redshift > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/redshift ]]; then
+				mkdir -pv "$HOME"/.config/redshift 2>&1 | lognoc
+			fi
 			ln -s "$dfloc"/config/redshift/redshift.conf "$HOME"/.config/redshift/redshift.conf 2>&1 | lognoc
 		fi
 
