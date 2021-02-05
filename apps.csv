@@ -39,7 +39,6 @@ I,fd-find
 I,nethogs
 I,tcpdump
 M,ansifilter
-M,ccat
 M,findutils
 M,gotop
 M,mas
@@ -84,6 +83,7 @@ MADRI,htop
 MADRI,ncdu
 MADRI,tmux
 MDRY,urlview
+MY,ccat
 R,bind-utils
 R,perl-App-cpanminus
 S,1043270657 gif keyboard
