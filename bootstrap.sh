@@ -990,16 +990,27 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			ln -s "$dfloc"/config/redshift/redshift.conf "$HOME"/.config/redshift/redshift.conf 2>&1 | lognoc
 		fi
+		if type pulseeffects > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/PulseEffects/output ]]; then
+				mkdir -pv "$HOME"/.config/PulseEffects/output 2>&1 | lognoc
+			fi
+			ln -s "$dfloc"/config/PulseEffects/output/MySettings.json "$HOME"/.config/PulseEffects/output/MySettings.json 2>&1 | lognoc
+		fi
 
 		# If this is a SSH connection, install the server config of TMUX
 		if type tmux > /dev/null 2>&1; then
 			if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-				ln -s "$dfloc"/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
+				# TMUX introduced XDG Base Directory compliance in v3.1
+				if [[ $(tmux -V) == "2\." ]]; then
+					ln -s "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
+				else
+					ln -s "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+				fi
 			else
 				if [[ ! -d "$HOME"/.config/tmux ]]; then
 					mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
 				fi
-				ln -s "$dfloc"/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+				ln -s "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
 			fi
 		fi
 
