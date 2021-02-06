@@ -821,6 +821,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/surfraw/conf "$HOME"/.old-dotfiles/surfraw > /dev/null 2>&1
 				mv "$HOME"/.config/newsboat "$HOME"/.old-dotfiles/newsboat > /dev/null 2>&1
 				mv "$HOME"/.config/redshift.conf "$HOME"/.old-dotfiles/redshift.conf > /dev/null 2>&1
+				mv "$HOME"/.config/PulseEffects/output/MySettings.json "$HOME"/.old-dotfiles/PulseEffects-Output_MySettings.json
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -rf "$HOME"/.bash_profile
@@ -856,6 +857,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/config/weechat/fset.conf
 				rm -rf "$HOME"/config/weechat/iset.conf
 				rm -rf "$HOME"/config/redshift.conf
+				rm -rf "$HOME"/config/PulseEffects/output/MySettings.json
 				break
 			fi
 		done
