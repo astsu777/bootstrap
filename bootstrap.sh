@@ -1003,7 +1003,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		if type tmux > /dev/null 2>&1; then
 			if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 				# TMUX introduced XDG Base Directory compliance in v3.1
-				if [[ $(tmux -V) == "2\." ]]; then
+				if [[ $(tmux -V) =~ 2\.[0-9] ]]; then
 					ln -s "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 				else
 					ln -s "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
