@@ -1101,11 +1101,13 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
     					echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
     					mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
     					ln -s "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
+    					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -s "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     					echo -e "New 'xinitrc' file installed" 2>&1 | logc
     					echo -e 2>&1 | logc
     				else
     					echo -e "Installing 'xinitrc' file..." 2>&1 | logc
     					ln -s "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
+    					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -s "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     					echo -e "New 'xinitrc' file installed" 2>&1 | logc
     					echo -e 2>&1 | logc
 					fi
