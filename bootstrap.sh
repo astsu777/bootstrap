@@ -203,17 +203,17 @@ if [[ ! -h /etc/arch-release ]]; then
 		esac
 	}
 	installdwm(){
-		if [[ -d "$dwmloc" ]]; then rm -Rf "$dwmloc" 2>&1 /dev/null; fi
+		if [[ -d "$dwmloc" ]]; then sudo rm -Rf "$dwmloc" 2>&1 /dev/null; fi
 		sudo git clone "$dwmrepo" "$dwmloc" 2>&1 | lognoc
 		sudo make -C "$dwmloc" clean install 2>&1 | lognoc
 	}
 	installdwmblocks(){
-		if [[ -d "$dwmblocksloc" ]]; then rm -Rf "$dwmloc" 2>&1 /dev/null; fi
+		if [[ -d "$dwmblocksloc" ]]; then sudo rm -Rf "$dwmloc" 2>&1 /dev/null; fi
 		sudo git clone "$dwmblocksrepo" "$dwmblocksloc" 2>&1 | lognoc
 		sudo make -C "$dwmblocksloc" clean install 2>&1 | lognoc
 	}
 	installdmenu(){
-		if [[ -d "$dmenuloc" ]]; then rm -Rf "$dwmloc" 2>&1 /dev/null; fi
+		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dwmloc" 2>&1 /dev/null; fi
 		sudo git clone "$dmenurepo" "$dmenuloc" 2>&1 | lognoc
 		sudo make -C "$dmenuloc" clean install 2>&1 | lognoc
 	}
