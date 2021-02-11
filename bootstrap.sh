@@ -1113,6 +1113,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 					break
 				fi
 			done
+			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
 			break
