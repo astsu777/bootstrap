@@ -1086,8 +1086,8 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 	done
 	while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Dd][Ww][Mm]$ ]]; then
-			while read -p "Choose a custom environment from the following options: (1)dwm (Ex.: type 1 for dwm): " -n 1 -r; do
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			while read -p "Choose a custom environment from the following options: [1]dwm | (9)Cancel (Ex.: type 1 for dwm): " -n 1 -r; do
 				if [[ "$REPLY" == 1 ]]; then
 					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 					echo -e "Installing  DWM..." 2>&1 | logc
@@ -1108,11 +1108,14 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 					echo -e 2>&1 | logc
 					rm "$HOME"/apps.csv 2>&1 | lognoc
 					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				elif [[ "$REPLY" == 9 ]]; then
 					echo -e
 					break
 				fi
 			done
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
 		fi
 	done
 fi
