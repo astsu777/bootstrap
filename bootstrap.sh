@@ -203,14 +203,17 @@ if [[ ! -h /etc/arch-release ]]; then
 		esac
 	}
 	installdwm(){
+		if [[ -d "$dwmloc" ]]; then rm -Rf "$dwmloc" 2>&1 /dev/null; fi
 		sudo git clone "$dwmrepo" "$dwmloc" 2>&1 | lognoc
 		sudo make -C "$dwmloc" clean install 2>&1 | lognoc
 	}
 	installdwmblocks(){
+		if [[ -d "$dwmblocksloc" ]]; then rm -Rf "$dwmloc" 2>&1 /dev/null; fi
 		sudo git clone "$dwmblocksrepo" "$dwmblocksloc" 2>&1 | lognoc
 		sudo make -C "$dwmblocksloc" clean install 2>&1 | lognoc
 	}
 	installdmenu(){
+		if [[ -d "$dmenuloc" ]]; then rm -Rf "$dwmloc" 2>&1 /dev/null; fi
 		sudo git clone "$dmenurepo" "$dmenuloc" 2>&1 | lognoc
 		sudo make -C "$dmenuloc" clean install 2>&1 | lognoc
 	}
@@ -1088,10 +1091,11 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			while read -p "Choose a custom environment from the following options: [1]dwm | (9)Cancel (Ex.: type 1 for dwm): " -n 1 -r; do
+				echo -e 2>&1 | logc
 				if [[ "$REPLY" == 1 ]]; then
 					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 					echo -e "Installing  DWM..." 2>&1 | logc
-					installdwm
+					installdwm && installdwmblocks && installdmenu
 					echo -e "DWM installed" 2>&1 | logc
 					if [[ -f "$HOME"/.xinitrc ]]; then
     					echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
@@ -1109,13 +1113,13 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 					rm "$HOME"/apps.csv 2>&1 | lognoc
 					break
 				elif [[ "$REPLY" == 9 ]]; then
-					echo -e
+					echo -e 2>&1 | logc
 					break
 				fi
 			done
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
+			echo -e 2>&1 | logc
 			break
 		fi
 	done
