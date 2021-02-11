@@ -391,6 +391,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			setupcustomrepos
 			echo -e "Custom repositories configured" 2>&1 | logc
 			echo -e 2>&1 | logc
+			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
 			break
