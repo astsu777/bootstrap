@@ -1072,10 +1072,12 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
 			grepxpkg && installxpkg && installlibxftbgra && installvideodriver
 			echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
 			echo -e 2>&1 | logc
+			rm "$HOME"/apps.csv 2>&1 | lognoc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e
@@ -1087,6 +1089,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 		if [[ "$REPLY" =~ ^[Dd][Ww][Mm]$ ]]; then
 			while read -p "Choose a custom environment from the following options: (1)dwm (Ex.: type 1 for dwm): " -n 1 -r; do
 				if [[ "$REPLY" == 1 ]]; then
+					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 					echo -e "Installing  DWM..." 2>&1 | logc
 					installdwm
 					echo -e "DWM installed" 2>&1 | logc
@@ -1103,6 +1106,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
     					echo -e 2>&1 | logc
 					fi
 					echo -e 2>&1 | logc
+					rm "$HOME"/apps.csv 2>&1 | lognoc
 					break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 					echo -e
