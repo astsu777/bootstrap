@@ -1,13 +1,16 @@
 # TAG, PROGRAM
-# Tags: W=Work, M=macOS brew, A=Arch Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
-# Y=Yay, G=Git Repo
+# Tags: W=Work, M=macOS brew, A=Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
+# Y=Yay, G=Git Repo, X=Arch Xorg
+A,base-devel
 A,drill
 A,flameshot
 A,hypnotix
+A,mlocate
 A,pritunl-client-electron
 A,pulseeffects
 A,signal-desktop
 A,ttf-jetbrains-mono
+A,xdg-user-dirs
 ADR,audacity
 ADR,mlocate
 ADR,mplayer
@@ -144,6 +147,22 @@ WS,1422475219 zentermlite
 WY,gns3-converter
 WY,gns3-gui
 WY,gns3-server
+X,alsa-utils
+X,bluez
+X,lxsession
+X,nitrogen
+X,pacman-contrib
+X,picom
+X,polkit
+X,pulseaudio-alsa
+X,pulseaudio-bluetooth
+X,trayer
+X,ttf-jetbrains-mono
+X,ttf-joypixels
+X,xorg-server
+X,xorg-xinit
+X,xorg-xrandr
+X,xorg-xset
 Y,brave-bin
 Y,ferdi-bin
 Y,plex-media-player
