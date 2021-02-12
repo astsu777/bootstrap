@@ -134,6 +134,7 @@ S,876540291 copy'em paste
 S,946798523 antisleep
 WA,code
 WA,gnu-netcat
+WA,traceroute
 WA,wireshark-qt
 WADR,speedtest-cli
 WADR,testssl.sh
