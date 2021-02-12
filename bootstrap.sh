@@ -269,7 +269,7 @@ elif [[ "$OSTYPE" == "linux-gnu" ]] && type sudo > /dev/null 2>&1 && [[ "$EUID" 
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			while read -p "What will be your username? " -r user; do
-				if [[ "$user" =~ ^[A-z0-9-]{1,15}$ ]]; then
+				if [[ "$user" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
 					useradd -m "$user" 2>&1 | lognoc
 					usermod -a -G wheel,sudo "$user" 2>&1 | lognoc
 					echo -e "Enter the password for your new user: " 2>&1 | logc
@@ -944,7 +944,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			while read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r; do
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					while read -p "What name your computer should use? " -r name; do
-						if [[ "$name" =~ ^[A-z0-9-]{1,15}$ ]]; then
+						if [[ "$name" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
 							sudo scutil --set ComputerName "$name"
 							sudo scutil --set LocalHostName "$name"
 							sudo scutil --set HostName "$name"
