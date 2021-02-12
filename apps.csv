@@ -181,9 +181,9 @@ X,acpid
 X,alsa-utils
 X,blueman
 X,bluez
+X,feh
 X,lxsession
 X,network-manager-applet
-X,nitrogen
 X,numlockx
 X,openal
 X,pacman-contrib

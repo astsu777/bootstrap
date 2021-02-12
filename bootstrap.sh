@@ -53,6 +53,9 @@ powerline_fonts="https://github.com/powerline/fonts"
 # TMUX Plugins
 tpm="https://github.com/tmux-plugins/tpm"
 
+# Wallpapers
+wallpapers="https://github.com/GSquad934/wallpapers.git"
+
 #=============
 # Global Functions
 #=============
@@ -194,6 +197,7 @@ if [[ ! -h /etc/arch-release ]]; then
 	installxpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 	# TEMP until the library is fixed
 	installlibxftbgra(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S libxft-bgra 2>&1 | lognoc ;}
+	uninstalltmux(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && yes | sudo pacman -Rcs --noconfirm tmux 2>&1 | lognoc ;}
 	installvideodriver(){
 		case "$(lspci -v | grep -A1 -e VGA -e 3D)" in
 			*NVIDIA*) sudo pacman -S --needed --noconfirm xf86-video-nouveau 2>&1 | lognoc ;;
@@ -610,6 +614,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type tmux > /dev/null 2>&1; 
 			fi
 		done
 	else
+		echo -e "If you plan using a tiling window manager, it is recommended to reply NO to the following question" 2>&1 | logc
 		while read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -933,6 +938,27 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 done
 
 #============
+# Wallpapers
+#============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+	while read -p "Do you want to install a set of nice wallpapers? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Retrieving wallpapers..." 2>&1 | logc
+			if [[ ! -d "$HOME/Pictures" ]]; then mkdir "$HOME"/Pictures 2>&1 | lognoc; fi
+			git clone "$wallpapers" "$HOME"/Pictures/wallpapers 2>&1 | lognoc
+			echo -e "Wallpapers installed" 2>&1 | logc
+			echo -e "There are stored in \"$HOME/Pictures/wallpapers/\"" 2>&1 | logc
+			echo -e 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e 2>&1 | logc
+			break
+		fi
+	done
+fi
+
+#============
 # macOS Workstation - Configuration
 #============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]; then
@@ -1136,6 +1162,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 					echo -e "Installing  DWM..." 2>&1 | logc
 					installdwm && installdwmblocks && installdmenu
 					installlibxftbgra
+					uninstalltmux
 					echo -e "DWM installed" 2>&1 | logc
 					if [[ -f "$HOME"/.xinitrc ]]; then
     					echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
