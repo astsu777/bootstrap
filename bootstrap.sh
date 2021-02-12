@@ -917,8 +917,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.config/moc ]]; then
 				mkdir "$HOME"/.config/moc 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/moc/config "$HOME"/.config/moc/config 2>&1 | lognoc
-			ln -s "$dfloc"/config/moc/themes "$HOME"/.config/moc/themes 2>&1 | lognoc
+			ln -s "$dfloc"/config/moc/config "$HOME"/.config/moc/ 2>&1 | lognoc
+			ln -s "$dfloc"/config/moc/themes "$HOME"/.config/moc/ 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
