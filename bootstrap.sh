@@ -280,7 +280,7 @@ elif [[ "$OSTYPE" == "linux-gnu" ]] && type sudo > /dev/null 2>&1 && [[ "$EUID" 
 					echo -e 2>&1 | logc
 					continue
 				fi
-				if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL'; then
+				if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1; then
 					if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
 						if [[ ! -d /etc/sudoers.d ]]; then mkdir /etc/sudoers.d 2>&1 | lognoc; fi
 						touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
