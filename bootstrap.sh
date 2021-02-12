@@ -197,7 +197,6 @@ if [[ ! -h /etc/arch-release ]]; then
 	installxpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 	# TEMP until the library is fixed
 	installlibxftbgra(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S libxft-bgra 2>&1 | lognoc ;}
-	uninstalltmux(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && yes | sudo pacman -Rcs --noconfirm tmux 2>&1 | lognoc ;}
 	installvideodriver(){
 		case "$(lspci -v | grep -A1 -e VGA -e 3D)" in
 			*NVIDIA*) sudo pacman -S --needed --noconfirm xf86-video-nouveau 2>&1 | lognoc ;;
@@ -1162,7 +1161,6 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 					echo -e "Installing  DWM..." 2>&1 | logc
 					installdwm && installdwmblocks && installdmenu
 					installlibxftbgra
-					uninstalltmux
 					echo -e "DWM installed" 2>&1 | logc
 					if [[ -f "$HOME"/.xinitrc ]]; then
     					echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
