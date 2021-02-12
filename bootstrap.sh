@@ -275,7 +275,6 @@ elif [[ "$OSTYPE" == "linux-gnu" ]] && type sudo > /dev/null 2>&1 && [[ "$EUID" 
 					echo -e "Enter the password for your new user: " 2>&1 | logc
 					passwd "$user"
 					echo -e 2>&1 | logc
-					break
 				else
 					echo -e "Invalid username! The name should only contain alphanumeric characters" 2>&1 | logc
 					echo -e 2>&1 | logc
@@ -288,12 +287,14 @@ elif [[ "$OSTYPE" == "linux-gnu" ]] && type sudo > /dev/null 2>&1 && [[ "$EUID" 
 					else
 						sed -i 's/^#\ \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/' /etc/sudoers
 					fi
+					break
 				fi
 			done
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
 			break
 		fi
+		break
 	done
 	echo -e "Please logout and login with your regular user. Then run this script again" 2>&1 | logc
 	exit 0
