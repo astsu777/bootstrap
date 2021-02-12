@@ -1058,6 +1058,22 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 			# Build the 'locate' database
 			if type updatedb > /dev/null 2>&1; then	sudo updatedb 2>&1 | lognoc; fi
 
+			# Enable services at boot
+			if type docker > /dev/null 2>&1; then sudo systemctl enable docker 2>&1 | lognoc; fi
+			if type containerd > /dev/null 2>&1; then sudo systemctl enable containerd 2>&1 | lognoc; fi
+			if type teamviewer > /dev/null 2>&1; then sudo systemctl enable teamviewerd 2>&1 | lognoc; fi
+			if type nmtui > /dev/null 2>&1; then sudo systemctl enable NetworkManager 2>&1 | lognoc; fi
+			if type ntpd > /dev/null 2>&1; then sudo systemctl enable ntpd 2>&1 | lognoc; fi
+			if type logrotate > /dev/null 2>&1; then sudo systemctl enable logrotate 2>&1 | lognoc; fi
+			if type avahi-daemon > /dev/null 2>&1; then sudo systemctl enable avahi-daemon 2>&1 | lognoc; fi
+			if type cups > /dev/null 2>&1; then sudo systemctl enable cups 2>&1 | lognoc; fi
+			if type bluetooth > /dev/null 2>&1; then sudo systemctl enable bluetooth 2>&1 | lognoc; fi
+			if type crond > /dev/null 2>&1; then sudo systemctl enable cronie 2>&1 | lognoc; fi
+			if type pritunl-client > /dev/null 2>&1; then sudo systemctl enable pritunl-client 2>&1 | lognoc; fi
+
+			# Add current to 'wireshark' group if need be
+			if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
+
 			echo -e "Preferences configured" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
