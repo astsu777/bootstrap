@@ -252,10 +252,38 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 			pacman -Sy 2>&1 | lognoc
 			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
 		fi
+		if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL'; then
+			if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
+				if [[ ! -d /etc/sudoers.d ]]; then mkdir /etc/sudoers.d 2>&1 | lognoc; fi
+				touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
+			else
+				sed -i 's/^#\ \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/' /etc/sudoers
+			fi
+		fi
 		echo -e "Package 'sudo' is now installed" 2>&1 | logc
-		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | logc
-		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | logc
-		echo -e 2>&1 | logc
+		echo -e "The 'sudo' configuration can be modified with the command \"visudo\"" 2>&1 | logc
+		while read -p "Do you want to create a user account? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				while read -p "What will be your username? " -r user; do
+					if [[ "$user" =~ ^[A-z0-9-]$ ]]; then
+						useradd -m "$user" 2>&1 | lognoc
+						usermod -a -G wheel,sudo "$user" 2>&1 | lognoc
+						echo -e "Enter the password for your new user: " 2>&1 | logc
+						passwd "$user"
+						echo -e 2>&1 | logc
+						break
+					else
+						echo -e "Invalid username! The name should only contain alphanumeric characters" 2>&1 | logc
+						echo -e 2>&1 | logc
+					fi
+				done
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e 2>&1 | logc
+				break
+			fi
+		done
+		echo -e "Please logout and login with your regular user. Then run this script again" 2>&1 | logc
 		exit 0
 	fi
 fi
@@ -324,25 +352,6 @@ if [[ "$OSTYPE" == "darwin"* ]] && ! type brew > /dev/null 2>&1; then
 		brew update 2>&1 | lognoc
 		echo -e "Homebrew is now installed" 2>&1 | logc
 		echo -e "Please run this script again to bootstrap your system" 2>&1 | logc
-		exit 0
-	fi
-fi
-
-#=============
-# Linux - Install 'sudo' (Requirement)
-#=============
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
-	echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
-	echo -e "Installing 'sudo'..." 2>&1 | logc
-	if [[ "$EUID" != 0 ]]; then
-		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
-		exit 1
-	else
-		installsudo
-		echo -e "Package 'sudo' is now installed" 2>&1 | logc
-		echo -e "Please configure sudo with the command \"visudo\"" 2>&1 | logc
-		echo -e "Once sudo is configured, run this script again with a normal user with sudo rights" 2>&1 | logc
-		echo -e 2>&1 | logc
 		exit 0
 	fi
 fi
@@ -938,7 +947,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 					done
 				break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
+					echo -e 2>&1 | logc
 					break
 				fi
 			done
