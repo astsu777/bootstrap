@@ -255,7 +255,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 			pacman -Sy 2>&1 | lognoc
 			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
 		fi
-		if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL'; then
+		if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers; then
 			if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
 				if [[ ! -d /etc/sudoers.d ]]; then mkdir /etc/sudoers.d 2>&1 | lognoc; fi
 				touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
