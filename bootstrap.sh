@@ -271,7 +271,8 @@ elif [[ "$OSTYPE" == "linux-gnu" ]] && type sudo > /dev/null 2>&1 && [[ "$EUID" 
 			while read -p "What will be your username? " -r user; do
 				if [[ "$user" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
 					useradd -m "$user" 2>&1 | lognoc
-					usermod -a -G wheel,sudo "$user" 2>&1 | lognoc
+					usermod -a -G wheel "$user" 2>&1 | lognoc
+					usermod -a -G sudo "$user" 2>&1 | lognoc
 					echo -e "Enter the password for your new user: " 2>&1 | logc
 					passwd "$user"
 					echo -e 2>&1 | logc
