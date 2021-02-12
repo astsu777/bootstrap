@@ -193,7 +193,7 @@ if [[ ! -h /etc/arch-release ]]; then
 	grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
 	installxpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 	# TEMP until the library is fixed
-	installlibxftbgra(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S libxft-bgra 2>&1 | lognoc ;}
+	installlibxftbgra(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S libxft-bgra 2>&1 | lognoc ;}
 	installvideodriver(){
 		case "$(lspci -v | grep -A1 -e VGA -e 3D)" in
 			*NVIDIA*) sudo pacman -S --needed --noconfirm xf86-video-nouveau 2>&1 | lognoc ;;
@@ -1077,7 +1077,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
-			grepxpkg && installxpkg && installlibxftbgra && installvideodriver
+			grepxpkg && installxpkg && installvideodriver
 			echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			rm "$HOME"/apps.csv 2>&1 | lognoc
@@ -1096,6 +1096,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 					echo -e "Installing  DWM..." 2>&1 | logc
 					installdwm && installdwmblocks && installdmenu
+					installlibxftbgra
 					echo -e "DWM installed" 2>&1 | logc
 					if [[ -f "$HOME"/.xinitrc ]]; then
     					echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
