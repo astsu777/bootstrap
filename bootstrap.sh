@@ -735,6 +735,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/newsboat "$HOME"/.old-dotfiles/newsboat > /dev/null 2>&1
 				mv "$HOME"/.config/redshift.conf "$HOME"/.old-dotfiles/redshift.conf > /dev/null 2>&1
 				mv "$HOME"/.config/PulseEffects/output/MySettings.json "$HOME"/.old-dotfiles/PulseEffects-Output_MySettings.json > /dev/null 2>&1
+				if [[ -f "$HOME"/.moc ]]; then mv "$HOME"/.moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; else mv "$HOME"/.config/moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; fi
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -rf "$HOME"/.bash_profile
@@ -771,6 +772,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -rf "$HOME"/config/weechat/iset.conf
 				rm -rf "$HOME"/config/redshift.conf
 				rm -rf "$HOME"/config/PulseEffects/output/MySettings.json
+				if [[ -f "$HOME"/.moc ]]; then rm -rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
 				break
 			fi
 		done
@@ -910,6 +912,13 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/PulseEffects/output 2>&1 | lognoc
 			fi
 			ln -s "$dfloc"/config/PulseEffects/output/MySettings.json "$HOME"/.config/PulseEffects/output/MySettings.json 2>&1 | lognoc
+		fi
+		if type mocp > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/moc ]]; then
+				mkdir "$HOME"/.config/moc 2>&1 | lognoc
+			fi
+			ln -s "$dfloc"/config/moc/config "$HOME"/.config/moc/config 2>&1 | lognoc
+			ln -s "$dfloc"/config/moc/themes "$HOME"/.config/moc/themes 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
