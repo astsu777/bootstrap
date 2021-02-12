@@ -265,8 +265,10 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 		fi
 		echo -e "Package 'sudo' is now installed" 2>&1 | logc
 		echo -e "The 'sudo' configuration can be modified with the command \"visudo\"" 2>&1 | logc
+		echo -e 2>&1 | logc
 	fi
-elif [[ "$OSTYPE" == "linux-gnu" ]] && type sudo > /dev/null 2>&1 && [[ "$EUID" == 0 ]]; then
+fi
+if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
 	echo -e "You are currently logged in as 'root'" 2>&1 | logc
 	while read -p "Do you want to create a user account (it will be given SUDO privilege)? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
