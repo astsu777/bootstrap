@@ -8,12 +8,11 @@
 #=============
 
 # Dotfiles location
-dfloc="$HOME/projects/dotfiles"
+dfloc="$HOME/.dotfiles"
 dfrepo="https://github.com/GSquad934/dotfiles.git"
 
 # Custom scripts location
-scriptsloc="$HOME/scripts"
-scriptsrepo="https://github.com/GSquad934/scripts.git"
+scriptsloc="$HOME/.local/bin/"
 
 # Custom WM/DE location
 dwmrepo="https://github.com/GSquad934/dwm.git"
@@ -24,10 +23,7 @@ dmenurepo="https://github.com/GSquad934/dmenu.git"
 dmenuloc="/opt/dmenu"
 
 # Git repositories location
-gitrepoloc="$HOME/sources/repos"
-
-# Software sources location
-# sourceloc="$HOME/sources"
+gitrepoloc="$HOME/.sources/repos"
 
 # Logging
 date="$(date +%Y-%m-%d-%H%M%S)"
@@ -683,7 +679,6 @@ fi
 #==============
 # Dotfiles
 #==============
-
 # Clone the GitHub repository with all wanted dotfiles
 while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
@@ -732,47 +727,49 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
 				mv "$HOME"/.w3m "$HOME"/.old-dotfiles/w3m > /dev/null 2>&1
 				mv "$HOME"/.config/surfraw/conf "$HOME"/.old-dotfiles/surfraw > /dev/null 2>&1
-				mv "$HOME"/.config/newsboat "$HOME"/.old-dotfiles/newsboat > /dev/null 2>&1
+				mv "$HOME"/.config/newsboat/config "$HOME"/.old-dotfiles/newsboat-config > /dev/null 2>&1
+				mv "$HOME"/.config/newsboat/urls "$HOME"/.old-dotfiles/newsboat-urls > /dev/null 2>&1
 				mv "$HOME"/.config/redshift.conf "$HOME"/.old-dotfiles/redshift.conf > /dev/null 2>&1
 				mv "$HOME"/.config/PulseEffects/output/MySettings.json "$HOME"/.old-dotfiles/PulseEffects-Output_MySettings.json > /dev/null 2>&1
 				if [[ -d "$HOME"/.moc ]]; then mv "$HOME"/.moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; else mv "$HOME"/.config/moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; fi
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				rm -rf "$HOME"/.bash_profile
-				rm -rf "$HOME"/.bashrc
-				rm -rf "$HOME"/.gitconfig
-				if [[ -f "$HOME"/.msmtprc ]]; then rm -rf "$HOME"/.msmtprc; else rm -Rf "$HOME"/.config/msmtp; fi
-				if [[ -f "$HOME"/.p10k.zsh ]]; then rm -rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
-				if [[ -f "$HOME"/starship.toml ]]; then rm -rf "$HOME"/starship.toml else rm -Rf "$HOME"/.config/starship.toml; fi
-				if [[ -f "$HOME"/.tmux.conf ]]; then rm -rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
-				if [[ -f "$HOME"/screenrc ]]; then rm -rf "$HOME"/screenrc else rm -Rf "$HOME"/.config/screen/screenrc; fi
-				rm -rf "$HOME"/.vim
-				rm -rf "$HOME"/.vimrc
-				if [[ -f "$HOME"/.zshrc ]]; then rm -rf "$HOME"/.zshrc; else rm -Rf "$HOME"/.config/zsh/.zshrc; fi
-				rm -rf "$HOME"/.zprofile
-				rm -rf "$HOME"/.zshenv
-				rm -rf "$HOME"/.config/nvim/init.vim
-				rm -rf "$HOME"/.config/nvim
-				rm -rf "$HOME"/.config/wget
-				rm -rf "$HOME"/.config/vifm
-				rm -rf "$HOME"/.config/alacritty
-				rm -rf "$HOME"/.w3m
-				rm -rf "$HOME"/.config/surfraw/conf
-				rm -rf "$HOME"/.config/newsboat
-				rm -rf "$HOME"/.config/weechat
-				rm -rf "$HOME"/config/weechat/irc.conf
-				rm -rf "$HOME"/config/weechat/perl
-				rm -rf "$HOME"/config/weechat/python
-				rm -rf "$HOME"/config/weechat/trigger.conf
-				rm -rf "$HOME"/config/weechat/weechat.conf
-				rm -rf "$HOME"/config/weechat/xfer.conf
-				rm -rf "$HOME"/config/weechat/buflist.conf
-				rm -rf "$HOME"/config/weechat/colorize_nicks.conf
-				rm -rf "$HOME"/config/weechat/fset.conf
-				rm -rf "$HOME"/config/weechat/iset.conf
-				rm -rf "$HOME"/config/redshift.conf
-				rm -rf "$HOME"/config/PulseEffects/output/MySettings.json
-				if [[ -d "$HOME"/.moc ]]; then rm -rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
+				rm -Rf "$HOME"/.bash_profile
+				rm -Rf "$HOME"/.bashrc
+				rm -Rf "$HOME"/.gitconfig
+				if [[ -f "$HOME"/.msmtprc ]]; then rm -Rf "$HOME"/.msmtprc; else rm -Rf "$HOME"/.config/msmtp; fi
+				if [[ -f "$HOME"/.p10k.zsh ]]; then rm -Rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
+				if [[ -f "$HOME"/starship.toml ]]; then rm -Rf "$HOME"/starship.toml; else rm -Rf "$HOME"/.config/starship.toml; fi
+				if [[ -f "$HOME"/.tmux.conf ]]; then rm -Rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
+				if [[ -f "$HOME"/screenrc ]]; then rm -Rf "$HOME"/screenrc; else rm -Rf "$HOME"/.config/screen/screenrc; fi
+				rm -Rf "$HOME"/.vim
+				rm -Rf "$HOME"/.vimrc
+				if [[ -f "$HOME"/.zshrc ]]; then rm -Rf "$HOME"/.zshrc; else rm -Rf "$HOME"/.config/zsh/.zshrc; fi
+				rm -Rf "$HOME"/.zprofile
+				rm -Rf "$HOME"/.zshenv
+				rm -Rf "$HOME"/.config/nvim/init.vim
+				rm -Rf "$HOME"/.config/nvim
+				rm -Rf "$HOME"/.config/wget
+				rm -Rf "$HOME"/.config/vifm
+				rm -Rf "$HOME"/.config/alacritty
+				rm -Rf "$HOME"/.w3m
+				rm -Rf "$HOME"/.config/surfraw/conf
+				rm -Rf "$HOME"/.config/newsboat/config
+				rm -Rf "$HOME"/.config/newsboat/urls
+				rm -Rf "$HOME"/.config/weechat
+				rm -Rf "$HOME"/.config/weechat/irc.conf
+				rm -Rf "$HOME"/.config/weechat/perl
+				rm -Rf "$HOME"/.config/weechat/python
+				rm -Rf "$HOME"/.config/weechat/trigger.conf
+				rm -Rf "$HOME"/.config/weechat/weechat.conf
+				rm -Rf "$HOME"/.config/weechat/xfer.conf
+				rm -Rf "$HOME"/.config/weechat/buflist.conf
+				rm -Rf "$HOME"/.config/weechat/colorize_nicks.conf
+				rm -Rf "$HOME"/.config/weechat/fset.conf
+				rm -Rf "$HOME"/.config/weechat/iset.conf
+				rm -Rf "$HOME"/.config/redshift/redshift.conf
+				rm -Rf "$HOME"/.config/PulseEffects/output/MySettings.json
+				if [[ -d "$HOME"/.moc ]]; then rm -Rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
 				break
 			fi
 		done
@@ -804,13 +801,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 
 		# Create symlinks in the home folder
 		echo -e "Installing new dotfiles..." 2>&1 | logc
+		if [[ ! -d "$HOME"/.local/bin ]]; then mkdir -pv "$HOME"/.local/bin; fi
+		ln -sf "$dfloc"/local/bin/* "$scriptsloc" 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
 		if type bash > /dev/null 2>&1; then
 			ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
 			touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
-		fi
-		if type git > /dev/null 2>&1; then
-			ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
 		fi
 		if type zsh > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/zsh ]]; then
@@ -821,6 +817,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type starship > /dev/null 2>&1; then
 			ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		fi
+		if type git > /dev/null 2>&1; then
+			ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
 		fi
 		if type weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
@@ -849,7 +848,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type nvim > /dev/null 2>&1; then
 			ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | lognoc
-			ln -s "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
+			ln -sf "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
 		fi
 		if type vifm > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/vifm ]]; then
@@ -869,7 +868,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 		fi
 		if [[ -d /Applications/iTerm.app ]]; then
-			ln -s "$dfloc"/iterm2 "$HOME"/.iterm2 > /dev/null 2>&1
+			ln -s "$dfloc"/iterm2 "$HOME"/.iterm5 > /dev/null 2>&1
 		fi
 		if type w3m > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.w3m ]]; then
@@ -955,10 +954,10 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Retrieving wallpapers..." 2>&1 | logc
-			if [[ ! -d "$HOME/Pictures" ]]; then mkdir "$HOME"/Pictures 2>&1 | lognoc; fi
-			git clone "$wallpapers" "$HOME"/Pictures/wallpapers 2>&1 | lognoc
+			if [[ ! -d "$HOME/.local/share" ]]; then mkdir -pv "$HOME"/.local/share 2>&1 | lognoc; fi
+			git clone "$wallpapers" "$HOME"/.local/share/wallpapers 2>&1 | lognoc
 			echo -e "Wallpapers installed" 2>&1 | logc
-			echo -e "There are stored in \"$HOME/Pictures/wallpapers/\"" 2>&1 | logc
+			echo -e "There are stored in \"$HOME/.local/share/wallpapers/\"" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -1169,12 +1168,13 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" == 1 ]]; then
 					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
-					echo -e "Installing  DWM..." 2>&1 | logc
+					echo -e "Installing DWM..." 2>&1 | logc
 					installdwm && installdwmblocks && installdmenu
 					installlibxftbgra
 					echo -e "DWM installed" 2>&1 | logc
 					if [[ -f "$HOME"/.xinitrc ]]; then
     					echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
+						if [[ ! -d "$dfloc" ]]; then git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     					mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
     					ln -s "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
     					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -s "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
@@ -1182,6 +1182,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
     					echo -e 2>&1 | logc
     				else
     					echo -e "Installing 'xinitrc' file..." 2>&1 | logc
+						if [[ ! -d "$dfloc" ]]; then git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     					ln -s "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
     					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -s "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     					echo -e "New 'xinitrc' file installed" 2>&1 | logc
@@ -1198,41 +1199,6 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
-			break
-		fi
-	done
-fi
-
-#==============
-# Custom scripts
-#==============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -d "$scriptsloc" ]]; then
-	while read -p "Do you want to install custom scripts? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing custom scripts..." 2>&1 | logc
-			mkdir "$scriptsloc"
-			git clone --recurse-submodules "$scriptsrepo" "$scriptsloc" 2>&1 | lognoc
-			git -C "$scriptsloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
-			echo -e "Custom scripts installed" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-elif [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$scriptsloc" ]]; then
-	while read -p "Custom scripts are already installed. Do you want to update custom scripts? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Updating custom scripts..." 2>&1 | logc
-			git -C "$scriptsloc" pull 2>&1 | lognoc
-			echo -e "Custom scripts updated" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
 			break
 		fi
 	done

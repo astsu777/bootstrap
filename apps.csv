@@ -77,6 +77,7 @@ MAD,cpanminus
 MAD,streamlink
 MADR,bash
 MADR,bash-completion
+MADR,bashtop
 MADR,colordiff
 MADR,coreutils
 MADR,curl
@@ -91,6 +92,7 @@ MADR,grep
 MADR,lame
 MADR,moc
 MADR,mpv
+MADR,neofetch
 MADR,neovim
 MADR,newsboat
 MADR,openssl
