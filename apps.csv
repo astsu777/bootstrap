@@ -80,7 +80,7 @@ MAD,cpanminus
 MAD,streamlink
 MADR,bash
 MADR,bash-completion
-MADR,bashtop
+MADR,bpytop
 MADR,colordiff
 MADR,coreutils
 MADR,curl
