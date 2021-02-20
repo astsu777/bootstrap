@@ -24,6 +24,9 @@ A,nfs-utils
 A,pritunl-client-electron
 A,pulseeffects
 A,reflector
+A,rofi
+A,rofi-calc
+A,rofimoji
 A,signal-desktop
 A,texinfo
 A,ttf-jetbrains-mono
@@ -104,6 +107,7 @@ MADR,ripgrep
 MADR,rsync
 MADR,shellcheck
 MADR,surfraw
+MADR,sxhkd
 MADR,transmission-cli
 MADR,tree
 MADR,vifm
@@ -205,10 +209,7 @@ X,x265
 X,xclip
 X,xdotool
 X,xlockmore
-X,xorg-server
-X,xorg-xinit
-X,xorg-xrandr
-X,xorg-xset
+X,xorg
 X,xterm
 X,zenity
 Y,brave-bin
