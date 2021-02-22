@@ -731,6 +731,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/newsboat/urls "$HOME"/.old-dotfiles/newsboat-urls > /dev/null 2>&1
 				mv "$HOME"/.config/redshift.conf "$HOME"/.old-dotfiles/redshift.conf > /dev/null 2>&1
 				mv "$HOME"/.config/PulseEffects/output/MySettings.json "$HOME"/.old-dotfiles/PulseEffects-Output_MySettings.json > /dev/null 2>&1
+				mv "$HOME"/.config/dunst/dunstrc "$HOME"/.old-dotfiles/dunstrc > /dev/null 2>&1
+				mv "$HOME"/.config/rofi/config.rasi "$HOME"/.old-dotfiles/rofi-config.rasi > /dev/null 2>&1
 				if [[ -d "$HOME"/.moc ]]; then mv "$HOME"/.moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; else mv "$HOME"/.config/moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; fi
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -769,6 +771,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/weechat/iset.conf
 				rm -Rf "$HOME"/.config/redshift/redshift.conf
 				rm -Rf "$HOME"/.config/PulseEffects/output/MySettings.json
+				rm -Rf "$HOME"/.config/dunst/dunstrc
+				rm -Rf "$HOME"/.config/rofi/config.rasi
 				if [[ -d "$HOME"/.moc ]]; then rm -Rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
 				break
 			fi
@@ -918,6 +922,18 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			ln -s "$dfloc"/config/moc/config "$HOME"/.config/moc/ 2>&1 | lognoc
 			ln -s "$dfloc"/config/moc/themes "$HOME"/.config/moc/ 2>&1 | lognoc
+		fi
+		if type dunst > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/dunst ]]; then
+				mkdir "$HOME"/.config/dunst 2>&1 | lognoc
+			fi
+			ln -s "$dfloc"/config/dunst/dunstrc "$HOME"/.config/dunst/ 2>&1 | lognoc
+		fi
+		if type rofi > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/rofi ]]; then
+				mkdir "$HOME"/.config/rofi 2>&1 | lognoc
+			fi
+			ln -s "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
@@ -1128,6 +1144,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 			if type bluetooth > /dev/null 2>&1; then sudo systemctl enable bluetooth 2>&1 | lognoc; fi
 			if type crond > /dev/null 2>&1; then sudo systemctl enable cronie 2>&1 | lognoc; fi
 			if type pritunl-client > /dev/null 2>&1; then sudo systemctl enable pritunl-client 2>&1 | lognoc; fi
+			if type syslog-ng > /dev/null 2>&1; then sudo systemctl enable syslog-ng@default.service 2>&1 | lognoc; fi
 
 			# Add current to 'wireshark' group if need be
 			if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
