@@ -21,6 +21,8 @@ dwmblocksrepo="https://github.com/GSquad934/dwmblocks.git"
 dwmblocksloc="/opt/dwmblocks"
 dmenurepo="https://github.com/GSquad934/dmenu.git"
 dmenuloc="/opt/dmenu"
+strepo="https://github.com/GSquad934/st.git"
+stloc="/opt/st"
 
 # Git repositories location
 gitrepoloc="$HOME/.sources/repos"
@@ -72,8 +74,8 @@ if type brew > /dev/null 2>&1; then
 		chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
-		git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug
-		ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug
+		ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 	}
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -81,21 +83,21 @@ elif type apt-get > /dev/null 2>&1; then
 	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc && git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
 	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
 	installaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
@@ -106,7 +108,7 @@ elif type pacman > /dev/null 2>&1; then
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
 fi
 
 grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
@@ -203,18 +205,18 @@ if [[ ! -h /etc/arch-release ]]; then
 	}
 	installdwm(){
 		if [[ -d "$dwmloc" ]]; then sudo rm -Rf "$dwmloc" 2>&1 /dev/null; fi
-		sudo git clone "$dwmrepo" "$dwmloc" 2>&1 | lognoc
+		sudo git clone --depth 1 "$dwmrepo" "$dwmloc" 2>&1 | lognoc
 		sudo make -C "$dwmloc" clean install 2>&1 | lognoc
 	}
-	installdwmblocks(){
-		if [[ -d "$dwmblocksloc" ]]; then sudo rm -Rf "$dwmloc" 2>&1 /dev/null; fi
-		sudo git clone "$dwmblocksrepo" "$dwmblocksloc" 2>&1 | lognoc
-		sudo make -C "$dwmblocksloc" clean install 2>&1 | lognoc
-	}
 	installdmenu(){
-		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dwmloc" 2>&1 /dev/null; fi
-		sudo git clone "$dmenurepo" "$dmenuloc" 2>&1 | lognoc
+		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dmenuloc" 2>&1 /dev/null; fi
+		sudo git clone --depth 1 "$dmenurepo" "$dmenuloc" 2>&1 | lognoc
 		sudo make -C "$dmenuloc" clean install 2>&1 | lognoc
+	}
+	installst(){
+		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" 2>&1 /dev/null; fi
+		sudo git clone --depth 1 "$strepo" "$stloc" 2>&1 | lognoc
+		sudo make -C "$stloc" clean install 2>&1 | lognoc
 	}
 fi
 
@@ -385,7 +387,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! type yay > 
 					echo -e "Installing 'yay', an AUR helper..." 2>&1 | logc
 					sudo pacman -Sy 2>&1 | lognoc
 					sudo pacman -S git base-devel --needed --noconfirm 2>&1 | lognoc
-					git clone "$aurhelper" "$HOME"/yay 2>&1 | lognoc
+					git clone --depth 1 "$aurhelper" "$HOME"/yay 2>&1 | lognoc
 					cd "$HOME"/yay && makepkg -si 2>&1 | logc
 					cd "$HOME" || exit
 					rm -Rf "$HOME"/yay
@@ -576,7 +578,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 					fi
 				fi
 				echo -e 2>&1 | logc
-				git clone "$powerline_fonts" "$HOME"/fonts 2>&1 | lognoc && "$HOME"/fonts/install.sh
+				git clone --depth 1 "$powerline_fonts" "$HOME"/fonts 2>&1 | lognoc && "$HOME"/fonts/install.sh
 				cd "$HOME" || exit
 				rm -Rf "$HOME"/fonts > /dev/null 2>&1
 			fi
@@ -600,7 +602,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type tmux > /dev/null 2>&1; 
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | logc
 				rm -Rf "$HOME"/.config/tmux/plugins/tpm
-				git clone "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
+				git clone --depth 1 "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
 				echo -e "TMUX Plugin Manager installed" 2>&1 | logc
 				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
 				echo -e 2>&1 | logc
@@ -616,7 +618,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type tmux > /dev/null 2>&1; 
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Installing TMUX Plugin Manager..." 2>&1 | logc
-				git clone "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
+				git clone --depth 1 "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
 				echo -e "TMUX Plugin Manager installed" 2>&1 | logc
 				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
 				echo -e 2>&1 | logc
@@ -689,7 +691,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if [[ ! -d "$dfloc" ]]; then
 			echo -e "Retrieving dotfiles..." 2>&1 | logc
-			git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | lognoc
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
 			git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
 		else
 			git -C "$dfloc" pull 2>&1 | lognoc
@@ -809,131 +811,131 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		ln -sf "$dfloc"/local/bin/* "$scriptsloc" 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
 		if type bash > /dev/null 2>&1; then
-			ln -s "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
+			ln -sf "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
 			touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
 		fi
 		if type zsh > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/zsh ]]; then
 				mkdir -pv "$HOME"/.config/zsh 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
-			ln -s "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
+			ln -sf "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
+			ln -sf "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
 		fi
 		if type starship > /dev/null 2>&1; then
-			ln -s "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 		fi
 		if type git > /dev/null 2>&1; then
-			ln -s "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
+			ln -sf "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
 		fi
 		if type weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
 				mkdir "$HOME"/.config/weechat 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/weechat/irc.conf "$HOME"/.config/weechat/irc.conf 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/perl "$HOME"/.config/weechat/perl 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/python "$HOME"/.config/weechat/python 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/trigger.conf "$HOME"/.config/weechat/trigger.conf 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/weechat.conf "$HOME"/.config/weechat/weechat.conf 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/xfer.conf "$HOME"/.config/weechat/xfer.conf 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/buflist.conf "$HOME"/.config/weechat/buflist.conf 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/colorize_nicks.conf "$HOME"/.config/weechat/colorize_nicks.conf 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/fset.conf "$HOME"/.config/weechat/fset.conf 2>&1 | lognoc
-			ln -s "$dfloc"/config/weechat/iset.conf "$HOME"/.config/weechat/iset.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/irc.conf "$HOME"/.config/weechat/irc.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/perl "$HOME"/.config/weechat/perl 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/python "$HOME"/.config/weechat/python 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/trigger.conf "$HOME"/.config/weechat/trigger.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/weechat.conf "$HOME"/.config/weechat/weechat.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/xfer.conf "$HOME"/.config/weechat/xfer.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/buflist.conf "$HOME"/.config/weechat/buflist.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/colorize_nicks.conf "$HOME"/.config/weechat/colorize_nicks.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/fset.conf "$HOME"/.config/weechat/fset.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/weechat/iset.conf "$HOME"/.config/weechat/iset.conf 2>&1 | lognoc
 		fi
 		if type wget > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/wget ]]; then
 				mkdir "$HOME"/.config/wget 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/wget/wgetrc "$HOME"/.config/wget/wgetrc 2>&1 | lognoc
+			ln -sf "$dfloc"/config/wget/wgetrc "$HOME"/.config/wget/wgetrc 2>&1 | lognoc
 		fi
 		if type vim > /dev/null 2>&1; then
-			ln -s "$dfloc"/vim "$HOME"/.vim 2>&1 | lognoc
-			ln -s "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | lognoc
+			ln -sf "$dfloc"/vim "$HOME"/.vim 2>&1 | lognoc
+			ln -sf "$dfloc"/vim/vimrc "$HOME"/.vimrc 2>&1 | lognoc
 		fi
 		if type nvim > /dev/null 2>&1; then
-			ln -s "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | lognoc
+			ln -sf "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | lognoc
 			ln -sf "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
 		fi
 		if type vifm > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/vifm ]]; then
 				mkdir "$HOME"/.config/vifm 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | lognoc
-			ln -s "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | lognoc
+			ln -sf "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | lognoc
+			ln -sf "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | lognoc
 		fi
 		if type msmtp > /dev/null 2>&1; then
-			ln -s "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | lognoc
+			ln -sf "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | lognoc
 		fi
 		if type alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]]; then
-				mkdir "$HOME"/.config/alacritty && ln -s "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+				mkdir "$HOME"/.config/alacritty && ln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				mkdir "$HOME"/.config/alacritty && ln -s "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+				mkdir "$HOME"/.config/alacritty && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			fi
 		fi
 		if [[ -d /Applications/iTerm.app ]]; then
-			ln -s "$dfloc"/iterm2 "$HOME"/.iterm5 > /dev/null 2>&1
+			ln -sf "$dfloc"/iterm2 "$HOME"/.iterm5 > /dev/null 2>&1
 		fi
 		if type w3m > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.w3m ]]; then
 				mkdir -pv "$HOME"/.w3m > /dev/null 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
+			ln -sf "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
 		fi
 		if type surfraw > /dev/null 2>&1 || type sr > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/surfraw ]]; then
 				mkdir -pv "$HOME"/.config/surfraw 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/surfraw/conf "$HOME"/.config/surfraw/conf 2>&1 | lognoc
 		fi
 		if type newsboat > /dev/null 2>&1 > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/newsboat ]]; then
 				mkdir -pv "$HOME"/.config/newsboat 2>&1 | lognoc
 			fi
 			if type tsp > /dev/null 2>&1; then
-				ln -s "$dfloc"/config/newsboat/config-tsp "$HOME"/.config/newsboat/config 2>&1 | lognoc
-				ln -s "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
+				ln -sf "$dfloc"/config/newsboat/config-tsp "$HOME"/.config/newsboat/config 2>&1 | lognoc
+				ln -sf "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
 			else
-				ln -s "$dfloc"/config/newsboat/config-ts "$HOME"/.config/newsboat/config 2>&1 | lognoc
-				ln -s "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
+				ln -sf "$dfloc"/config/newsboat/config-ts "$HOME"/.config/newsboat/config 2>&1 | lognoc
+				ln -sf "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
 			fi
 		fi
 		if type screen > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/screen ]]; then
 				mkdir -pv "$HOME"/.config/screen 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/screen/screenrc "$HOME"/.config/screen/screenrc 2>&1 | lognoc
+			ln -sf "$dfloc"/config/screen/screenrc "$HOME"/.config/screen/screenrc 2>&1 | lognoc
 		fi
 		if type redshift > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/redshift ]]; then
 				mkdir -pv "$HOME"/.config/redshift 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/redshift/redshift.conf "$HOME"/.config/redshift/redshift.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/redshift/redshift.conf "$HOME"/.config/redshift/redshift.conf 2>&1 | lognoc
 		fi
 		if type pulseeffects > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/PulseEffects/output ]]; then
 				mkdir -pv "$HOME"/.config/PulseEffects/output 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/PulseEffects/output/MySettings.json "$HOME"/.config/PulseEffects/output/MySettings.json 2>&1 | lognoc
+			ln -sf "$dfloc"/config/PulseEffects/output/MySettings.json "$HOME"/.config/PulseEffects/output/MySettings.json 2>&1 | lognoc
 		fi
 		if type mocp > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/moc ]]; then
 				mkdir "$HOME"/.config/moc 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/moc/config "$HOME"/.config/moc/ 2>&1 | lognoc
-			ln -s "$dfloc"/config/moc/themes "$HOME"/.config/moc/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/moc/config "$HOME"/.config/moc/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/moc/themes "$HOME"/.config/moc/ 2>&1 | lognoc
 		fi
 		if type dunst > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/dunst ]]; then
 				mkdir "$HOME"/.config/dunst 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/dunst/dunstrc "$HOME"/.config/dunst/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/dunst/dunstrc "$HOME"/.config/dunst/ 2>&1 | lognoc
 		fi
 		if type rofi > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/rofi ]]; then
 				mkdir "$HOME"/.config/rofi 2>&1 | lognoc
 			fi
-			ln -s "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
@@ -941,15 +943,15 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 				# TMUX introduced XDG Base Directory compliance in v3.1
 				if [[ $(tmux -V) =~ 2\.[0-9] ]]; then
-					ln -s "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
+					ln -sf "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 				else
-					ln -s "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+					ln -sf "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
 				fi
 			else
 				if [[ ! -d "$HOME"/.config/tmux ]]; then
 					mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
 				fi
-				ln -s "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
 			fi
 		fi
 
@@ -971,7 +973,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Retrieving wallpapers..." 2>&1 | logc
 			if [[ ! -d "$HOME/.local/share" ]]; then mkdir -pv "$HOME"/.local/share 2>&1 | lognoc; fi
-			git clone "$wallpapers" "$HOME"/.local/share/wallpapers 2>&1 | lognoc
+			git clone --depth 1 "$wallpapers" "$HOME"/.local/share/wallpapers 2>&1 | lognoc
 			echo -e "Wallpapers installed" 2>&1 | logc
 			echo -e "There are stored in \"$HOME/.local/share/wallpapers/\"" 2>&1 | logc
 			echo -e 2>&1 | logc
@@ -1186,22 +1188,22 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 				if [[ "$REPLY" == 1 ]]; then
 					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 					echo -e "Installing DWM..." 2>&1 | logc
-					installdwm && installdwmblocks && installdmenu
+					installdwm && installdmenu && installst
 					installlibxftbgra
 					echo -e "DWM installed" 2>&1 | logc
 					if [[ -f "$HOME"/.xinitrc ]]; then
     					echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
-						if [[ ! -d "$dfloc" ]]; then git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+						if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     					mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
-    					ln -s "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -s "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
+    					ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
+    					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     					echo -e "New 'xinitrc' file installed" 2>&1 | logc
     					echo -e 2>&1 | logc
     				else
     					echo -e "Installing 'xinitrc' file..." 2>&1 | logc
-						if [[ ! -d "$dfloc" ]]; then git clone --recurse-submodules "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
-    					ln -s "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -s "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
+						if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    					ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
+    					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     					echo -e "New 'xinitrc' file installed" 2>&1 | logc
     					echo -e 2>&1 | logc
 					fi
@@ -1227,7 +1229,7 @@ fi
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
 	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
 	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir "$gitrepoloc/bin"; fi
-	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -s '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
+	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -sf '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
 	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
 	echo -e "Git repos' binaries symlinked" 2>&1 | logc
 	echo -e 2>&1 | logc
