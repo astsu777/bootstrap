@@ -1022,7 +1022,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			if [[ ! -d "$HOME/.local/share" ]]; then mkdir -pv "$HOME"/.local/share 2>&1 | lognoc; fi
 			git clone --depth 1 "$wallpapers" "$HOME"/.local/share/wallpapers 2>&1 | lognoc
 			echo -e "Wallpapers installed" 2>&1 | logc
-			echo -e "There are stored in \"$HOME/.local/share/wallpapers/\"" 2>&1 | logc
+			echo -e "Wallpapers are stored in \"$HOME/.local/share/wallpapers/\"" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
