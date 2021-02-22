@@ -809,10 +809,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 
 		# Create symlinks in the home folder
 		echo -e "Installing new dotfiles..." 2>&1 | logc
-		if [[ ! -d "$HOME"/.local/bin ]]; then mkdir -pv "$HOME"/.local/bin; fi
+		if [[ ! -d "$HOME"/.local/bin ]]; then mkdir -pv "$HOME"/.local/bin 2>&1 | lognoc ; fi
 		ln -sf "$dfloc"/local/bin/* "$scriptsloc" 2>&1 | lognoc
-		if [[ ! -d "$HOME"/.local/bin/statusbar ]]; then mkdir -pv "$HOME"/.local/bin/statusbar; fi
-		ln -sf "$dfloc"/local/bin/statusbar/* "$scriptsloc"/statusbar 2>&1 | lognoc
+		if [[ ! -d "$HOME"/.local/bin/statusbar ]]; then mkdir -pv "$HOME"/.local/bin/statusbar 2>&1 | lognoc ; fi
+		ln -sf "$dfloc"/local/bin/statusbar/* "$scriptsloc"/statusbar/ 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
 		if type bash > /dev/null 2>&1; then
 			ln -sf "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
