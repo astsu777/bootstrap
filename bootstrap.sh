@@ -17,8 +17,6 @@ scriptsloc="$HOME/.local/bin/"
 # Custom WM/DE location
 dwmrepo="https://github.com/GSquad934/dwm.git"
 dwmloc="/opt/dwm"
-dwmblocksrepo="https://github.com/GSquad934/dwmblocks.git"
-dwmblocksloc="/opt/dwmblocks"
 dmenurepo="https://github.com/GSquad934/dmenu.git"
 dmenuloc="/opt/dmenu"
 strepo="https://github.com/GSquad934/st.git"
@@ -74,8 +72,13 @@ if type brew > /dev/null 2>&1; then
 		chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
-		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug
-		ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		fi
 	}
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -83,21 +86,48 @@ elif type apt-get > /dev/null 2>&1; then
 	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc && git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){
+		sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc
+		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		fi
+	}
 elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc && git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){
+		sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc
+		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		fi
+	}
 elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){
+		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc
+		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		fi
+	}
 	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
 	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
 	installaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
@@ -108,7 +138,16 @@ elif type pacman > /dev/null 2>&1; then
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
 	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc && git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc && ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc ;}
+	installzsh(){
+		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc
+		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		fi
+	}
 fi
 
 grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
@@ -540,7 +579,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 				echo -e "Please run this script as a normal user" 2>&1 | logc
 				exit 1
 			else
-				mkdir -pv "$HOME"/fonts
+				mkdir -pv "$HOME"/fonts 2>&1 | lognoc
 				if type wget > /dev/null 2>&1; then
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
@@ -568,7 +607,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | lognoc
 				elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 					if [[ ! -d /usr/share/fonts ]]; then
-						sudo mkdir -pv /usr/share/fonts
+						sudo mkdir -pv /usr/share/fonts 2>&1 | lognoc
 					fi
 					if type fc-cache > /dev/null 2>&1; then
 						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | lognoc
@@ -613,7 +652,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type tmux > /dev/null 2>&1; 
 			fi
 		done
 	else
-		echo -e "If you plan using a tiling window manager, it is recommended to reply NO to the following question" 2>&1 | logc
 		while read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -794,12 +832,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 					if [[ -n "$bkpdf" ]]; then
 						mv "$HOME"/.config/weechat "$HOME"/.old-dotfiles/weechat > /dev/null 2>&1
-						mkdir -pv "$HOME"/.config/weechat
+						mkdir -pv "$HOME"/.config/weechat 2>&1 | lognoc
 						mv "$HOME"/.old-dotfiles/weechat/sec.conf "$HOME"/.config/weechat/sec.conf
 					else
 						mv "$HOME"/.config/weechat/sec.conf "$HOME"/sec.conf
 						rm -Rf "$HOME"/.config/weechat
-						mkdir -pv "$HOME"/.config/weechat
+						mkdir -pv "$HOME"/.config/weechat 2>&1 | lognoc
 						mv "$HOME"/sec.conf "$HOME"/.config/weechat/sec.conf
 					fi
 					break
@@ -813,7 +851,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		ln -sf "$dfloc"/local/bin/* "$scriptsloc" 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.local/bin/statusbar ]]; then mkdir -pv "$HOME"/.local/bin/statusbar 2>&1 | lognoc ; fi
 		ln -sf "$dfloc"/local/bin/statusbar/* "$scriptsloc"/statusbar/ 2>&1 | lognoc
-		if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config; fi
+		if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config 2>&1 | lognoc ; fi
 		if type bash > /dev/null 2>&1; then
 			ln -sf "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
 			touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
@@ -825,9 +863,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -sf "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
 			ln -sf "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
 		fi
-		if type starship > /dev/null 2>&1; then
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		fi
+		## Starship is symlinked as it needs to be present BEFORE the installation of starship
+		ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 		if type git > /dev/null 2>&1; then
 			ln -sf "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
 		fi
@@ -872,9 +909,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]]; then
-				mkdir -pv "$HOME"/.config/alacritty && ln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				mkdir -pv "$HOME"/.config/alacritty && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			fi
 		fi
 		if [[ -d /Applications/iTerm.app ]]; then
@@ -882,7 +919,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type w3m > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.w3m ]]; then
-				mkdir -pv "$HOME"/.w3m > /dev/null 2>&1 | lognoc
+				mkdir -pv "$HOME"/.w3m 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
 		fi
@@ -1238,7 +1275,7 @@ fi
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
 	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
-	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir -pv "$gitrepoloc/bin"; fi
+	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir -pv "$gitrepoloc/bin" 2>&1 | lognoc ; fi
 	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -sf '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
 	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
 	echo -e "Git repos' binaries symlinked" 2>&1 | logc
@@ -1356,5 +1393,5 @@ echo -e 2>&1 | logc
 echo -e 2>&1 | logc
 echo -e "======= ALL DONE =======" 2>&1 | logc
 echo -e 2>&1 | logc
-echo -e "If anything has been modified, please reboot the computer for all the settings to be applied (not applicable to servers)." 2>&1 | logc
-echo -e "A log file called \"$logfile\" contains the details of all operations. Check if for errors." 2>&1 | logc
+echo -e "Please reboot the computer for all the settings to be applied (not applicable for servers)." 2>&1 | logc
+echo -e "A log file called \"$logfile\" contains the details of all operations. Check it for errors." 2>&1 | logc
