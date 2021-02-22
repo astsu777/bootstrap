@@ -118,8 +118,8 @@ installworkstoreapp(){ if type mas > /dev/null 2>&1; then < "$workstoreapp" xarg
 
 grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
-installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -p "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
-installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -p "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
+installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
+installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
 
 installperldeps(){
 	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
@@ -255,7 +255,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 		fi
 		if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers; then
 			if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
-				if [[ ! -d /etc/sudoers.d ]]; then mkdir /etc/sudoers.d 2>&1 | lognoc; fi
+				if [[ ! -d /etc/sudoers.d ]]; then mkdir -pv /etc/sudoers.d 2>&1 | lognoc; fi
 				touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
 			else
 				sed -i 's/^#\ \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/' /etc/sudoers
@@ -286,7 +286,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
 				fi
 				if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1; then
 					if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
-						if [[ ! -d /etc/sudoers.d ]]; then mkdir /etc/sudoers.d 2>&1 | lognoc; fi
+						if [[ ! -d /etc/sudoers.d ]]; then mkdir -pv /etc/sudoers.d 2>&1 | lognoc; fi
 						touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
 					else
 						sed -i 's/^#\ \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/' /etc/sudoers
@@ -540,7 +540,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 				echo -e "Please run this script as a normal user" 2>&1 | logc
 				exit 1
 			else
-				mkdir "$HOME"/fonts
+				mkdir -pv "$HOME"/fonts
 				if type wget > /dev/null 2>&1; then
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
@@ -568,7 +568,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | lognoc
 				elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 					if [[ ! -d /usr/share/fonts ]]; then
-						sudo mkdir /usr/share/fonts
+						sudo mkdir -pv /usr/share/fonts
 					fi
 					if type fc-cache > /dev/null 2>&1; then
 						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | lognoc
@@ -704,10 +704,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				bkpdf=1
 				echo -e "Backup your current dotfiles to $HOME/.old-dotfiles..." 2>&1 | logc
 				if [[ ! -d "$HOME"/.old-dotfiles ]]; then
-					mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
+					mkdir -pv "$HOME"/.old-dotfiles > /dev/null 2>&1
 				else
 					rm -Rf "$HOME"/.old-dotfiles > /dev/null 2>&1
-					mkdir "$HOME"/.old-dotfiles > /dev/null 2>&1
+					mkdir -pv "$HOME"/.old-dotfiles > /dev/null 2>&1
 				fi
 				mv "$HOME"/.bash_profile "$HOME"/.old-dotfiles/bash_profile > /dev/null 2>&1
 				mv "$HOME"/.bashrc "$HOME"/.old-dotfiles/bashrc > /dev/null 2>&1
@@ -794,12 +794,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 					if [[ -n "$bkpdf" ]]; then
 						mv "$HOME"/.config/weechat "$HOME"/.old-dotfiles/weechat > /dev/null 2>&1
-						mkdir "$HOME"/.config/weechat
+						mkdir -pv "$HOME"/.config/weechat
 						mv "$HOME"/.old-dotfiles/weechat/sec.conf "$HOME"/.config/weechat/sec.conf
 					else
 						mv "$HOME"/.config/weechat/sec.conf "$HOME"/sec.conf
 						rm -Rf "$HOME"/.config/weechat
-						mkdir "$HOME"/.config/weechat
+						mkdir -pv "$HOME"/.config/weechat
 						mv "$HOME"/sec.conf "$HOME"/.config/weechat/sec.conf
 					fi
 					break
@@ -813,7 +813,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		ln -sf "$dfloc"/local/bin/* "$scriptsloc" 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.local/bin/statusbar ]]; then mkdir -pv "$HOME"/.local/bin/statusbar 2>&1 | lognoc ; fi
 		ln -sf "$dfloc"/local/bin/statusbar/* "$scriptsloc"/statusbar/ 2>&1 | lognoc
-		if [[ ! -d "$HOME"/.config ]]; then mkdir "$HOME"/.config; fi
+		if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config; fi
 		if type bash > /dev/null 2>&1; then
 			ln -sf "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
 			touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
@@ -833,7 +833,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
-				mkdir "$HOME"/.config/weechat 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/weechat 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/weechat/irc.conf "$HOME"/.config/weechat/irc.conf 2>&1 | lognoc
 			ln -sf "$dfloc"/config/weechat/perl "$HOME"/.config/weechat/perl 2>&1 | lognoc
@@ -848,7 +848,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type wget > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/wget ]]; then
-				mkdir "$HOME"/.config/wget 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/wget 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/wget/wgetrc "$HOME"/.config/wget/wgetrc 2>&1 | lognoc
 		fi
@@ -862,7 +862,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type vifm > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/vifm ]]; then
-				mkdir "$HOME"/.config/vifm 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/vifm 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | lognoc
 			ln -sf "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | lognoc
@@ -872,9 +872,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
 			if [[ "$OSTYPE" == "darwin"* ]]; then
-				mkdir "$HOME"/.config/alacritty && ln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/alacritty && ln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				mkdir "$HOME"/.config/alacritty && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/alacritty && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			fi
 		fi
 		if [[ -d /Applications/iTerm.app ]]; then
@@ -924,26 +924,26 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type mocp > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/moc ]]; then
-				mkdir "$HOME"/.config/moc 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/moc 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/moc/config "$HOME"/.config/moc/ 2>&1 | lognoc
 			ln -sf "$dfloc"/config/moc/themes "$HOME"/.config/moc/ 2>&1 | lognoc
 		fi
 		if type dunst > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/dunst ]]; then
-				mkdir "$HOME"/.config/dunst 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/dunst 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/dunst/dunstrc "$HOME"/.config/dunst/ 2>&1 | lognoc
 		fi
 		if type rofi > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/rofi ]]; then
-				mkdir "$HOME"/.config/rofi 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/rofi 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
 		fi
 		if type sxhkd > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/sxhkd ]]; then
-				mkdir "$HOME"/.config/sxhkd 2>&1 | lognoc
+				mkdir -pv "$HOME"/.config/sxhkd 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/sxhkd/sxhkdrc "$HOME"/.config/sxhkd/ 2>&1 | lognoc
 		fi
@@ -1206,14 +1206,14 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 						if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     					mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
     					ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
+    					mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     					echo -e "New 'xinitrc' file installed" 2>&1 | logc
     					echo -e 2>&1 | logc
     				else
     					echo -e "Installing 'xinitrc' file..." 2>&1 | logc
 						if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     					ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    					mkdir "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
+    					mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     					echo -e "New 'xinitrc' file installed" 2>&1 | logc
     					echo -e 2>&1 | logc
 					fi
@@ -1238,7 +1238,7 @@ fi
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
 	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
-	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir "$gitrepoloc/bin"; fi
+	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir -pv "$gitrepoloc/bin"; fi
 	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -sf '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
 	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
 	echo -e "Git repos' binaries symlinked" 2>&1 | logc
