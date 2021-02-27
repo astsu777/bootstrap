@@ -14,20 +14,12 @@ dfrepo="https://github.com/GSquad934/dotfiles.git"
 # Custom scripts location
 scriptsloc="$HOME/.local/bin/"
 
-# Custom WM/DE location
-dwmrepo="https://github.com/GSquad934/dwm.git"
-dwmloc="/opt/dwm"
-dmenurepo="https://github.com/GSquad934/dmenu.git"
-dmenuloc="/opt/dmenu"
-strepo="https://github.com/GSquad934/st.git"
-stloc="/opt/st"
-
 # Git repositories location
 gitrepoloc="$HOME/.sources/repos"
 
-# Logging
-date="$(date +%Y-%m-%d-%H%M%S)"
-logfile="$HOME/bootstrap_log_$date.txt"
+# Wallpapers
+wallpapers="https://github.com/GSquad934/wallpapers.git"
+wallpapersloc="$HOME/.local/share/wallpapers"
 
 # Software lists
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
@@ -49,8 +41,17 @@ powerline_fonts="https://github.com/powerline/fonts"
 # TMUX Plugins
 tpm="https://github.com/tmux-plugins/tpm"
 
-# Wallpapers
-wallpapers="https://github.com/GSquad934/wallpapers.git"
+# Custom WM/DE location
+dwmrepo="https://github.com/GSquad934/dwm.git"
+dwmloc="/opt/dwm"
+dmenurepo="https://github.com/GSquad934/dmenu.git"
+dmenuloc="/opt/dmenu"
+strepo="https://github.com/GSquad934/st.git"
+stloc="/opt/st"
+
+# Logging
+date="$(date +%Y-%m-%d-%H%M%S)"
+logfile="$HOME/bootstrap_log_$date.txt"
 
 #=============
 # Global Functions
@@ -1020,9 +1021,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Retrieving wallpapers..." 2>&1 | logc
 			if [[ ! -d "$HOME/.local/share" ]]; then mkdir -pv "$HOME"/.local/share 2>&1 | lognoc; fi
-			git clone --depth 1 "$wallpapers" "$HOME"/.local/share/wallpapers 2>&1 | lognoc
+			git clone --depth 1 "$wallpapers" "$wallpapersloc" 2>&1 | lognoc
 			echo -e "Wallpapers installed" 2>&1 | logc
-			echo -e "Wallpapers are stored in \"$HOME/.local/share/wallpapers/\"" 2>&1 | logc
+			echo -e "Wallpapers are stored in \"$wallpapersloc\"" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
