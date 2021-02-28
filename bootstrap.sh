@@ -981,6 +981,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/rofi 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
+			# Replace DMenu by Rofi
+			if [[ -f /bin/dmenu ]]; then
+				sudo mv /bin/dmenu /bin/dmenu.ORIG 2>&1 | lognoc && ln -sf /bin/rofi /bin/dmenu 2>&1 | lognoc
+			else
+				ln -sf /bin/rofi /bin/dmenu 2>&1 | lognoc
+			fi
 		fi
 		if type sxhkd > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/sxhkd ]]; then
