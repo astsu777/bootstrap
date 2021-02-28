@@ -12,7 +12,8 @@ dfloc="$HOME/.dotfiles"
 dfrepo="https://github.com/GSquad934/dotfiles.git"
 
 # Custom scripts location
-scriptsloc="$HOME/.local/bin/"
+scriptsloc="$HOME/.local/bin"
+resourcesloc="$HOME/.local/share"
 
 # Git repositories location
 gitrepoloc="$HOME/.sources/repos"
@@ -848,10 +849,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 
 		# Create symlinks in the home folder
 		echo -e "Installing new dotfiles..." 2>&1 | logc
-		if [[ ! -d "$HOME"/.local/bin ]]; then mkdir -pv "$HOME"/.local/bin 2>&1 | lognoc ; fi
-		ln -sf "$dfloc"/local/bin/* "$scriptsloc" 2>&1 | lognoc
-		if [[ ! -d "$HOME"/.local/bin/statusbar ]]; then mkdir -pv "$HOME"/.local/bin/statusbar 2>&1 | lognoc ; fi
-		ln -sf "$dfloc"/local/bin/statusbar/* "$scriptsloc"/statusbar/ 2>&1 | lognoc
+		if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
+		ln -sf "$dfloc"/local/bin/* "$scriptsloc"/ 2>&1 | lognoc
+		if [[ ! -d "$resourcesloc" ]]; then mkdir -pv "$resourcesloc"/ 2>&1 | lognoc ; fi
+		ln -sf "$dfloc"/local/share/* "$resourcesloc" 2>&1 | lognoc
+		if [[ ! -d "$scriptsloc/statusbar" ]]; then mkdir -pv "$scriptsloc/statusbar" 2>&1 | lognoc ; fi
+		ln -sf "$dfloc"/local/bin/statusbar/* "$scriptsloc/statusbar/" 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config 2>&1 | lognoc ; fi
 		if type bash > /dev/null 2>&1; then
 			ln -sf "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc

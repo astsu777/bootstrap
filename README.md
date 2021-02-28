@@ -73,9 +73,22 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 | S | The application can be installed from the macOS App Store |
 | G | The application can be cloned from a Git repository |
 
-The file is structed in this way because some applications have different names depending on the OS. Also, some applications are not available on some systems. Personally, I also use different applications on different systems depending on my workflow.
+The file is structured in this way because some applications have different names depending on the OS. Also, some applications are not available on some systems. Personally, I also use different applications on different systems depending on my workflow.
 
 <u>**Note**</u>: the "G" tag will trigger the script to detect binaries in the cloned repositories and symlinked them in a location defined by the *$gitrepoloc* in their defined location (see chapter **Variables** below for details).
+
+#### Mac App Store
+The application coming from the Mac App Store needs to be set via their ID: the name in the *apps.csv* file is there just for clarity sake. In order to retrieve the ID of an app from the store, search for an application with the *mas* tool like this:
+
+```
+mas search Xcode
+497799835 Xcode
+688199928 Docs for Xcode
+449589707 Dash 3 - API Docs & Snippets. Integrates with Xcode, Alfred, TextWrangler and many more.
+[...]
+```
+
+For more information about *mas*, please check the [documentation](https://github.com/mas-cli/mas).
 
 ### Variables
 The file *bootstrap&#46;sh* has a lot of variables defined at the very beginning. This allows changing the configuration of the script without actually modifying the code. It is recommended to change the following variables:
@@ -84,6 +97,7 @@ The file *bootstrap&#46;sh* has a lot of variables defined at the very beginning
 * **dfloc**: this variable defines where the installed dotfiles need to be stored. Default value is *$HOME/.dotfiles*
 * **dfrepo**: this variable indicates what repository of dotfiles needs to be installed (this points to [my dotfiles](https://github.com/GSquad934/dotfiles))
 * **scriptsloc**: this variable defines where custom scripts will be stored. Personally, I use this to auto-create this folder so my dotfiles will deploy scripts there and add this folder to my *&#36;PATH*. Default value is *$HOME/.local/bin*
+* **resourcesloc**: this variable defines where resources to be used by custom scripts are located (Ex.: a list of all unicode characters)
 * **gitrepoloc**: this variable defines where cloned Git repositories will be stored. Default value is *$HOME/.sources/repos*
 * **wallpapers**: this variable indicates what repository of wallpapers can be downloaded
 * **wallpapersloc**: this variable defines where downloaded wallpapers will be stored. Default value is *$HOME/.local/share/wallpapers*
