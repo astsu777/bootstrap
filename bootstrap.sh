@@ -767,6 +767,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/wget "$HOME"/.old-dotfiles/wget > /dev/null 2>&1
 				mv "$HOME"/.config/vifm "$HOME"/.old-dotfiles/vifm > /dev/null 2>&1
 				mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
+				mv "$HOME"/.config/kitty "$HOME"/.old-dotfiles/kitty > /dev/null 2>&1
+				mv "$HOME"/.config/termite "$HOME"/.old-dotfiles/termite > /dev/null 2>&1
 				mv "$HOME"/.w3m "$HOME"/.old-dotfiles/w3m > /dev/null 2>&1
 				mv "$HOME"/.config/surfraw/conf "$HOME"/.old-dotfiles/surfraw > /dev/null 2>&1
 				mv "$HOME"/.config/newsboat/config "$HOME"/.old-dotfiles/newsboat-config > /dev/null 2>&1
@@ -797,6 +799,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/wget
 				rm -Rf "$HOME"/.config/vifm
 				rm -Rf "$HOME"/.config/alacritty
+				rm -Rf "$HOME"/.config/kitty
+				rm -Rf "$HOME"/.config/termite
 				rm -Rf "$HOME"/.w3m
 				rm -Rf "$HOME"/.config/surfraw/conf
 				rm -Rf "$HOME"/.config/newsboat/config
@@ -912,11 +916,30 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -sf "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | lognoc
 		fi
 		if type alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
+			if [[ ! -d "$HOME"/.config/vifm ]]; then
+				mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc
+			fi
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			fi
+		fi
+		if type kitty > /dev/null 2>&1 || [[ -d /Applications/Kitty.app ]]; then
+			if [[ ! -d "$HOME"/.config/kitty ]]; then
+				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc
+			fi
+			if [[ "$OSTYPE" == "darwin"* ]]; then
+				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
+			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
+			fi
+		fi
+		if type termite > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/termite ]]; then
+				mkdir -pv "$HOME"/.config/termite 2>&1 | lognoc
+			fi
+			ln -sf "$dfloc"/config/termite/config "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
 		fi
 		if [[ -d /Applications/iTerm.app ]]; then
 			ln -sf "$dfloc"/iterm2 "$HOME"/.iterm5 > /dev/null 2>&1

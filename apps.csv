@@ -15,7 +15,7 @@ A,pulseeffects
 A,reflector
 A,signal-desktop
 A,syslog-ng
-A,ttf-jetbrains-mono
+A,termite
 AD,gufw
 AD,ufw
 ADR,audacity
@@ -63,6 +63,8 @@ ADRX,xclip
 ADX,xdo
 AR,nextcloud-client
 AX,pulsemixer
+AX,ttf-jetbrains-mono
+AX,ttf-joypixels
 AX,xdg-user-dirs
 C,amethyst
 C,brave-browser
@@ -99,6 +101,7 @@ MADR,firefox
 MADR,fzf
 MADR,git
 MADR,grep
+MADR,kitty
 MADR,lame
 MADR,mpv
 MADR,neofetch
@@ -214,10 +217,7 @@ X,pulseaudio-alsa
 X,pulseaudio-bluetooth
 X,qpdf
 X,qpdfview
-X,termite
 X,trayer
-X,ttf-jetbrains-mono
-X,ttf-joypixels
 X,unclutter
 X,volumeicon
 X,x264
@@ -226,6 +226,7 @@ X,xdotool
 X,xlockmore
 X,xorg
 X,xorg-xinit
+X,xterm
 X,zenity
 Y,cointop
 Y,ferdi-bin
