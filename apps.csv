@@ -12,15 +12,12 @@ A,ldns
 A,mtpfs
 A,pritunl-client-electron
 A,pulseeffects
-A,pulsemixer
 A,reflector
 A,signal-desktop
 A,syslog-ng
 A,ttf-jetbrains-mono
-A,xdg-user-dirs
 AD,gufw
 AD,ufw
-AD,xdo
 ADR,audacity
 ADR,avahi
 ADR,ca-certificates
@@ -31,11 +28,9 @@ ADR,lsof
 ADR,man-db
 ADR,man-pages
 ADR,mlocate
-ADR,mlocate
 ADR,moc
 ADR,mplayer
 ADR,net-tools
-ADR,nethogs
 ADR,networkmanager
 ADR,networkmanager-l2tp
 ADR,networkmanager-openvpn
@@ -53,9 +48,7 @@ ADR,sxiv
 ADR,texinfo
 ADR,unrar
 ADR,unzip
-ADR,vi
 ADR,wpa_supplicant
-ADR,xclip
 ADR,zathura
 ADR,zathura-djvu
 ADR,zathura-pdf-poppler
@@ -65,7 +58,12 @@ ADRC,vlc
 ADRI,nmon
 ADRI,tcpdump
 ADRI,vim
+ADRX,vi
+ADRX,xclip
+ADX,xdo
 AR,nextcloud-client
+AX,pulsemixer
+AX,xdg-user-dirs
 C,amethyst
 C,brave-browser
 C,cyberduck
@@ -216,6 +214,7 @@ X,pulseaudio-alsa
 X,pulseaudio-bluetooth
 X,qpdf
 X,qpdfview
+X,termite
 X,trayer
 X,ttf-jetbrains-mono
 X,ttf-joypixels
@@ -227,7 +226,6 @@ X,xdotool
 X,xlockmore
 X,xorg
 X,xorg-xinit
-X,xterm
 X,zenity
 Y,cointop
 Y,ferdi-bin
