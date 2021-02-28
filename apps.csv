@@ -20,6 +20,7 @@ A,ttf-jetbrains-mono
 A,xdg-user-dirs
 AD,gufw
 AD,ufw
+AD,xdo
 ADR,audacity
 ADR,avahi
 ADR,ca-certificates
