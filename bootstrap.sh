@@ -936,7 +936,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.config/termite ]]; then
 				mkdir -pv "$HOME"/.config/termite 2>&1 | lognoc
 			fi
-			ln -sf "$dfloc"/config/termite/config "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/termite/config "$HOME"/.config/termite/config 2>&1 | lognoc
 		fi
 		if [[ -d /Applications/iTerm.app ]]; then
 			ln -sf "$dfloc"/iterm2 "$HOME"/.iterm5 > /dev/null 2>&1
