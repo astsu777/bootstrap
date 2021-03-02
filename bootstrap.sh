@@ -586,9 +586,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$sourcecodepro_regular" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$sourcecodepro_bold" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$sourcecodepro_italic" 2>&1 | lognoc
 				elif type curl > /dev/null 2>&1; then
 					cd "$HOME"/fonts || exit
 					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
@@ -597,19 +594,16 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 					curl -fSLO "$jetbrainsmono_regular" 2>&1 | lognoc
 					curl -fSLO "$jetbrainsmono_bold" 2>&1 | lognoc
 					curl -fSLO "$jetbrainsmono_italic" 2>&1 | lognoc
-					curl -fSLO "$sourcecodepro_regular" 2>&1 | lognoc
-					curl -fSLO "$sourcecodepro_bold" 2>&1 | lognoc
-					curl -fSLO "$sourcecodepro_italic" 2>&1 | lognoc
 					for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
 				fi
 				if [[ "$OSTYPE" == "darwin"* ]]; then
 					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | lognoc
 				elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-					if [[ ! -d /usr/share/fonts ]]; then
-						sudo mkdir -pv /usr/share/fonts 2>&1 | lognoc
+					if [[ ! -d /usr/share/fonts/TTF ]]; then
+						sudo mkdir -pv /usr/share/fonts/TTF 2>&1 | lognoc
 					fi
 					if type fc-cache > /dev/null 2>&1; then
-						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/ && fc-cache 2>&1 | lognoc
+						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ && fc-cache -f -v 2>&1 | lognoc
 					else
 						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | logc
 						exit 1
