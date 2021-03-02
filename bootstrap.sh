@@ -1002,10 +1002,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			ln -sf "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
 			# Replace DMenu by Rofi
-			if [[ -f /bin/dmenu ]]; then
-				sudo mv /bin/dmenu /bin/dmenu.ORIG 2>&1 | lognoc && ln -sf /bin/rofi /bin/dmenu 2>&1 | lognoc
-			else
-				ln -sf /bin/rofi /bin/dmenu 2>&1 | lognoc
+			if type dmenu > /dev/null 2>&1 && [[ ! -h $(which dmenu) ]]; then
+				echo -e "Replacing DMenu by Rofi..."
+				dmenu=$(which dmenu)
+				rofi=$(which rofi)
+				sudo mv "$dmenu" "$dmenu".ORIG 2>&1 | lognoc && sudo ln -sf "$rofi" "$dmenu" 2>&1 | lognoc
+				echo -e "DMenu replaced by Rofi"
 			fi
 		fi
 		if type sxhkd > /dev/null 2>&1; then
