@@ -1341,7 +1341,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 
 		# Install GTK config files if no DE is detected
-		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
+		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
 			echo -e "No desktop environment has been detected on the system." 2>&1 | logc
 			while read -p "Do you want to install the GTK dotfiles? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
