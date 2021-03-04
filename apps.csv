@@ -204,13 +204,16 @@ X,alsa-utils
 X,blueman
 X,bluez
 X,dunst
+X,engrampa
 X,feh
+X,gnome-themes-extra
 X,lxsession
 X,network-manager-applet
 X,numlockx
 X,openal
 X,pacman-contrib
 X,pavucontrol
+X,pcmanfm
 X,picom
 X,polkit
 X,pulseaudio-alsa

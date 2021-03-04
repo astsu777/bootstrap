@@ -1339,6 +1339,51 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 
 		echo -e "New dotfiles installed" 2>&1 | logc
 		echo -e 2>&1 | logc
+
+		# Install GTK config files if no DE is detected
+		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
+			echo -e "No desktop environment has been detected on the system." 2>&1 | logc
+			while read -p "Do you want to install the GTK dotfiles? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					if [[ ! -d "$HOME"/.config/gtk-3.0 ]]; then
+						mkdir -pv "$HOME"/.config/gtk-3.0 2>&1 | lognoc
+					elif [[ -f "$HOME"/.config/gtk-3.0/settings.ini ]]; then
+						rm -Rf "$HOME"/.config/gtk-3.0/settings.ini
+					fi
+					ln -sf "$dfloc"/config/gtk-3.0/settings.ini "$HOME"/.config/gtk-3.0/ 2>&1 | lognoc
+					if type pcmanfm > /dev/null 2>&1; then
+						if [[ ! -d "$HOME"/.config/libfm ]]; then
+							mkdir -pv "$HOME"/.config/libfm 2>&1 | lognoc
+						elif [[ -f "$HOME"/.config/libfm/libfm.conf ]]; then
+							rm -Rf "$HOME"/.config/libfm/libfm.conf
+						fi
+						if [[ ! -d "$HOME"/.config/pcmanfm/default ]]; then
+							mkdir -pv "$HOME"/.config/pcmanfm/default 2>&1 | lognoc
+						elif [[ -f "$HOME"/.config/pcmanfm/default/pcmanfm.conf ]]; then
+							rm -Rf "$HOME"/.config/pcmanfm/default/pcmanfm.conf
+						fi
+						ln -sf "$dfloc"/config/libfm/libfm.conf "$HOME"/.config/libfm/libfm.conf 2>&1 | lognoc
+						ln -sf "$dfloc"/config/pcmanfm/default/pcmanfm.conf "$HOME"/.config/pcmanfm/default/pcmanfm.conf 2>&1 | lognoc
+					fi
+					if type volumeicon > /dev/null 2>&1; then
+						if [[ ! -d "$HOME"/.config/volumeicon ]]; then
+							mkdir -pv "$HOME"/.config/volumeicon 2>&1 | lognoc
+						elif [[ -f "$HOME"/.config/volumeicon/volumeicon ]]; then
+							rm -Rf "$HOME"/.config/volumeicon/volumeicon
+						fi
+						ln -sf "$dfloc"/config/volumeicon/volumeicon "$HOME"/.config/volumeicon/volumeicon 2>&1 | lognoc
+					fi
+
+					echo -e "GTK dotfiles installed" 2>&1 | logc
+					echo -e 2>&1 | logc
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
+		fi
 		break
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e
