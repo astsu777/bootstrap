@@ -1017,7 +1017,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -sf "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
 			# Replace DMenu by Rofi
 			rofi=$(which rofi)
-			ln -sf "$rofi" "$scriptsloc" 2>&1 | lognoc
+			ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
 		fi
 		if type sxhkd > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/sxhkd ]]; then
@@ -1299,7 +1299,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 			# Replace DMenu by Rofi
 			if type rofi > /dev/null 2>&1; then
 				rofi=$(which rofi)
-				ln -sf "$rofi" "$scriptsloc" 2>&1 | lognoc
+				ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
 			fi
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
