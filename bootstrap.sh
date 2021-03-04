@@ -623,16 +623,16 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 						sudo mkdir -pv /usr/share/fonts/TTF 2>&1 | lognoc
 					fi
 					if type fc-cache > /dev/null 2>&1; then
-						sudo mv "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ && fc-cache -f -v 2>&1 | lognoc
+						sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ && fc-cache -f -v 2>&1 | lognoc
 					else
 						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | logc
 						exit 1
 					fi
 				fi
 				echo -e 2>&1 | logc
-				git clone --depth 1 "$powerline_fonts" "$HOME"/fonts 2>&1 | lognoc && "$HOME"/fonts/install.sh
+				git clone --depth 1 "$powerline_fonts" "$HOME"/fonts_powerline 2>&1 | lognoc && "$HOME"/fonts_powerline/install.sh
 				cd "$HOME" || exit
-				rm -Rf "$HOME"/fonts > /dev/null 2>&1
+				rm -Rf "$HOME"/fonts* > /dev/null 2>&1
 			fi
 			echo -e "Custom fonts installed" 2>&1 | logc
 			echo -e 2>&1 | logc
