@@ -729,6 +729,300 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 	done
 fi
 
+#============
+# Wallpapers
+#============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+	while read -p "Do you want to install a set of nice wallpapers? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Retrieving wallpapers..." 2>&1 | logc
+			if [[ ! -d "$HOME/.local/share" ]]; then mkdir -pv "$HOME"/.local/share 2>&1 | lognoc; fi
+			git clone --depth 1 "$wallpapers" "$wallpapersloc" 2>&1 | lognoc
+			echo -e "Wallpapers installed" 2>&1 | logc
+			echo -e "Wallpapers are stored in \"$wallpapersloc\"" 2>&1 | logc
+			echo -e 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e 2>&1 | logc
+			break
+		fi
+	done
+fi
+
+#============
+# macOS Workstation - Configuration
+#============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]; then
+	while read -p "Do you want to setup System Preferences? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+
+			# Configure computer's name
+			computername=$(scutil --get ComputerName)
+			echo -e "Your current computer's name is \"$computername\"" 2>&1 | logc
+			while read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r; do
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					while read -p "What name your computer should use? " -r name; do
+						if [[ "$name" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
+							sudo scutil --set ComputerName "$name"
+							sudo scutil --set LocalHostName "$name"
+							sudo scutil --set HostName "$name"
+							echo -e "Computer's name successfully changed" 2>&1 | logc
+							echo -e 2>&1 | logc
+							break
+						else
+							echo -e "Invalid computer name! The name should be between 1 and 15 characters and must not contain special characters except \"-\"" 2>&1 | logc
+							echo -e 2>&1 | logc
+							continue
+						fi
+					done
+				break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e 2>&1 | logc
+					break
+				fi
+			done
+
+			# Close any open System Preferences panes, to prevent them from overriding
+			# settings we’re about to change
+			echo -e "Setting up system preferences..." 2>&1 | logc
+			osascript -e 'tell application "System Preferences" to quit'
+
+			# General
+			defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark" # Enable Dark Mode
+			defaults write NSGlobalDomain AppleHighlightColor -string "0.847059 0.847059 0.862745 Graphite" # Choose Graphite as the highlight color
+			defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 # Set the sidebar icon size to small
+			# defaults write NSGlobalDomain _HIHideMenuBar -bool true # Auto-hide the menu bar
+
+			# Disable screen saver
+			defaults -currentHost write com.apple.screensaver idleTime -int 0
+
+			# Dock
+			defaults write com.apple.dock autohide -int 1 # Auto-hide the dock
+			defaults write com.apple.dock largesize -int 55 # Dock size
+			defaults write com.apple.dock magnification -int 1 # Enable magnification
+			defaults write com.apple.dock mineffect -string "scale" # Set the window minimize effect to Scale
+			defaults write com.apple.dock launchanim -int 0 # Disable launch animation
+			defaults write com.apple.dock tilesize -int 38 # Set the icons size
+			defaults write com.apple.dock show-recents -int 0 # Do not show recent apps
+			defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces
+
+			# Mission Control
+			defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces automatically by recent use
+
+			# Trackpad
+			defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 # Click when tapping on the trackpad
+			defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -int 0 # Right-click in bottom-right corner of the trackpad
+			defaults -currentHost write NSGlobalDomain com.apple.trackpad.scrollBehavior -int 2 # Do not invert scrolling
+
+			# Firewall
+			sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1 # Enable the firewall
+			sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -int 1 # Do not respond to ICMP
+
+			# Disable UI sound effects
+			defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
+
+			# Keyboard
+			defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false # Disable automatic capitalization
+			defaults write NSGlobalDomain NSUserQuotesArray -array '"\""' '"\""' '"'\''"' '"'\''"' # Adjust smart quotes
+			defaults write NSGlobalDomain KeyRepeat -int 1 # Enable fast key repeat
+			defaults write NSGlobalDomain InitialKeyRepeat -int 10 # Very fast initial key repeat
+			defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false # Disable automatic spelling correction
+			defaults write -g ApplePressAndHoldEnabled -bool false # Enable key repeat
+
+			# Configure the clock to be 24h and display the date
+			defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM  HH:mm"
+
+			# Finder
+			defaults write NSGlobalDomain AppleShowAllExtensions -bool true # Show all file extensions
+			defaults write com.apple.finder ShowPathbar -bool true # Show full path
+			defaults write com.apple.finder ShowStatusBar -bool true # Show status bar
+			defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv" # View as list
+			defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" # Search in current folder
+			defaults write com.apple.finder ShowMountedServersOnDesktop -bool true # Show connected servers on the desktop
+			defaults write com.apple.mail AttachAtEnd -int 1 # Fix attachments when sending emails read by Outlook clients
+
+			# Allow running applications from anywhere
+			sudo spctl --master-disable
+
+			# Disable software quarantine that displays 'Are you sure you want to run...'
+			if [[ $(ls -lhdO "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 | awk '{print$5}') != schg ]]; then
+				echo -e "" > "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
+				sudo chflags schg "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 > /dev/null 2>&1
+			fi
+
+			# Accessibility
+			# defaults write com.apple.universalaccess reduceMotion -int 1 # Reduce animations
+			defaults write com.apple.universalaccess reduceMotion -int 0 # Enable animations
+			# defaults write com.apple.universalaccess reduceTranssparency -int 1 # Disable transparency
+
+			# Build the 'locate' database
+			sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | lognoc
+			sudo /usr/libexec/locate.updatedb 2>&1 | lognoc
+
+			echo -e "System preferences configured. Some settings require a reboot" 2>&1 | logc
+			echo -e 2>&1 | logc
+			echo -e "You may want to configure these settings in System Preferences:" 2>&1 | logc
+			echo -e "- In the \"General\" section, change the number of recent items (for TextEdit)" 2>&1 | logc
+			echo -e "- In the \"Security \& Privacy\" section, enable requiring a password immediately after lock and enable FileVault (if laptop)" 2>&1 | logc
+			echo -e "- Configure Siri if you wish to use it" 2>&1 | logc
+			echo -e "- In the \"Keyboard\" section, you may want to adjust keyboard shortcuts to your liking" 2>&1 | logc
+			echo -e "- Certain Finder preferences cannot be set fully. You may wish to review these" 2>&1 | logc
+			echo -e 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
+fi
+
+#============
+# Linux Workstation - Configuration
+#============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]]; then
+	while read -p "Do you want to configure preferences? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+
+			# Ask for the administrator password upfront
+			echo -e "Starting configuration process..." 2>&1 | logc
+			sudo -v
+
+			# Add current user to necessary groups
+			sudo usermod -a -G wheel,video,audio,group,network,sys,lp "$(whoami)" 2>&1 | lognoc
+
+			# Enable Master channel sound output
+			if type amixer > /dev/null 2>&1; then amixer sset Master unmute 2>&1 | lognoc; fi
+
+			# Build the 'locate' database
+			if type updatedb > /dev/null 2>&1; then	sudo updatedb 2>&1 | lognoc; fi
+
+			# Enable services at boot
+			if type docker > /dev/null 2>&1; then sudo systemctl enable docker 2>&1 | lognoc; fi
+			if type containerd > /dev/null 2>&1; then sudo systemctl enable containerd 2>&1 | lognoc; fi
+			if type teamviewer > /dev/null 2>&1; then sudo systemctl enable teamviewerd 2>&1 | lognoc; fi
+			if type nmtui > /dev/null 2>&1; then sudo systemctl enable NetworkManager 2>&1 | lognoc; fi
+			if type ntpd > /dev/null 2>&1; then sudo systemctl enable ntpd 2>&1 | lognoc; fi
+			if type logrotate > /dev/null 2>&1; then sudo systemctl enable logrotate 2>&1 | lognoc; fi
+			if type avahi-daemon > /dev/null 2>&1; then sudo systemctl enable avahi-daemon 2>&1 | lognoc; fi
+			if type cups > /dev/null 2>&1; then sudo systemctl enable cups 2>&1 | lognoc; fi
+			if type bluetooth > /dev/null 2>&1; then sudo systemctl enable bluetooth 2>&1 | lognoc; fi
+			if type crond > /dev/null 2>&1; then sudo systemctl enable cronie 2>&1 | lognoc; fi
+			if type pritunl-client > /dev/null 2>&1; then sudo systemctl enable pritunl-client 2>&1 | lognoc; fi
+			if type syslog-ng > /dev/null 2>&1; then sudo systemctl enable syslog-ng@default.service 2>&1 | lognoc; fi
+
+			# Add current to 'wireshark' group if need be
+			if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
+
+			echo -e "Preferences configured" 2>&1 | logc
+			echo -e 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
+fi
+
+#============
+# Arch Linux - GUI Requirements
+#============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
+	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
+			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
+			grepxpkg && installxpkg && installvideodriver
+			echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
+			echo -e 2>&1 | logc
+			rm "$HOME"/apps.csv 2>&1 | lognoc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
+fi
+
+#============
+# Arch Linux - DE/WM Installation
+#============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -h /etc/arch-release ]] && type Xorg > /dev/null 2>&1; then
+while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
+	echo -e 2>&1 | logc
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+		while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" == 1 ]]; then
+				echo -e "Installing DWM..." 2>&1 | logc
+				installxinitrc
+				installdwm && installdmenu && installst
+				installlibxftbgra
+				sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+				echo -e "DWM installed" 2>&1 | logc
+				echo -e 2>&1 | logc
+				break
+			elif [[ "$REPLY" == 2 ]]; then
+				echo -e "Installing LeftWM..." 2>&1 | logc
+				installxinitrc
+				installleftwm && installdmenu && installst
+				installlibxftbgra
+				sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+				echo -e "LeftWM installed" 2>&1 | logc
+				break
+			elif [[ "$REPLY" == 9 ]]; then
+				echo -e 2>&1 | logc
+				break
+			fi
+		done
+		break
+		# Replace DMenu by Rofi
+		if type rofi > /dev/null 2>&1; then
+			rofi=$(which rofi)
+			ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
+		fi
+	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+		echo -e 2>&1 | logc
+		break
+	fi
+done
+fi
+
+#==============
+# Git Repositories
+#==============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
+	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
+	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir -pv "$gitrepoloc/bin" 2>&1 | lognoc ; fi
+	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -sf '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
+	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
+	echo -e "Git repos' binaries symlinked" 2>&1 | logc
+	echo -e 2>&1 | logc
+fi
+
+#==============
+# Perl Dependencies
+#==============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && type perl > /dev/null 2>&1; then
+	echo -e "Installing Perl dependencies..." 2>&1 | logc
+	installperldeps
+	echo -e "Perl dependencies installed" 2>&1 | logc
+	echo -e 2>&1 | logc
+fi
+
+#==============
+# Python Dependencies
+#==============
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && type python > /dev/null 2>&1; then
+	echo -e "Installing Python dependencies..." 2>&1 | logc
+	installpythondeps
+	echo -e "Python dependencies installed" 2>&1 | logc
+	echo -e 2>&1 | logc
+fi
+
 #==============
 # Dotfiles
 #==============
@@ -1051,295 +1345,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		break
 	fi
 done
-
-#============
-# Wallpapers
-#============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
-	while read -p "Do you want to install a set of nice wallpapers? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Retrieving wallpapers..." 2>&1 | logc
-			if [[ ! -d "$HOME/.local/share" ]]; then mkdir -pv "$HOME"/.local/share 2>&1 | lognoc; fi
-			git clone --depth 1 "$wallpapers" "$wallpapersloc" 2>&1 | lognoc
-			echo -e "Wallpapers installed" 2>&1 | logc
-			echo -e "Wallpapers are stored in \"$wallpapersloc\"" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e 2>&1 | logc
-			break
-		fi
-	done
-fi
-
-#============
-# macOS Workstation - Configuration
-#============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]; then
-	while read -p "Do you want to setup System Preferences? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-
-			# Configure computer's name
-			computername=$(scutil --get ComputerName)
-			echo -e "Your current computer's name is \"$computername\"" 2>&1 | logc
-			while read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r; do
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					while read -p "What name your computer should use? " -r name; do
-						if [[ "$name" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
-							sudo scutil --set ComputerName "$name"
-							sudo scutil --set LocalHostName "$name"
-							sudo scutil --set HostName "$name"
-							echo -e "Computer's name successfully changed" 2>&1 | logc
-							echo -e 2>&1 | logc
-							break
-						else
-							echo -e "Invalid computer name! The name should be between 1 and 15 characters and must not contain special characters except \"-\"" 2>&1 | logc
-							echo -e 2>&1 | logc
-							continue
-						fi
-					done
-				break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e 2>&1 | logc
-					break
-				fi
-			done
-
-			# Close any open System Preferences panes, to prevent them from overriding
-			# settings we’re about to change
-			echo -e "Setting up system preferences..." 2>&1 | logc
-			osascript -e 'tell application "System Preferences" to quit'
-
-			# General
-			defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark" # Enable Dark Mode
-			defaults write NSGlobalDomain AppleHighlightColor -string "0.847059 0.847059 0.862745 Graphite" # Choose Graphite as the highlight color
-			defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 # Set the sidebar icon size to small
-			# defaults write NSGlobalDomain _HIHideMenuBar -bool true # Auto-hide the menu bar
-
-			# Disable screen saver
-			defaults -currentHost write com.apple.screensaver idleTime -int 0
-
-			# Dock
-			defaults write com.apple.dock autohide -int 1 # Auto-hide the dock
-			defaults write com.apple.dock largesize -int 55 # Dock size
-			defaults write com.apple.dock magnification -int 1 # Enable magnification
-			defaults write com.apple.dock mineffect -string "scale" # Set the window minimize effect to Scale
-			defaults write com.apple.dock launchanim -int 0 # Disable launch animation
-			defaults write com.apple.dock tilesize -int 38 # Set the icons size
-			defaults write com.apple.dock show-recents -int 0 # Do not show recent apps
-			defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces
-
-			# Mission Control
-			defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces automatically by recent use
-
-			# Trackpad
-			defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 # Click when tapping on the trackpad
-			defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -int 0 # Right-click in bottom-right corner of the trackpad
-			defaults -currentHost write NSGlobalDomain com.apple.trackpad.scrollBehavior -int 2 # Do not invert scrolling
-
-			# Firewall
-			sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1 # Enable the firewall
-			sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -int 1 # Do not respond to ICMP
-
-			# Disable UI sound effects
-			defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
-
-			# Keyboard
-			defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false # Disable automatic capitalization
-			defaults write NSGlobalDomain NSUserQuotesArray -array '"\""' '"\""' '"'\''"' '"'\''"' # Adjust smart quotes
-			defaults write NSGlobalDomain KeyRepeat -int 1 # Enable fast key repeat
-			defaults write NSGlobalDomain InitialKeyRepeat -int 10 # Very fast initial key repeat
-			defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false # Disable automatic spelling correction
-			defaults write -g ApplePressAndHoldEnabled -bool false # Enable key repeat
-
-			# Configure the clock to be 24h and display the date
-			defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM  HH:mm"
-
-			# Finder
-			defaults write NSGlobalDomain AppleShowAllExtensions -bool true # Show all file extensions
-			defaults write com.apple.finder ShowPathbar -bool true # Show full path
-			defaults write com.apple.finder ShowStatusBar -bool true # Show status bar
-			defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv" # View as list
-			defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" # Search in current folder
-			defaults write com.apple.finder ShowMountedServersOnDesktop -bool true # Show connected servers on the desktop
-			defaults write com.apple.mail AttachAtEnd -int 1 # Fix attachments when sending emails read by Outlook clients
-
-			# Allow running applications from anywhere
-			sudo spctl --master-disable
-
-			# Disable software quarantine that displays 'Are you sure you want to run...'
-			if [[ $(ls -lhdO "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 | awk '{print$5}') != schg ]]; then
-				echo -e "" > "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
-				sudo chflags schg "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 > /dev/null 2>&1
-			fi
-
-			# Accessibility
-			# defaults write com.apple.universalaccess reduceMotion -int 1 # Reduce animations
-			defaults write com.apple.universalaccess reduceMotion -int 0 # Enable animations
-			# defaults write com.apple.universalaccess reduceTranssparency -int 1 # Disable transparency
-
-			# Build the 'locate' database
-			sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | lognoc
-			sudo /usr/libexec/locate.updatedb 2>&1 | lognoc
-
-			echo -e "System preferences configured. Some settings require a reboot" 2>&1 | logc
-			echo -e 2>&1 | logc
-			echo -e "You may want to configure these settings in System Preferences:" 2>&1 | logc
-			echo -e "- In the \"General\" section, change the number of recent items (for TextEdit)" 2>&1 | logc
-			echo -e "- In the \"Security \& Privacy\" section, enable requiring a password immediately after lock and enable FileVault (if laptop)" 2>&1 | logc
-			echo -e "- Configure Siri if you wish to use it" 2>&1 | logc
-			echo -e "- In the \"Keyboard\" section, you may want to adjust keyboard shortcuts to your liking" 2>&1 | logc
-			echo -e "- Certain Finder preferences cannot be set fully. You may wish to review these" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
-
-#============
-# Linux Workstation - Configuration
-#============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]]; then
-	while read -p "Do you want to configure preferences? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-
-			# Ask for the administrator password upfront
-			echo -e "Starting configuration process..." 2>&1 | logc
-			sudo -v
-
-			# Add current user to necessary groups
-			sudo usermod -a -G wheel,video,audio,group,network,sys,lp "$(whoami)" 2>&1 | lognoc
-
-			# Enable Master channel sound output
-			if type amixer > /dev/null 2>&1; then amixer sset Master unmute 2>&1 | lognoc; fi
-
-			# Build the 'locate' database
-			if type updatedb > /dev/null 2>&1; then	sudo updatedb 2>&1 | lognoc; fi
-
-			# Enable services at boot
-			if type docker > /dev/null 2>&1; then sudo systemctl enable docker 2>&1 | lognoc; fi
-			if type containerd > /dev/null 2>&1; then sudo systemctl enable containerd 2>&1 | lognoc; fi
-			if type teamviewer > /dev/null 2>&1; then sudo systemctl enable teamviewerd 2>&1 | lognoc; fi
-			if type nmtui > /dev/null 2>&1; then sudo systemctl enable NetworkManager 2>&1 | lognoc; fi
-			if type ntpd > /dev/null 2>&1; then sudo systemctl enable ntpd 2>&1 | lognoc; fi
-			if type logrotate > /dev/null 2>&1; then sudo systemctl enable logrotate 2>&1 | lognoc; fi
-			if type avahi-daemon > /dev/null 2>&1; then sudo systemctl enable avahi-daemon 2>&1 | lognoc; fi
-			if type cups > /dev/null 2>&1; then sudo systemctl enable cups 2>&1 | lognoc; fi
-			if type bluetooth > /dev/null 2>&1; then sudo systemctl enable bluetooth 2>&1 | lognoc; fi
-			if type crond > /dev/null 2>&1; then sudo systemctl enable cronie 2>&1 | lognoc; fi
-			if type pritunl-client > /dev/null 2>&1; then sudo systemctl enable pritunl-client 2>&1 | lognoc; fi
-			if type syslog-ng > /dev/null 2>&1; then sudo systemctl enable syslog-ng@default.service 2>&1 | lognoc; fi
-
-			# Add current to 'wireshark' group if need be
-			if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
-
-			echo -e "Preferences configured" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
-
-#============
-# Arch Linux - Install graphical environment
-#============
-if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
-	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
-			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
-			grepxpkg && installxpkg && installvideodriver
-			echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
-			echo -e 2>&1 | logc
-			rm "$HOME"/apps.csv 2>&1 | lognoc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-	while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
-				echo -e 2>&1 | logc
-				if [[ "$REPLY" == 1 ]]; then
-					echo -e "Installing DWM..." 2>&1 | logc
-					installxinitrc
-					installdwm && installdmenu && installst
-					installlibxftbgra
-					sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
-					echo -e "DWM installed" 2>&1 | logc
-					echo -e 2>&1 | logc
-					break
-				elif [[ "$REPLY" == 2 ]]; then
-					echo -e "Installing LeftWM..." 2>&1 | logc
-					installxinitrc
-					installleftwm && installdmenu && installst
-					installlibxftbgra
-					sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
-					echo -e "LeftWM installed" 2>&1 | logc
-					break
-				elif [[ "$REPLY" == 9 ]]; then
-					echo -e 2>&1 | logc
-					break
-				fi
-			done
-			break
-			# Replace DMenu by Rofi
-			if type rofi > /dev/null 2>&1; then
-				rofi=$(which rofi)
-				ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
-			fi
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e 2>&1 | logc
-			break
-		fi
-	done
-fi
-
-#==============
-# Git Repositories
-#==============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
-	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
-	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir -pv "$gitrepoloc/bin" 2>&1 | lognoc ; fi
-	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -sf '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
-	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
-	echo -e "Git repos' binaries symlinked" 2>&1 | logc
-	echo -e 2>&1 | logc
-fi
-
-#==============
-# Perl Dependencies
-#==============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && type perl > /dev/null 2>&1; then
-	echo -e "Installing Perl dependencies..." 2>&1 | logc
-	installperldeps
-	echo -e "Perl dependencies installed" 2>&1 | logc
-	echo -e 2>&1 | logc
-fi
-
-#==============
-# Python Dependencies
-#==============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && type python > /dev/null 2>&1; then
-	echo -e "Installing Python dependencies..." 2>&1 | logc
-	installpythondeps
-	echo -e "Python dependencies installed" 2>&1 | logc
-	echo -e 2>&1 | logc
-fi
-
 
 #==============
 # macOS Workstation - Amethyst Configuration
