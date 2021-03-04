@@ -273,7 +273,7 @@ if [[ ! -h /etc/arch-release ]]; then
 		sudo make -C "$stloc" clean install 2>&1 | lognoc
 	}
 	installleftwm(){
-		yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S leftwm polybar 2>&1 | lognoc
+		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S leftwm polybar 2>&1 | lognoc
 		if [[ ! -d "$dfloc" ]]; then
 			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
 		else
