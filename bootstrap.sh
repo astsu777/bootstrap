@@ -1293,7 +1293,7 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 					echo -e "DWM installed" 2>&1 | logc
 					echo -e 2>&1 | logc
 					break
-				if [[ "$REPLY" == 2 ]]; then
+				elif [[ "$REPLY" == 2 ]]; then
 					echo -e "Installing LeftWM..." 2>&1 | logc
 					installxinitrc
 					installleftwm && installdmenu && installst
@@ -1301,7 +1301,6 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 					sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 					echo -e "LeftWM installed" 2>&1 | logc
 					break
-				fi
 				elif [[ "$REPLY" == 9 ]]; then
 					echo -e 2>&1 | logc
 					break
