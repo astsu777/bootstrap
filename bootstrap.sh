@@ -241,6 +241,24 @@ if [[ ! -h /etc/arch-release ]]; then
 			*) sudo pacman -S --needed --noconfirm xf86-video-fbdev 2>&1 | lognoc ;;
 		esac
 	}
+	installxinitrc(){
+		if [[ -f "$HOME"/.xinitrc ]]; then
+    		echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
+			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    		mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
+    		ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
+    		mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
+    		echo -e "New 'xinitrc' file installed" 2>&1 | logc
+    		echo -e 2>&1 | logc
+    	else
+    		echo -e "Installing 'xinitrc' file..." 2>&1 | logc
+			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    		ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
+    		mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
+    		echo -e "New 'xinitrc' file installed" 2>&1 | logc
+    		echo -e 2>&1 | logc
+		fi
+	}
 	installdwm(){
 		if [[ -d "$dwmloc" ]]; then sudo rm -Rf "$dwmloc" 2>&1 /dev/null; fi
 		sudo git clone --depth 1 "$dwmrepo" "$dwmloc" 2>&1 | lognoc
@@ -255,6 +273,14 @@ if [[ ! -h /etc/arch-release ]]; then
 		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" 2>&1 /dev/null; fi
 		sudo git clone --depth 1 "$strepo" "$stloc" 2>&1 | lognoc
 		sudo make -C "$stloc" clean install 2>&1 | lognoc
+	}
+	installleftwm(){
+		yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S leftwm polybar 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/leftwm "$HOME"/.config/ 2>&1 | lognoc
+		fi
 	}
 fi
 
@@ -1256,33 +1282,26 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 	while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			while read -p "Choose a custom environment from the following options: [1]dwm | (9)Cancel (Ex.: type 1 for dwm): " -n 1 -r; do
+			while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" == 1 ]]; then
-					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 					echo -e "Installing DWM..." 2>&1 | logc
+					installxinitrc
 					installdwm && installdmenu && installst
 					installlibxftbgra
+					sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 					echo -e "DWM installed" 2>&1 | logc
-					if [[ -f "$HOME"/.xinitrc ]]; then
-    					echo -e "Installing new 'xinitrc' file (old one backed up)..." 2>&1 | logc
-						if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
-    					mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
-    					ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    					mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
-    					echo -e "New 'xinitrc' file installed" 2>&1 | logc
-    					echo -e 2>&1 | logc
-    				else
-    					echo -e "Installing 'xinitrc' file..." 2>&1 | logc
-						if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
-    					ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    					mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
-    					echo -e "New 'xinitrc' file installed" 2>&1 | logc
-    					echo -e 2>&1 | logc
-					fi
 					echo -e 2>&1 | logc
-					rm "$HOME"/apps.csv 2>&1 | lognoc
 					break
+				if [[ "$REPLY" == 2 ]]; then
+					echo -e "Installing LeftWM..." 2>&1 | logc
+					installxinitrc
+					installleftwm && installdmenu && installst
+					installlibxftbgra
+					sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+					echo -e "LeftWM installed" 2>&1 | logc
+					break
+				fi
 				elif [[ "$REPLY" == 9 ]]; then
 					echo -e 2>&1 | logc
 					break
