@@ -1297,8 +1297,10 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 			done
 			break
 			# Replace DMenu by Rofi
-			rofi=$(which rofi)
-			ln -sf "$rofi" "$scriptsloc" 2>&1 | lognoc
+			if type rofi > /dev/null 2>&1; then
+				rofi=$(which rofi)
+				ln -sf "$rofi" "$scriptsloc" 2>&1 | lognoc
+			fi
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
 			break
