@@ -1305,6 +1305,14 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 				fi
 			done
 			break
+			# Replace DMenu by Rofi
+			if type dmenu > /dev/null 2>&1 && [[ ! -h $(which dmenu) ]]; then
+				echo -e "Replacing DMenu by Rofi..."
+				dmenu=$(which dmenu)
+				rofi=$(which rofi)
+				sudo mv "$dmenu" "$dmenu".ORIG 2>&1 | lognoc && sudo ln -sf "$rofi" "$dmenu" 2>&1 | lognoc
+				echo -e "DMenu replaced by Rofi"
+			fi
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
 			break
