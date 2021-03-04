@@ -249,14 +249,12 @@ if [[ ! -h /etc/arch-release ]]; then
     		ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
     		mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     		echo -e "New 'xinitrc' file installed" 2>&1 | logc
-    		echo -e 2>&1 | logc
     	else
     		echo -e "Installing 'xinitrc' file..." 2>&1 | logc
 			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     		ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
     		mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     		echo -e "New 'xinitrc' file installed" 2>&1 | logc
-    		echo -e 2>&1 | logc
 		fi
 	}
 	installdwm(){
