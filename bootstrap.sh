@@ -1016,13 +1016,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			ln -sf "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
 			# Replace DMenu by Rofi
-			if type dmenu > /dev/null 2>&1 && [[ ! -h $(which dmenu) ]]; then
-				echo -e "Replacing DMenu by Rofi..."
-				dmenu=$(which dmenu)
-				rofi=$(which rofi)
-				sudo mv "$dmenu" "$dmenu".ORIG 2>&1 | lognoc && sudo ln -sf "$rofi" "$dmenu" 2>&1 | lognoc
-				echo -e "DMenu replaced by Rofi"
-			fi
+			rofi=$(which rofi)
+			ln -sf "$rofi" "$scriptsloc" 2>&1 | lognoc
 		fi
 		if type sxhkd > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/sxhkd ]]; then
@@ -1302,13 +1297,8 @@ if [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 			done
 			break
 			# Replace DMenu by Rofi
-			if type dmenu > /dev/null 2>&1 && [[ ! -h $(which dmenu) ]]; then
-				echo -e "Replacing DMenu by Rofi..."
-				dmenu=$(which dmenu)
-				rofi=$(which rofi)
-				sudo mv "$dmenu" "$dmenu".ORIG 2>&1 | lognoc && sudo ln -sf "$rofi" "$dmenu" 2>&1 | lognoc
-				echo -e "DMenu replaced by Rofi"
-			fi
+			rofi=$(which rofi)
+			ln -sf "$rofi" "$scriptsloc" 2>&1 | lognoc
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
 			break
