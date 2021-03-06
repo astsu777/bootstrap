@@ -1070,7 +1070,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
 				mv "$HOME"/.config/nvim "$HOME"/.old-dotfiles/nvim > /dev/null 2>&1
 				mv "$HOME"/.config/wget "$HOME"/.old-dotfiles/wget > /dev/null 2>&1
-				mv "$HOME"/.config/vifm "$HOME"/.old-dotfiles/vifm > /dev/null 2>&1
 				mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
 				mv "$HOME"/.config/kitty "$HOME"/.old-dotfiles/kitty > /dev/null 2>&1
 				mv "$HOME"/.config/termite "$HOME"/.old-dotfiles/termite > /dev/null 2>&1
@@ -1102,7 +1101,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/nvim/init.vim
 				rm -Rf "$HOME"/.config/nvim
 				rm -Rf "$HOME"/.config/wget
-				rm -Rf "$HOME"/.config/vifm
 				rm -Rf "$HOME"/.config/alacritty
 				rm -Rf "$HOME"/.config/kitty
 				rm -Rf "$HOME"/.config/termite
@@ -1210,18 +1208,11 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -sf "$HOME"/.vim "$HOME"/.config/nvim 2>&1 | lognoc
 			ln -sf "$HOME"/.vim/vimrc "$HOME"/.config/nvim/init.vim 2>&1 | lognoc
 		fi
-		if type vifm > /dev/null 2>&1; then
-			if [[ ! -d "$HOME"/.config/vifm ]]; then
-				mkdir -pv "$HOME"/.config/vifm 2>&1 | lognoc
-			fi
-			ln -sf "$dfloc"/config/vifm/colors "$HOME"/.config/vifm/colors 2>&1 | lognoc
-			ln -sf "$dfloc"/config/vifm/vifmrc "$HOME"/.config/vifm/vifmrc 2>&1 | lognoc
-		fi
 		if type msmtp > /dev/null 2>&1; then
 			ln -sf "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | lognoc
 		fi
 		if type alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
-			if [[ ! -d "$HOME"/.config/vifm ]]; then
+			if [[ ! -d "$HOME"/.config/alacritty ]]; then
 				mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc
 			fi
 			if [[ "$OSTYPE" == "darwin"* ]]; then
