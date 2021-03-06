@@ -1312,19 +1312,27 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
+		# For TMUX <=2.9, another config file can be manually installed if TMUX is throwing errors
 		if type tmux > /dev/null 2>&1; then
 			if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 				# TMUX introduced XDG Base Directory compliance in v3.1
 				if [[ $(tmux -V) =~ 2\.[0-9] ]]; then
 					ln -sf "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
-				else
+				elif [[ $(tmux -V) =~ 3\.[1-9] ]]; then
+					if [[ ! -d "$HOME"/.config/tmux ]]; then
+						mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
+					fi
 					ln -sf "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
 				fi
 			else
-				if [[ ! -d "$HOME"/.config/tmux ]]; then
-					mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
+				if [[ $(tmux -V) =~ 2\.[0-9] ]]; then
+					ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | lognoc
+				elif [[ $(tmux -V) =~ 3\.[1-9] ]]; then
+					if [[ ! -d "$HOME"/.config/tmux ]]; then
+						mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
+					fi
+					ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
 				fi
-				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
 			fi
 		fi
 
