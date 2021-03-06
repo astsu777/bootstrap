@@ -180,6 +180,7 @@ WMADR,nmap
 WMADR,rtmpdump
 WMADR,speedtest-cli
 WMADR,tor
+WMADR,whois
 WMADRI,mtr
 WMAR,caddy
 WMD,dhcpdump
