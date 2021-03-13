@@ -276,6 +276,16 @@ if [[ ! -h /etc/arch-release ]]; then
 			ln -sf "$dfloc"/config/leftwm "$HOME"/.config/ 2>&1 | lognoc
 		fi
 	}
+	installopenbox(){
+		sudo pacman --noconfirm --needed -S openbox obconf menumaker lxappearance 2>&1 | lognoc
+		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S obkey polybar arc-dark-osx-openbox-theme-git 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/openbox "$HOME"/.config/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/openbox/polybar "$HOME"/.config/ 2>&1 | lognoc
+		fi
+	}
 fi
 
 #=============
@@ -954,7 +964,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-		while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
+		while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [3] Openbox | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" == 1 ]]; then
 				echo -e "Installing DWM..." 2>&1 | logc
@@ -972,6 +982,14 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "LeftWM installed" 2>&1 | logc
+				break
+			elif [[ "$REPLY" == 3 ]]; then
+				echo -e "Installing Openbox..." 2>&1 | logc
+				installxinitrc
+				installopenbox && installdmenu && installst
+				installlibxftbgra
+				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
+				echo -e "Openbox installed" 2>&1 | logc
 				break
 			elif [[ "$REPLY" == 9 ]]; then
 				echo -e 2>&1 | logc
