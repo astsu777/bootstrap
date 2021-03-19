@@ -286,6 +286,14 @@ if [[ ! -h /etc/arch-release ]]; then
 			ln -sf "$dfloc"/config/openbox/polybar "$HOME"/.config/ 2>&1 | lognoc
 		fi
 	}
+	installxfce(){
+		sudo pacman --noconfirm --needed -S xfce4 gvfs 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/xfce4 "$HOME"/.config/ 2>&1 | lognoc
+		fi
+	}
 fi
 
 #=============
@@ -964,7 +972,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-		while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [3] Openbox | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
+		while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [3] Openbox | [4] XFCE | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" == 1 ]]; then
 				echo -e "Installing DWM..." 2>&1 | logc
@@ -990,6 +998,12 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "Openbox installed" 2>&1 | logc
+				break
+			elif [[ "$REPLY" == 4 ]]; then
+				echo -e "Installing XFCE..." 2>&1 | logc
+				installxfce
+				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
+				echo -e "XFCE installed" 2>&1 | logc
 				break
 			elif [[ "$REPLY" == 9 ]]; then
 				echo -e 2>&1 | logc
