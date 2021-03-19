@@ -127,6 +127,7 @@ MADR,youtube-dl
 MADR,zip
 MADRI,glances
 MADRI,htop
+MADRI,inxi
 MADRI,ncdu
 MADRI,nethogs
 MADRI,tmux
