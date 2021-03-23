@@ -288,6 +288,7 @@ if [[ ! -h /etc/arch-release ]]; then
 	}
 	installxfce(){
 		sudo pacman --noconfirm --needed -S xfce4 gvfs 2>&1 | lognoc
+		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
 		if [[ ! -d "$dfloc" ]]; then
 			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
 		else
