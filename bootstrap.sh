@@ -242,10 +242,10 @@ if [[ ! -h /etc/arch-release ]]; then
 		esac
 	}
 	setupkeyring(){
-		if ! grep '^auth[ \t]*optional[ \t]*pam_gnome_keyring.so$' /etc/pam.d/login 2>&1 | lognoc; then
-			sudo awk -i inplace 'FNR==NR{ if (/auth/) p=NR; next} 1; FNR==p{ print "auth       optional    pam_gnome_keyring.so" }' /etc/pam.d/login /etc/pam.d/login
+		if ! grep '^auth[ \t]*optional[ \t]*pam_gnome_keyring.so$' /etc/pam.d/login; then
+			sudo awk -i inplace 'FNR==NR{ if (/auth/) p=NR; next} 1; FNR==p{ print "auth       optional     pam_gnome_keyring.so" }' /etc/pam.d/login /etc/pam.d/login
 		fi
-		if ! grep '^session[ \t]*optional[ \t]*pam_gnome_keyring.so auto_start$' /etc/pam.d/login 2>&1 | lognoc; then
+		if ! grep '^session[ \t]*optional[ \t]*pam_gnome_keyring.so auto_start$' /etc/pam.d/login; then
 			sudo awk -i inplace 'FNR==NR{ if (/session/) p=NR; next} 1; FNR==p{ print "session    optional     pam_gnome_keyring.so auto_start" }' /etc/pam.d/login /etc/pam.d/login
 		fi
 	}
@@ -962,7 +962,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -h /etc/arch-release ]]
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
-			grepxpkg && installxpkg && installvideodriver && setupkeyring
+			grepxpkg && installxpkg
+ 	 	 	setupkeyring
+			installvideodriver
 			echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			rm "$HOME"/apps.csv 2>&1 | lognoc
