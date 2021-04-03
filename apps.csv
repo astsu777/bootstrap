@@ -208,6 +208,7 @@ X,engrampa
 X,feh
 X,gnome-keyring
 X,gnome-themes-extra
+X,gvfs
 X,lxsession
 X,network-manager-applet
 X,numlockx
@@ -215,7 +216,7 @@ X,openal
 X,pacman-contrib
 X,papirus-icon-theme
 X,pavucontrol
-X,pcmanfm
+X,pcmanfm-gtk3
 X,picom
 X,polkit
 X,pulseaudio-alsa
