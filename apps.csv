@@ -206,6 +206,7 @@ X,bluez
 X,dunst
 X,engrampa
 X,feh
+X,gnome-keyring
 X,gnome-themes-extra
 X,lxsession
 X,network-manager-applet
@@ -221,6 +222,7 @@ X,pulseaudio-alsa
 X,pulseaudio-bluetooth
 X,qpdf
 X,qpdfview
+X,seahorse
 X,trayer
 X,unclutter
 X,volumeicon
