@@ -1090,7 +1090,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				fi
 				mv "$HOME"/.bash_profile "$HOME"/.old-dotfiles/bash_profile > /dev/null 2>&1
 				mv "$HOME"/.bashrc "$HOME"/.old-dotfiles/bashrc > /dev/null 2>&1
-				mv "$HOME"/.gitconfig "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1
+				if [[ -f "$HOME"/.gitconfig ]]; then mv "$HOME"/.gitconfig "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1; else mv "$HOME"/.config/git/config "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.msmtprc ]]; then mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1; else mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; else mv "$HOME"/.config/tmux/tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.screenrc ]]; then mv "$HOME"/.screenrc "$HOME"/.old-dotfiles/screenrc > /dev/null 2>&1; else mv "$HOME"/.config/screen/screenrc "$HOME"/.old-dotfiles/screenrc > /dev/null 2>&1; fi
@@ -1121,7 +1121,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -Rf "$HOME"/.bash_profile
 				rm -Rf "$HOME"/.bashrc
-				rm -Rf "$HOME"/.gitconfig
+				if [[ -f "$HOME"/.gitconfig ]]; then rm -Rf "$HOME"/.gitconfig; else rm -Rf "$HOME"/.config/git/config; fi
 				if [[ -f "$HOME"/.msmtprc ]]; then rm -Rf "$HOME"/.msmtprc; else rm -Rf "$HOME"/.config/msmtp; fi
 				if [[ -f "$HOME"/.p10k.zsh ]]; then rm -Rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
 				if [[ -f "$HOME"/starship.toml ]]; then rm -Rf "$HOME"/starship.toml; else rm -Rf "$HOME"/.config/starship.toml; fi
@@ -1211,7 +1211,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		## Starship is symlinked as it needs to be present BEFORE the installation of starship
 		ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 		if type git > /dev/null 2>&1; then
-			ln -sf "$dfloc"/gitconfig "$HOME"/.gitconfig 2>&1 | lognoc
+			if [[ ! -d "$HOME"/.config/git ]]; then
+				mkdir -pv "$HOME"/.config/git 2>&1 | lognoc
+			fi
+			ln -sf "$dfloc"/gitconfig "$HOME"/.config/git/config 3>&1 | lognoc
 		fi
 		if type weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
