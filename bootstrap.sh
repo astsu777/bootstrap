@@ -983,6 +983,11 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+		if [[ -n $(ps aux | awk '/[X]org/ {print $7}') ]]; then
+			echo -e "A new GUI cannot be installed while Xorg is running!"
+			echo -e "Please run this script from a TTY (Press CTRL+F1-9 keys) without Xorg running"
+			exit 1
+		fi
 		while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [3] Openbox | [4] XFCE | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" == 1 ]]; then
