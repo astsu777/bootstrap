@@ -209,6 +209,11 @@ X,feh
 X,gnome-keyring
 X,gnome-themes-extra
 X,gvfs
+X,gvfs-afc
+X,gvfs-gphoto2
+X,gvfs-mtp
+X,gvfs-nfs
+X,gvfs-smb
 X,lxsession
 X,network-manager-applet
 X,numlockx
