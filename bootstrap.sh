@@ -249,6 +249,9 @@ if [[ ! -h /etc/arch-release ]]; then
 			sudo awk -i inplace 'FNR==NR{ if (/session/) p=NR; next} 1; FNR==p{ print "session    optional     pam_gnome_keyring.so auto_start" }' /etc/pam.d/login /etc/pam.d/login
 		fi
 	}
+	setupcompositor(){
+		sudo sed -i '/^  tooltip/c \ \ tooltip = { fade = false; shadow = false; opacity = 1; focus = false; full-shadow = false; };' /etc/xdg/picom.conf 2>&1 | lognoc
+	}
 	installxinitrc(){
 		if [[ -f "$HOME"/.xinitrc ]]; then
 			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
@@ -964,6 +967,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -h /etc/arch-release ]]
 			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
 			grepxpkg && installxpkg
  	 	 	setupkeyring
+ 	 	 	setupcompositor
 			installvideodriver
 			echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
 			echo -e 2>&1 | logc
