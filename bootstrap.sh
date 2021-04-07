@@ -1398,7 +1398,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		# Install GTK config files if no DE is detected
 		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
 			echo -e "No desktop environment has been detected on the system." 2>&1 | logc
-			while read -p "Do you want to install the GTK dotfiles? (Y/n) " -n 1 -r; do
+			while read -p "Do you want to install the GTK-3.0 dotfiles? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					if [[ ! -d "$HOME"/.config/gtk-3.0 ]]; then
@@ -1406,7 +1406,13 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 					elif [[ -f "$HOME"/.config/gtk-3.0/settings.ini ]]; then
 						rm -Rf "$HOME"/.config/gtk-3.0/settings.ini
 					fi
+					if [[ ! -d "$HOME"/.local/share/icons ]]; then
+						mkdir -pv "$HOME"/.local/share/icons 2>&1 | lognoc
+					elif [[ -d "$HOME"/.local/share/icons/Breeze_Snow ]]; then
+						rm -Rf "$HOME"/.local/share/icons/Breeze_Snow
+					fi
 					ln -sf "$dfloc"/config/gtk-3.0/settings.ini "$HOME"/.config/gtk-3.0/ 2>&1 | lognoc
+					ln -sf "$dfloc"/local/share/icons/Breeze_Snow "$HOME"/.local/share/icons/ 2>&1 | lognoc
 					if type pcmanfm > /dev/null 2>&1; then
 						if [[ ! -d "$HOME"/.config/libfm ]]; then
 							mkdir -pv "$HOME"/.config/libfm 2>&1 | lognoc
