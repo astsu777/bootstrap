@@ -1416,15 +1416,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 					elif [[ -f "$HOME"/.icons/default/index.theme ]]; then
 						rm -Rf "$HOME"/.icons/default/index.theme
 					fi
-					if [[ ! -d "$HOME"/.local/share/icons ]]; then
-						mkdir -pv "$HOME"/.local/share/icons 2>&1 | lognoc
-					elif [[ -d "$HOME"/.local/share/icons/Breeze_Snow ]]; then
-						rm -Rf "$HOME"/.local/share/icons/Breeze_Snow
-					fi
 					ln -sf "$dfloc"/config/gtk-3.0/settings.ini "$HOME"/.config/gtk-3.0/ 2>&1 | lognoc
 					ln -sf "$dfloc"/config/gtk-2.0/gtkrc "$HOME"/.config/gtk-2.0/ 2>&1 | lognoc
 					ln -sf "$dfloc"/icons/default/index.theme "$HOME"/.icons/default/ 2>&1 | lognoc
-					ln -sf "$dfloc"/local/share/icons/Breeze_Snow "$HOME"/.local/share/icons/ 2>&1 | lognoc
 					if type pcmanfm > /dev/null 2>&1; then
 						if [[ ! -d "$HOME"/.config/libfm ]]; then
 							mkdir -pv "$HOME"/.config/libfm 2>&1 | lognoc
