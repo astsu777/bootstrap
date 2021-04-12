@@ -1397,10 +1397,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 
 		# Install GTK config files if no DE is detected
 		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
-			echo -e "No desktop environment has been detected on the system." 2>&1 | logc
-			while read -p "Do you want to install the GTK dotfiles? (Y/n) " -n 1 -r; do
+			while read -p "Do you want to install the GTK/QT theme (dark)? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					# GTK 3 & 2
 					if [[ ! -d "$HOME"/.config/gtk-3.0 ]]; then
 						mkdir -pv "$HOME"/.config/gtk-3.0 2>&1 | lognoc
 					elif [[ -f "$HOME"/.config/gtk-3.0/settings.ini ]]; then
@@ -1441,8 +1441,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 						fi
 						ln -sf "$dfloc"/config/volumeicon/volumeicon "$HOME"/.config/volumeicon/volumeicon 2>&1 | lognoc
 					fi
-
-					echo -e "GTK dotfiles installed" 2>&1 | logc
+					# QT
+					sudo git clone --depth 1 https://github.com/FedoraQt/adwaita-qt.git /opt/adwaita-qt 2>&1 | lognoc
+					cd /opt/adwaita-qt && sudo cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr 2>&1 | lognoc
+					sudo make 2>&1 | lognoc && sudo make install 2>&1 | lognoc
+					cd "$HOME" || exit
+					echo -e "GTK/QT theme installed" 2>&1 | logc
 					echo -e 2>&1 | logc
 					break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
