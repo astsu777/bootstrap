@@ -49,7 +49,7 @@ ADR,unzip
 ADR,wpa_supplicant
 ADR,zathura
 ADR,zathura-djvu
-ADR,zathura-pdf-poppler
+ADR,zathura-pdf-mupdf
 ADR,zathura-ps
 ADRC,keepassxc
 ADRC,vlc
