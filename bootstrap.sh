@@ -1118,6 +1118,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/.p10k.zsh ]]; then mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/starship.toml ]]; then mv "$HOME"/starship.toml "$HOME"/.old-dotfiles/starship.toml > /dev/null 2>&1; else mv "$HOME"/.config/starship.toml "$HOME"/.old-dotfiles/starship.toml > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.zshrc ]]; then mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; fi
+				mv "$HOME"/.config/mimeapps.list "$HOME"/.old-dotfiles/mimeapps.list > /dev/null 2>&1
 				mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
 				mv "$HOME"/.zshenv "$HOME"/.old-dotfiles/zshenv > /dev/null 2>&1
 				mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
@@ -1146,6 +1147,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/starship.toml ]]; then rm -Rf "$HOME"/starship.toml; else rm -Rf "$HOME"/.config/starship.toml; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then rm -Rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
 				if [[ -f "$HOME"/screenrc ]]; then rm -Rf "$HOME"/screenrc; else rm -Rf "$HOME"/.config/screen/screenrc; fi
+				rm -Rf "$HOME"/.config/mimeapps.list
 				rm -Rf "$HOME"/.vim
 				rm -Rf "$HOME"/.vimrc
 				if [[ -f "$HOME"/.zshrc ]]; then rm -Rf "$HOME"/.zshrc; else rm -Rf "$HOME"/.config/zsh/.zshrc; fi
@@ -1227,6 +1229,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -sf "$dfloc"/shellconfig/zshrc "$HOME"/.config/zsh/.zshrc 2>&1 | lognoc
 			ln -sf "$dfloc"/shellconfig/zshenv "$HOME"/.zshenv 2>&1 | lognoc
 		fi
+		## XDG default applications also symlinked to 'local/share' for legacy reasons
+		ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.config/mimeapps.list 2>&1 | lognoc
+		if [[ -d "$HOME"/.local/share/applications ]]; then mkdir -pv "$HOME"/.local/share/applications 2>&1 | lognoc ; fi
+		ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.local/share/applications/mimeapps.list 2>&1 | lognoc
 		## Starship is symlinked as it needs to be present BEFORE the installation of starship
 		ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 		if type git > /dev/null 2>&1; then
