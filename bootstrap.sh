@@ -1022,7 +1022,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			elif [[ "$REPLY" == 4 ]]; then
 				echo -e "Installing XFCE..." 2>&1 | logc
 				installxinitrc
-				installxfce
+				installxfce && installdmenu && installst
 				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "XFCE installed" 2>&1 | logc
 				break
