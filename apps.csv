@@ -203,6 +203,7 @@ X,acpid
 X,alsa-utils
 X,blueman
 X,bluez
+X,cmake
 X,dunst
 X,engrampa
 X,feh
@@ -226,8 +227,6 @@ X,picom
 X,polkit
 X,pulseaudio-alsa
 X,pulseaudio-bluetooth
-X,qpdf
-X,qpdfview
 X,seahorse
 X,trayer
 X,unclutter
