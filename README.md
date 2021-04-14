@@ -15,7 +15,8 @@ This repository hosts a BASH bootstrap script that can be used to setup workstat
 * Detect a server connection (=SSH) and adjust the authorized operations
 * Clean output to the console, but all operations are logged to a log file
 * On a bare Arch Linux installation, deploy necessary packages for a GUI & (optional) deploy a GUI environment (WM & DE)
-* If no desktop environment is installed (nothing or WM only), deploy custom GTK theme files
+* When installing a GUI environment, offers the choice to login via Xinit (text mode) or with LightDM
+* Deploy custom GTK/QT theme for GUI applications
 
 ⚠️ **This script should not be used to setup a server!** Please use a proper automation framework such as [Ansible](https://www.ansible.com/) to do so.
 However, I use it to install my dotfiles and optionally (choice is provided) install certain useful tools on the servers I manage.
