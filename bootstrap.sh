@@ -264,34 +264,49 @@ if [[ ! -h /etc/arch-release ]]; then
     		mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
 		fi
 	}
+	installgreeter(){
+		sudo pacman -S --needed --noconfirm lightdm lightdm-gtk-greeter 2>&1 | lognoc
+		if [[ -f "$HOME"/.xprofile ]]; then
+			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    		mv "$HOME"/.xprofile "$HOME"/.xprofile.orig > /dev/null 2>&1
+    		ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.xprofile 2>&1 | lognoc
+    	else
+			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    		ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.xprofile 2>&1 | lognoc
+		fi
+		sudo cp -f "$dfloc"/config/X11/lightdm/* /etc/lightdm/ 2>&1 | lognoc
+		if [[ -f "$HOME"/.xprofile ]]; then sudo systemctl enable lightdm 2>&1 | lognoc ; fi
+	}
 	installdwm(){
-		if [[ -d "$dwmloc" ]]; then sudo rm -Rf "$dwmloc" 2>&1 /dev/null; fi
-		sudo git clone --depth 1 "$dwmrepo" "$dwmloc" 2>&1 | lognoc
-		sudo make -C "$dwmloc" clean install 2>&1 | lognoc
+		if [[ -d "$dwmloc" ]]; then sudo rm -Rf "$dwmloc" > /dev/null 2>&1 ; fi
+		sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
+		sudo make -C "$dwmloc" clean install > /dev/null 2>&1
+		if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
+		sudo cp "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
 	}
 	installdmenu(){
-		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dmenuloc" 2>&1 /dev/null; fi
-		sudo git clone --depth 1 "$dmenurepo" "$dmenuloc" 2>&1 | lognoc
-		sudo make -C "$dmenuloc" clean install 2>&1 | lognoc
+		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dmenuloc" > /dev/null 2>&1 ; fi
+		sudo git clone --depth 1 "$dmenurepo" "$dmenuloc" > /dev/null 2>&1
+		sudo make -C "$dmenuloc" clean install > /dev/null 2>&1
 	}
 	installst(){
-		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" 2>&1 /dev/null; fi
-		sudo git clone --depth 1 "$strepo" "$stloc" 2>&1 | lognoc
-		sudo make -C "$stloc" clean install 2>&1 | lognoc
+		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
+		sudo git clone --depth 1 "$strepo" "$stloc" > /dev/null 2>&1
+		sudo make -C "$stloc" clean install > /dev/null 2>&1
 	}
 	installleftwm(){
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S leftwm polybar 2>&1 | lognoc
 		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1
 		else
-			ln -sf "$dfloc"/config/leftwm "$HOME"/.config/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/leftwm "$HOME"/.config/ > /dev/null 2>&1
 		fi
 	}
 	installopenbox(){
 		sudo pacman --noconfirm --needed -S openbox obconf menumaker lxappearance 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S obkey polybar arc-dark-osx-openbox-theme-git 2>&1 | lognoc
 		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1
 		else
 			ln -sf "$dfloc"/config/openbox "$HOME"/.config/ 2>&1 | lognoc
 			ln -sf "$dfloc"/config/openbox/polybar "$HOME"/.config/ 2>&1 | lognoc
@@ -301,7 +316,7 @@ if [[ ! -h /etc/arch-release ]]; then
 		sudo pacman --noconfirm --needed -S xfce4 gvfs 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
 		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1
 		else
 			ln -sf "$dfloc"/config/xfce4 "$HOME"/.config/ 2>&1 | lognoc
 		fi
@@ -992,7 +1007,13 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			echo -e "Please run this script from a TTY (Press CTRL+F1-9 keys) without Xorg running"
 			exit 1
 		fi
-		while read -p "Choose a custom environment from the following options: [1] DWM | [2] LeftWM | [3] Openbox | [4] XFCE | [9] Cancel (Ex.: type 1 for DWM): " -n 1 -r; do
+		echo -e "Choose a custom environment from the following options:"
+		echo -e "[1] DWM"
+		echo -e "[2] LeftWM"
+		echo -e "[3] Openbox"
+		echo -e "[4] XFCE"
+		echo -e "[9] Cancel"
+		while read -p "Choose (ex.: type 1 for DWM): " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" == 1 ]]; then
 				echo -e "Installing DWM..." 2>&1 | logc
@@ -1002,7 +1023,6 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "DWM installed" 2>&1 | logc
 				echo -e 2>&1 | logc
-				break
 			elif [[ "$REPLY" == 2 ]]; then
 				echo -e "Installing LeftWM..." 2>&1 | logc
 				installxinitrc
@@ -1010,7 +1030,6 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "LeftWM installed" 2>&1 | logc
-				break
 			elif [[ "$REPLY" == 3 ]]; then
 				echo -e "Installing Openbox..." 2>&1 | logc
 				installxinitrc
@@ -1018,20 +1037,29 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "Openbox installed" 2>&1 | logc
-				break
 			elif [[ "$REPLY" == 4 ]]; then
 				echo -e "Installing XFCE..." 2>&1 | logc
 				installxinitrc
 				installxfce && installdmenu && installst
 				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "XFCE installed" 2>&1 | logc
-				break
 			elif [[ "$REPLY" == 9 ]]; then
 				echo -e 2>&1 | logc
 				break
 			fi
-		done
+			echo -e "The default login method is made via Xinit (preferred method)"
+			echo -e "However, it is possible to use a graphical login manager such as LightDM"
+			while read -p "Do you want to use a graphical login manager? (Y/n): " -n 1 -r; do
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					installgreeter
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e 2>&1 | logc
+					break
+				fi
+			done
 		break
+		done
 		# Replace DMenu by Rofi
 		if type rofi > /dev/null 2>&1; then
 			rofi=$(which rofi)
@@ -1041,6 +1069,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 		echo -e 2>&1 | logc
 		break
 	fi
+	break
 done
 fi
 
