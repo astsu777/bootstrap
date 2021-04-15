@@ -843,6 +843,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]
 			# Disable screen saver
 			defaults -currentHost write com.apple.screensaver idleTime -int 0
 
+			# Disable creation of .DS_Store files
+			defaults write com.apple.desktopservices DSDontWriteNetworkStores true
+
 			# Dock
 			defaults write com.apple.dock autohide -int 1 # Auto-hide the dock
 			defaults write com.apple.dock largesize -int 55 # Dock size
