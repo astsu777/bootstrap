@@ -259,11 +259,9 @@ if [[ ! -h /etc/arch-release ]]; then
 			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     		mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
     		ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    		mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
     	else
 			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     		ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    		mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc && ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.config/X11/xprofile 2>&1 | lognoc
 		fi
 	}
 	installgreeter(){
