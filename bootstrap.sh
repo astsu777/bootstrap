@@ -46,6 +46,8 @@ dmenurepo="https://github.com/GSquad934/dmenu.git"
 dmenuloc="/opt/dmenu"
 strepo="https://github.com/GSquad934/st.git"
 stloc="/opt/st"
+slockrepo="https://github.com/GSquad934/slock.git"
+slockloc="/opt/slock"
 
 # Logging
 date="$(date +%Y-%m-%d-%H%M%S)"
@@ -293,6 +295,11 @@ if [[ ! -h /etc/arch-release ]]; then
 		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
 		sudo git clone --depth 1 "$strepo" "$stloc" > /dev/null 2>&1
 		sudo make -C "$stloc" clean install > /dev/null 2>&1
+	}
+	installslock(){
+		if [[ -d "$slockloc" ]]; then sudo rm -Rf "$slockloc" > /dev/null 2>&1; fi
+		sudo git clone --depth 1 "$slockrepo" "$slockloc" > /dev/null 2>&1
+		sudo make -C "$slockloc" clean install > /dev/null 2>&1
 	}
 	installleftwm(){
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S leftwm polybar 2>&1 | lognoc
@@ -1021,7 +1028,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			if [[ "$REPLY" == 1 ]]; then
 				echo -e "Installing DWM..." 2>&1 | logc
 				installxinitrc
-				installdwm && installdmenu && installst
+				installdwm && installdmenu && installst && installslock
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "DWM installed" 2>&1 | logc
@@ -1029,21 +1036,21 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			elif [[ "$REPLY" == 2 ]]; then
 				echo -e "Installing LeftWM..." 2>&1 | logc
 				installxinitrc
-				installleftwm && installdmenu && installst
+				installleftwm && installdmenu && installst && installslock
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "LeftWM installed" 2>&1 | logc
 			elif [[ "$REPLY" == 3 ]]; then
 				echo -e "Installing Openbox..." 2>&1 | logc
 				installxinitrc
-				installopenbox && installdmenu && installst
+				installopenbox && installdmenu && installst && installslock
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "Openbox installed" 2>&1 | logc
 			elif [[ "$REPLY" == 4 ]]; then
 				echo -e "Installing XFCE..." 2>&1 | logc
 				installxinitrc
-				installxfce && installdmenu && installst
+				installxfce && installdmenu && installst && installslock
 				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "XFCE installed" 2>&1 | logc
 			elif [[ "$REPLY" == 9 ]]; then
