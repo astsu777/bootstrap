@@ -144,7 +144,6 @@ R,jetbrains-mono-fonts
 R,perl-App-cpanminus
 RY,brave-bin
 RY,plex-media-player
-S,1043270657 gif keyboard
 S,1116599239 nordvpn ike
 S,1233048948 boom 3d
 S,1452453066 hidden bar
@@ -152,7 +151,6 @@ S,408981434 imovie
 S,425424353 the unarchiver
 S,425955336 skitch
 S,568494494 pocket
-S,865500966 feedly
 S,876540291 copy'em paste
 S,946798523 antisleep
 WA,gnu-netcat
@@ -243,4 +241,5 @@ X,xorg-xinit
 X,xterm
 X,zenity
 Y,cointop
+Y,hypnotix
 Y,mailspring-libre
