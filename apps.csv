@@ -15,7 +15,6 @@ A,signal-desktop
 A,syslog-ng
 A,termite
 AC,discord
-AD,gufw
 AD,ufw
 ADC,telegram-desktop
 ADR,audacity
@@ -23,6 +22,8 @@ ADR,avahi
 ADR,ca-certificates
 ADR,cifs-utils
 ADR,flameshot
+ADR,gparted
+ADR,libreoffice
 ADR,logrotate
 ADR,lsof
 ADR,man-db
@@ -39,6 +40,7 @@ ADR,networkmanager-vpnc
 ADR,nfs-utils
 ADR,ntfs-3g
 ADR,ntp
+ADR,obs-studio
 ADR,python
 ADR,python-pip
 ADR,rofi
@@ -53,6 +55,8 @@ ADR,zathura
 ADR,zathura-djvu
 ADR,zathura-pdf-mupdf
 ADR,zathura-ps
+ADRC,gimp
+ADRC,inkscape
 ADRC,keepassxc
 ADRC,vlc
 ADRI,nmon
@@ -73,6 +77,7 @@ C,cyberduck
 C,gpg-suite-no-mail
 C,keycastr
 C,nextcloud
+C,obs
 C,plex
 C,signal
 CA,alacritty
