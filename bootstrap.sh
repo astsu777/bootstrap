@@ -255,6 +255,8 @@ if [[ ! -h /etc/arch-release ]]; then
 		sudo sed -i '/^  tooltip/c \ \ tooltip = { fade = false; shadow = false; opacity = 1; focus = true; full-shadow = false; };' /etc/xdg/picom.conf 2>&1 | lognoc
 		sudo sed -i '/^  popup_menu/c \ \ popup_menu = { opacity = 1; };' /etc/xdg/picom.conf 2>&1 | lognoc
 		sudo sed -i '/^  dropdown_menu/c \ \ dropdown_menu = { opacity = 1; };' /etc/xdg/picom.conf 2>&1 | lognoc
+		sudo sed -i 's/^shadow = true/shadow = false/' /etc/xdg/picom.conf 2>&1 | lognoc
+		sudo sed -i 's/^fading = true/fading = false/' /etc/xdg/picom.conf 2>&1 | lognoc
 	}
 	installxinitrc(){
 		if [[ -f "$HOME"/.xinitrc ]]; then
