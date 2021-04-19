@@ -150,7 +150,6 @@ S,568494494 pocket
 S,865500966 feedly
 S,876540291 copy'em paste
 S,946798523 antisleep
-WA,code
 WA,gnu-netcat
 WA,wireshark-qt
 WADR,testssl.sh
@@ -158,7 +157,6 @@ WADR,traceroute
 WADRC,docker
 WADRC,xca
 WC,tunnelblick
-WC,vscodium
 WCY,teamviewer
 WCY,tor-browser
 WD,netcat
