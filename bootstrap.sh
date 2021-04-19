@@ -953,14 +953,13 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 			if type teamviewer > /dev/null 2>&1; then sudo systemctl enable teamviewerd 2>&1 | lognoc; fi
 			if type nmtui > /dev/null 2>&1; then sudo systemctl enable NetworkManager 2>&1 | lognoc; fi
 			if type ntpd > /dev/null 2>&1; then sudo systemctl enable ntpd 2>&1 | lognoc; fi
-			if type logrotate > /dev/null 2>&1; then sudo systemctl enable logrotate 2>&1 | lognoc; fi
 			if type avahi-daemon > /dev/null 2>&1; then sudo systemctl enable avahi-daemon 2>&1 | lognoc; fi
-			if type cups > /dev/null 2>&1; then sudo systemctl enable cups 2>&1 | lognoc; fi
-			if type bluetooth > /dev/null 2>&1; then sudo systemctl enable bluetooth 2>&1 | lognoc; fi
+			if type cupsd > /dev/null 2>&1; then sudo systemctl enable cups 2>&1 | lognoc; fi
 			if type crond > /dev/null 2>&1; then sudo systemctl enable cronie 2>&1 | lognoc; fi
 			if type pritunl-client > /dev/null 2>&1; then sudo systemctl enable pritunl-client 2>&1 | lognoc; fi
 			if type syslog-ng > /dev/null 2>&1; then sudo systemctl enable syslog-ng@default.service 2>&1 | lognoc; fi
-			if type ufw > /dev/null 2>&1; then sudo ufw enable 2>&1 | lognoc; fi
+			if [ -f /usr/bin/ufw ]; then sudo /usr/bin/ufw enable 2>&1 | lognoc; fi
+			sudo systemctl enable bluetooth 2>&1 | lognoc
 
 			# Add current to 'wireshark' group if need be
 			if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
