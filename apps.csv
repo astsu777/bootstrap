@@ -14,8 +14,10 @@ A,reflector
 A,signal-desktop
 A,syslog-ng
 A,termite
+AC,discord
 AD,gufw
 AD,ufw
+ADC,telegram-desktop
 ADR,audacity
 ADR,avahi
 ADR,ca-certificates
@@ -68,7 +70,6 @@ AX,xdg-user-dirs
 C,amethyst
 C,brave-browser
 C,cyberduck
-C,ferdi
 C,gpg-suite-no-mail
 C,keycastr
 C,nextcloud
@@ -239,4 +240,4 @@ X,xorg-xinit
 X,xterm
 X,zenity
 Y,cointop
-Y,ferdi-bin
+Y,mailspring-libre
