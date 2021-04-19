@@ -301,30 +301,21 @@ if [[ ! -h /etc/arch-release ]]; then
 	}
 	installleftwm(){
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S leftwm polybar 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1
-		else
-			ln -sf "$dfloc"/config/leftwm "$HOME"/.config/ > /dev/null 2>&1
-		fi
+		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
+		ln -sf "$dfloc"/config/leftwm "$HOME"/.config/ > /dev/null 2>&1
 	}
 	installopenbox(){
 		sudo pacman --noconfirm --needed -S openbox obconf menumaker lxappearance 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S obkey polybar arc-dark-osx-openbox-theme-git 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1
-		else
-			ln -sf "$dfloc"/config/openbox "$HOME"/.config/ 2>&1 | lognoc
-			ln -sf "$dfloc"/config/openbox/polybar "$HOME"/.config/ 2>&1 | lognoc
-		fi
+		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
+		ln -sf "$dfloc"/config/openbox "$HOME"/.config/ 2>&1 | lognoc
+		ln -sf "$dfloc"/config/openbox/polybar "$HOME"/.config/ 2>&1 | lognoc
 	}
 	installxfce(){
 		sudo pacman --noconfirm --needed -S xfce4 gvfs 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1
-		else
-			ln -sf "$dfloc"/config/xfce4 "$HOME"/.config/ 2>&1 | lognoc
-		fi
+		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
+		ln -sf "$dfloc"/config/xfce4 "$HOME"/.config/ 2>&1 | lognoc
 	}
 fi
 
