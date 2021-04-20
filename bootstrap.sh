@@ -964,6 +964,14 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 			# Add current to 'wireshark' group if need be
 			if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
 
+			# Tweak pacman's configuration
+			if [ -f /etc/pacman.conf ]; then
+				# Enable colors
+				sudo sed -i 's/^#Color/Color/' /etc/pacman.conf 2>&1 | lognoc
+				# Beautify progress bars
+				if grep -q '^ILoveCandy' /etc/pacman.conf ; then sudo sed -i '/^Color/a ILoveCandy' /etc/pacman.conf 2>&1 | lognoc ; fi
+			fi
+
 			echo -e "Preferences configured" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
