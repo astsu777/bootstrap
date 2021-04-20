@@ -160,6 +160,7 @@ WADR,testssl.sh
 WADR,traceroute
 WADRC,docker
 WADRC,xca
+WC,rambox
 WC,tunnelblick
 WCY,teamviewer
 WCY,tor-browser
@@ -200,6 +201,7 @@ WY,bria
 WY,gns3-converter
 WY,gns3-gui
 WY,gns3-server
+WY,rambox-bin
 WY,telnet-bsd
 X,acpi
 X,acpid
