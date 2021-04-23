@@ -12,6 +12,7 @@ This repository hosts a BASH bootstrap script that can be used to setup workstat
 * Configure the prompt automatically (BASH & ZSH supported). The script will ask to set ZSH as the default shell too
 * Install TMUX and necessary plugins
 * Configure the system to personal preferences
+* Detect a laptop and propose to install power management
 * Detect a server connection (=SSH) and adjust the authorized operations
 * Clean output to the console, but all operations are logged to a log file
 * On a bare Arch Linux installation, deploy necessary packages for a GUI & (optional) deploy a GUI environment (WM & DE)
@@ -123,8 +124,11 @@ cd bootstrap
 
 If you use my dotfiles, a [function called bootstrap](https://github.com/GSquad934/dotfiles/blob/master/shellconfig/functions#L56) will automatically call this script again.
 
-# Server
+# Laptop
+When being executed, the script will try to determine if the machine is a laptop or not. If it is a laptop and Arch Linux is being installed, the script will say so and propose to install *tlp*, a power saver software that can greatly increase a laptop's battery life.
 
+
+# Server
 ![](https://hostr.co/file/giAJxqsaku8v/bootstrap_server_output.png)
 
 If the script is ran via a SSH connection, it will consider it is running on a remote server and adapt its behavior. It will then only propose two operations:
