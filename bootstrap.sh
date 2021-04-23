@@ -1125,8 +1125,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Installing power management software..." 2>&1 | logc
-				sudo pacman -S tlp --needed --noconfirm 2>&1 | lognoc
+				sudo pacman -S tlp xfce4-power-manager --needed --noconfirm 2>&1 | lognoc
 				sudo systemctl enable tlp 2>&1 | lognoc
+				sudo systemctl enable upower 2>&1 | lognoc
 				echo -e "Power management software installed" 2>&1 | logc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
