@@ -1091,6 +1091,54 @@ done
 fi
 
 #==============
+# Arch Linux - Laptop
+#==============
+# Chassis type can be determined by reading file '/sys/class/dmi/id/chassis_type'
+# An integer represents a type of chassis. Here is the full list:
+# 1 Other
+# 2 Unknown
+# 3 Desktop
+# 4 Low Profile Desktop
+# 5 Pizza Box
+# 6 Mini Tower
+# 7 Tower
+# 8 Portable
+# 9 Laptop
+# 10 Notebook
+# 11 Hand Held
+# 12 Docking Station
+# 13 All in One
+# 14 Sub Notebook
+# 15 Space-Saving
+# 16 Lunch Box
+# 17 Main System Chassis
+# 18 Expansion Chassis
+# 19 SubChassis
+# 20 Bus Expansion Chassis
+# 21 Peripheral Chassis
+# 22 Storage Chassis
+# 23 Rack Mount Chassis
+# 24 Sealed-Case PC
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ ! -h /etc/arch-release ]] && [[ $(cat /sys/class/dmi/id/chassis_type) == @(8|9|10|14) ]]; then
+	if type tlp > /dev/null 2>&1; then
+		while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Installing power management software..." 2>&1 | logc
+				sudo pacman -S tlp --needed --noconfirm 2>&1 | lognoc
+				sudo systemctl enable tlp 2>&1 | lognoc
+				echo -e "Power management software installed" 2>&1 | logc
+				break
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e
+				break
+			fi
+			break
+		done
+	fi
+fi
+
+#==============
 # Git Repositories
 #==============
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
