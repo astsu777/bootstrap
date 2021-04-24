@@ -39,6 +39,9 @@ powerline_fonts="https://github.com/powerline/fonts"
 # TMUX Plugins
 tpm="https://github.com/tmux-plugins/tpm"
 
+# Clipmenu location
+clipmenurepo="https://github.com/cdown/clipmenu"
+
 # Custom WM/DE location
 dwmrepo="https://github.com/GSquad934/dwm.git"
 dwmloc="/opt/dwm"
@@ -50,6 +53,7 @@ slockrepo="https://github.com/GSquad934/slock.git"
 slockloc="/opt/slock"
 surfrepo="https://github.com/GSquad934/surf.git"
 surfloc="/opt/surf"
+adwaitaqtrepo="https://github.com/FedoraQt/adwaita-qt.git"
 
 # Logging
 date="$(date +%Y-%m-%d-%H%M%S)"
@@ -160,8 +164,8 @@ installworkstoreapp(){ if type mas > /dev/null 2>&1; then < "$workstoreapp" xarg
 
 grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
-installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
-installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone url 2>&1 | lognoc; fi ;}
+installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
+installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 
 installperldeps(){
 	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
@@ -1082,6 +1086,13 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			rofi=$(which rofi)
 			ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
 		fi
+		# Install Clipmenu (clipboard manager)
+		if ! type clipmenu > /dev/null 2>&1; then
+			sudo pacman -S xsel clipnotify --needed --noconfirm 2>&1 | lognoc
+			sudo git clone --depth 1 "$clipmenurepo" /opt/clipmenu 2>&1 | lognoc
+			cd /opt/clipmenu && sudo make install 2>&1 | lognoc
+			cd "$HOME" || exit
+		fi
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e 2>&1 | logc
 		break
@@ -1561,7 +1572,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 						ln -sf "$dfloc"/config/volumeicon/volumeicon "$HOME"/.config/volumeicon/volumeicon 2>&1 | lognoc
 					fi
 					# QT
-					sudo git clone --depth 1 https://github.com/FedoraQt/adwaita-qt.git /opt/adwaita-qt 2>&1 | lognoc
+					sudo git clone --depth 1 "$adwaitaqtrepo" /opt/adwaita-qt 2>&1 | lognoc
 					cd /opt/adwaita-qt && sudo cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr 2>&1 | lognoc
 					sudo make 2>&1 | lognoc && sudo make install 2>&1 | lognoc
 					cd "$HOME" || exit

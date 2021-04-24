@@ -4,6 +4,7 @@
 A,amfora
 A,base-devel
 A,ca-certificates-mozilla
+A,clipnotify
 A,cronie
 A,cups
 A,etcher
@@ -15,6 +16,7 @@ A,reflector
 A,signal-desktop
 A,syslog-ng
 A,termite
+A,xsel
 AC,discord
 AD,ufw
 ADC,telegram-desktop
