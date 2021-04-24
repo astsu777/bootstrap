@@ -25,6 +25,7 @@ ADR,avahi
 ADR,ca-certificates
 ADR,cifs-utils
 ADR,flameshot
+ADR,galculator
 ADR,gparted
 ADR,libreoffice
 ADR,logrotate
