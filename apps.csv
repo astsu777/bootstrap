@@ -247,6 +247,7 @@ X,xautolock
 X,xdotool
 X,xorg
 X,xorg-xinit
+X,xss-lock
 X,xterm
 X,zenity
 Y,cointop
