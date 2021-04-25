@@ -18,6 +18,9 @@ resourcesloc="$HOME/.local/share"
 # Git repositories location
 gitrepoloc="$HOME/.sources/repos"
 
+# Software sources location
+sourcesloc="$HOME/.sources"
+
 # Wallpapers
 wallpapers="https://github.com/GSquad934/wallpapers.git"
 wallpapersloc="$HOME/.local/share/wallpapers"

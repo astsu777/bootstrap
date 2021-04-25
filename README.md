@@ -102,6 +102,7 @@ The file *bootstrap&#46;sh* has a lot of variables defined at the very beginning
 * **scriptsloc**: this variable defines where custom scripts will be stored. Personally, I use this to auto-create this folder so my dotfiles will deploy scripts there and add this folder to my *&#36;PATH*. Default value is *$HOME/.local/bin*
 * **resourcesloc**: this variable defines where resources to be used by custom scripts are located (Ex.: a list of all unicode characters)
 * **gitrepoloc**: this variable defines where cloned Git repositories will be stored. Default value is *$HOME/.sources/repos*
+* **sourcesloc**: this variable defines where software sources will be stored. Default value is *$HOME/.sources*
 * **wallpapers**: this variable indicates what repository of wallpapers can be downloaded
 * **wallpapersloc**: this variable defines where downloaded wallpapers will be stored. Default value is *$HOME/.local/share/wallpapers*
 
