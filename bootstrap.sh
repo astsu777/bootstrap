@@ -1145,14 +1145,18 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 				echo -e "Power management software installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 				if [[ $(cat /sys/class/dmi/id/chassis_type) == @(8|9|10|14) ]] && [[ $(cat /sys/class/dmi/id/chassis_version) =~ ^Mac ]]; then
-					echo -e "[MACBOOK DETECTED] Installing software specific to Macbooks..." 2>&1 | logc
+					echo -e "[MACBOOK DETECTED] Configuring hardware..." 2>&1 | logc
 					# Program to use the ambient light sensor
 					yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S macbook-lighter 2>&1 | lognoc
 					sudo systemctl enable macbook-lighter 2>&1 | lognoc
-					echo -e "Macbook's specific programs installed" 2>&1 | logc
-					echo -e "Configuring Macbook's hardware..." 2>&1 | logc
+				 	# Install proper Broadcom WiFi drivers for BCM43
+				 	if lspci | grep BCM43 > /dev/null ; then
+				 		sudo pacman -S linux-headers --needed --noconfirm 2>&1 | lognoc
+				 		sudo pacman -S broadcom-wl-dkms --needed --noconfirm 2>&1 | lognoc
+				 	fi
 					# Make function keys work properly (F1-12 by default)
 				 	echo "options hid_apple fnmode=2" | sudo tee /etc/modprobe.d/hid_apple.conf >/dev/null
+					echo -e "If WiFi is causing issues, please refer to online documentation" 2>&1 | logc
 					echo -e "Macbook's hardware configured" 2>&1 | logc
 					echo -e 2>&1 | logc
 					break
