@@ -219,6 +219,8 @@ X,engrampa
 X,feh
 X,gnome-keyring
 X,gnome-themes-extra
+X,gst-libav
+X,gst-plugins-good
 X,gvfs
 X,gvfs-afc
 X,gvfs-gphoto2
