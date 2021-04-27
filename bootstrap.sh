@@ -1136,7 +1136,7 @@ fi
 # 22 Storage Chassis
 # 23 Rack Mount Chassis
 # 24 Sealed-Case PC
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ ! -h /etc/arch-release ]] && [[ $(cat /sys/class/dmi/id/chassis_type) == @(8|9|10|14) ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ ! -h /etc/arch-release ]] && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
 	if type tlp > /dev/null 2>&1; then
 		while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
