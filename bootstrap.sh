@@ -315,7 +315,7 @@ if [[ ! -h /etc/arch-release ]]; then
 	installsurf(){
 		if [[ -d "$surfloc" ]]; then sudo rm -Rf "$surfloc" > /dev/null 2>&1; fi
 		sudo git clone --depth 1 "$surfrepo" "$surfloc" > /dev/null 2>&1
-		if [[ !d "$HOME"/.config/surf/styles ]]; then mkdir -pv "$HOME"/.config/surf/styles > /dev/null 2>&1; fi
+		if [[ ! -d "$HOME"/.config/surf/styles ]]; then mkdir -pv "$HOME"/.config/surf/styles > /dev/null 2>&1; fi
 		cp "$surfloc"/script.js "$HOME"/.config/surf/ > /dev/null 2>&1
 		cp -R "$surfloc"/styles/*.css "$HOME"/.config/surf/styles/ > /dev/null 2>&1
 		sudo make -C "$surfloc" clean install > /dev/null 2>&1
