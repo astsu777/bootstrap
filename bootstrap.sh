@@ -1493,6 +1493,13 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			ln -sf "$dfloc"/config/dunst/dunstrc "$HOME"/.config/dunst/ 2>&1 | lognoc
 		fi
+		if type tuir > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/tuir ]]; then
+				mkdir -pv "$HOME"/.config/tuir 2>&1 | lognoc
+			fi
+			ln -sf "$dfloc"/config/tuir/tuir.cfg "$HOME"/.config/tuir/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/tuir/mailcap "$HOME"/.config/tuir/ 2>&1 | lognoc
+		fi
 		if type rofi > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/rofi ]]; then
 				mkdir -pv "$HOME"/.config/rofi 2>&1 | lognoc
