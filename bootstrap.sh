@@ -1092,7 +1092,10 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			while read -p "Do you want to use a graphical login manager? (Y/n): " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Installing LightDM..." 2>&1 | logc
 					installgreeter
+					echo -e "LightDM installed" 2>&1 | logc
+					echo -e 2>&1 | logc
 					break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 					echo -e 2>&1 | logc
