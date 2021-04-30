@@ -85,12 +85,6 @@ if type brew > /dev/null 2>&1; then
 		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
 		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		else
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		fi
 	}
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -101,12 +95,6 @@ elif type apt-get > /dev/null 2>&1; then
 	installzsh(){
 		sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc
 		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		else
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		fi
 	}
 elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -117,12 +105,6 @@ elif type yum > /dev/null 2>&1; then
 	installzsh(){
 		sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc
 		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		else
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		fi
 	}
 elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -133,12 +115,6 @@ elif type pacman yay > /dev/null 2>&1; then
 	installzsh(){
 		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc
 		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		else
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		fi
 	}
 	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
 	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
@@ -153,12 +129,6 @@ elif type pacman > /dev/null 2>&1; then
 	installzsh(){
 		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc
 		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then
-			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		else
-			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-		fi
 	}
 fi
 
@@ -1263,7 +1233,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
 				mv "$HOME"/.vimrc "$HOME"/.old-dotfiles/vimrc > /dev/null 2>&1
 				if [[ -f "$HOME"/.p10k.zsh ]]; then mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; fi
-				if [[ -f "$HOME"/starship.toml ]]; then mv "$HOME"/starship.toml "$HOME"/.old-dotfiles/starship.toml > /dev/null 2>&1; else mv "$HOME"/.config/starship.toml "$HOME"/.old-dotfiles/starship.toml > /dev/null 2>&1; fi
+				if [[ -f "$HOME"/starship.toml ]]; then mv "$HOME"/starship.toml "$HOME"/.old-dotfiles/starship.toml > /dev/null 2>&1; elif [[ -f "$HOME"/.config/starship.toml ]]; then mv "$HOME"/.config/starship.toml "$HOME"/.old-dotfiles/starship.toml > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.zshrc ]]; then mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; fi
 				if [[ "$OSTYPE" == "linux-gnu" ]]; then mv "$HOME"/.config/mimeapps.list "$HOME"/.old-dotfiles/mimeapps.list > /dev/null 2>&1 ; fi
 				mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
@@ -1293,7 +1263,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/.gitconfig ]]; then rm -Rf "$HOME"/.gitconfig; else rm -Rf "$HOME"/.config/git/config; fi
 				if [[ -f "$HOME"/.msmtprc ]]; then rm -Rf "$HOME"/.msmtprc; else rm -Rf "$HOME"/.config/msmtp; fi
 				if [[ -f "$HOME"/.p10k.zsh ]]; then rm -Rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
-				if [[ -f "$HOME"/starship.toml ]]; then rm -Rf "$HOME"/starship.toml; else rm -Rf "$HOME"/.config/starship.toml; fi
+				if [[ -f "$HOME"/starship.toml ]]; then rm -Rf "$HOME"/starship.toml; elif [[ -f "$HOME"/.config/starship.toml ]]; then rm -Rf "$HOME"/.config/starship.toml; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then rm -Rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
 				if [[ -f "$HOME"/screenrc ]]; then rm -Rf "$HOME"/screenrc; else rm -Rf "$HOME"/.config/screen/screenrc; fi
 				if [[ "$OSTYPE" == "linux-gnu" ]]; then rm -Rf "$HOME"/.config/mimeapps.list ; fi
@@ -1386,8 +1356,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ -d "$HOME"/.local/share/applications ]]; then mkdir -pv "$HOME"/.local/share/applications 2>&1 | lognoc ; fi
 			ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.local/share/applications/mimeapps.list 2>&1 | lognoc
 		fi
-		## Starship is symlinked as it needs to be present BEFORE the installation of starship
-		ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 		if type git > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/git ]]; then
 				mkdir -pv "$HOME"/.config/git 2>&1 | lognoc
@@ -1573,11 +1541,32 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		echo -e "New dotfiles installed" 2>&1 | logc
 		echo -e 2>&1 | logc
 
+		# Install Starship prompt
+		while read -p "Do you want to install the Starship prompt (nice features)? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Installing Starship prompt..." 2>&1 | logc
+				if [[ ! -d "$dfloc" ]]; then
+					git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+					ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+				else
+					ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+				fi
+				echo -e "Starship prompt installed" 2>&1 | logc
+				echo -e 2>&1 | logc
+				break
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e
+				break
+			fi
+			break
+		done
 		# Install GTK config files if no DE is detected
 		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
 			while read -p "Do you want to install the GTK/QT theme (dark)? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Installing GTK/QT theme..." 2>&1 | logc
 					# GTK 3 & 2
 					if [[ ! -d "$HOME"/.config/gtk-3.0 ]]; then
 						mkdir -pv "$HOME"/.config/gtk-3.0 2>&1 | lognoc
