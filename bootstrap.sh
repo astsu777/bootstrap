@@ -1206,8 +1206,26 @@ while read -p "Do you want to install the Starship prompt (nice features)? (Y/n)
 		else
 			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
 		fi
-		echo -e "Starship prompt installed" 2>&1 | logc
-		echo -e 2>&1 | logc
+		if [[ -f "$HOME"/.bashrc ]] && ! grep 'eval \"[$][(]starship init' "$HOME"/.bashrc > /dev/null 2>&1; then
+			sudo tee -a "$HOME"/.bashrc <<-'EOF' >/dev/null
+			# Load Starship prompt
+			eval "$(starship init bash)"
+			EOF
+		elif [[ -f "$HOME"/.zshrc ]] && ! grep 'eval \"[$][(]starship init' "$HOME"/.zshrc > /dev/null 2>&1; then
+			echo -e "Starship prompt installed" 2>&1 | logc
+			echo -e 2>&1 | logc
+			sudo tee -a "$HOME"/.zshrc <<-'EOF' >/dev/null
+			# Load Starship prompt
+			eval "$(starship init zsh)"
+			EOF
+		elif [[ -f "$HOME"/.config/zsh/.zshrc ]] && ! grep 'eval \"[$][(]starship init' "$HOME"/.config/zsh/.zshrc > /dev/null 2>&1; then
+			echo -e "Starship prompt installed" 2>&1 | logc
+			echo -e 2>&1 | logc
+			sudo tee -a "$HOME"/.config/zsh/.zshrc <<-'EOF' >/dev/null
+			# Load Starship prompt
+			eval "$(starship init zsh)"
+			EOF
+		fi
 		break
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e
