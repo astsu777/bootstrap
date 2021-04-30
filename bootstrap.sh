@@ -726,32 +726,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type tmux > /dev/null 2>&1; 
 	fi
 fi
 
-#============
-# Workstation - Install ZSH
-#============
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; then
-	echo -e "Your current shell is \"$SHELL\""
-	while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			installzsh
-			if [[ "$EUID" = 0 ]]; then
-				echo -e "The shell of the root user should not be changed! (NOT RECOMMENDED)"
-				echo -e "Please run the script as root in order to install the requirements"
-				exit 1
-			else
-				chsh -s /bin/zsh 2>&1 | logc
-			fi
-			echo -e "ZSH successfully installed" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
-
 #=============
 # Install server packages
 #=============
@@ -1194,6 +1168,53 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && ty
 	echo -e 2>&1 | logc
 fi
 
+#============
+# Workstation - Shell & Prompt
+#============
+# Define ZSH as default prompt
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; then
+	echo -e "Your current shell is \"$SHELL\""
+	while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			installzsh
+			if [[ "$EUID" = 0 ]]; then
+				echo -e "The shell of the root user should not be changed! (NOT RECOMMENDED)"
+				echo -e "Please run the script as root in order to install the requirements"
+				exit 1
+			else
+				chsh -s /bin/zsh 2>&1 | logc
+			fi
+			echo -e "ZSH successfully installed" 2>&1 | logc
+			echo -e 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
+fi
+# Install Starship prompt
+while read -p "Do you want to install the Starship prompt (nice features)? (Y/n) " -n 1 -r; do
+	echo -e 2>&1 | logc
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+		echo -e "Installing Starship prompt..." 2>&1 | logc
+		if [[ ! -d "$dfloc" ]]; then
+			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		else
+			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
+		fi
+		echo -e "Starship prompt installed" 2>&1 | logc
+		echo -e 2>&1 | logc
+		break
+	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+		echo -e
+		break
+	fi
+	break
+done
+
 #==============
 # Dotfiles
 #==============
@@ -1542,26 +1563,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		echo -e "New dotfiles installed" 2>&1 | logc
 		echo -e 2>&1 | logc
 
-		# Install Starship prompt
-		while read -p "Do you want to install the Starship prompt (nice features)? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Installing Starship prompt..." 2>&1 | logc
-				if [[ ! -d "$dfloc" ]]; then
-					git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
-					ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-				else
-					ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
-				fi
-				echo -e "Starship prompt installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-				break
-			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e
-				break
-			fi
-			break
-		done
 		# Install GTK config files if no DE is detected
 		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
 			while read -p "Do you want to install the GTK/QT theme (dark)? (Y/n) " -n 1 -r; do
