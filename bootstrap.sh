@@ -1212,8 +1212,6 @@ while read -p "Do you want to install the Starship prompt (nice features)? (Y/n)
 			eval "$(starship init bash)"
 			EOF
 		elif [[ -f "$HOME"/.zshrc ]] && ! grep 'eval \"[$][(]starship init' "$HOME"/.zshrc > /dev/null 2>&1; then
-			echo -e "Starship prompt installed" 2>&1 | logc
-			echo -e 2>&1 | logc
 			sudo tee -a "$HOME"/.zshrc <<-'EOF' >/dev/null
 			# Load Starship prompt
 			eval "$(starship init zsh)"
@@ -1226,6 +1224,11 @@ while read -p "Do you want to install the Starship prompt (nice features)? (Y/n)
 			eval "$(starship init zsh)"
 			EOF
 		fi
+		echo -e "If Starship does not launch when you login, make sure to load it with your prompt" 2>&1 | logc
+		echo -e "  - For BASH, add the following to your BASHRC: eval \"$(starship init bash)\"" 2>&1 | logc
+		echo -e "  - For ZSH, add the following to your ZSHRC: eval \"$(starship init zsh)\"" 2>&1 | logc
+		echo -e "Starship prompt installed" 2>&1 | logc
+		echo -e 2>&1 | logc
 		break
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e
