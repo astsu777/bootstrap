@@ -313,13 +313,14 @@ if [[ ! -h /etc/arch-release ]]; then
 		if [[ -d "$slockloc" ]]; then sudo rm -Rf "$slockloc" > /dev/null 2>&1; fi
 		sudo git clone --depth 1 "$slockrepo" "$slockloc" > /dev/null 2>&1
 		sudo make -C "$slockloc" clean install > /dev/null 2>&1
+		sudo cp -f "$slockloc"/lock.sh /usr/bin/lockscreen 2>&1 | lognoc
 	}
 	installi3lock(){
 		if [[ -d "$i3lockloc" ]]; then sudo rm -Rf "$i3lockloc" > /dev/null 2>&1; fi
 		sudo git clone --depth 1 "$i3lockrepo" "$i3lockloc" > /dev/null 2>&1
 		sudo pacman -S xcb-util-xrm libxkbcommon libxkbcommon-x11 --needed --noconfirm 2>&1 | lognoc
 		cd "$i3lockloc" && sudo ./install-i3lock-color.sh 2>&1 | lognoc
-		sudo cp -f ./i3lock.sh /usr/bin/i3lock_fancy 2>&1 | lognoc
+		sudo cp -f ./lock.sh /usr/bin/lockscreen 2>&1 | lognoc
 		cd "$HOME" || exit
 	}
 	installsurf(){
