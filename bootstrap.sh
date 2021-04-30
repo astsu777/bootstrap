@@ -1199,6 +1199,7 @@ while read -p "Do you want to install the Starship prompt (nice features)? (Y/n)
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 		echo -e "Installing Starship prompt..." 2>&1 | logc
+		curl -fsSL https://starship.rs/install.sh | bash -s -- -y > /dev/null
 		if [[ ! -d "$dfloc" ]]; then
 			git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
 			ln -sf "$dfloc"/config/starship/starship.toml "$HOME"/.config/starship.toml 2>&1 | lognoc
