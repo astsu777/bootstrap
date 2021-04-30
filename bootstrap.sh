@@ -1067,6 +1067,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "LeftWM installed" 2>&1 | logc
+				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 3 ]]; then
 				echo -e "Installing Openbox..." 2>&1 | logc
 				installxinitrc
@@ -1074,12 +1075,14 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "Openbox installed" 2>&1 | logc
+				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 4 ]]; then
 				echo -e "Installing XFCE..." 2>&1 | logc
 				installxinitrc
 				installxfce && installdmenu && installst && installi3lock && installslock && installsurf
 				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "XFCE installed" 2>&1 | logc
+				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 9 ]]; then
 				echo -e 2>&1 | logc
 				break
