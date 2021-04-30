@@ -292,6 +292,7 @@ if [[ ! -h /etc/arch-release ]]; then
 		cd "$i3lockloc" && sudo ./install-i3lock-color.sh 2>&1 | lognoc
 		sudo cp -f ./lock.sh /usr/bin/lockscreen 2>&1 | lognoc
 		cd "$HOME" || exit
+		if [[ ! -d "$HOME"/.config/i3 ]]; then sudo pacman -Rcs i3-wm --noconfirm 2>&! | lognoc ; fi
 	}
 	installsurf(){
 		if [[ -d "$surfloc" ]]; then sudo rm -Rf "$surfloc" > /dev/null 2>&1; fi
