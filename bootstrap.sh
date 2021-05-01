@@ -315,10 +315,60 @@ if [[ ! -h /etc/arch-release ]]; then
 		ln -sf "$dfloc"/config/openbox/polybar "$HOME"/.config/ 2>&1 | lognoc
 	}
 	installxfce(){
-		sudo pacman --noconfirm --needed -S xfce4 gvfs 2>&1 | lognoc
+		sudo pacman --noconfirm --needed -S xfce4 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
 		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
 		ln -sf "$dfloc"/config/xfce4 "$HOME"/.config/ 2>&1 | lognoc
+		while read -p "Do you want to install the XFCE goodies/applications? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Installing XFCE goodies..." 2>&1 | logc
+				sudo pacman -S xfce4-goodies --needed --noconfirm 2>&1 | lognoc
+				echo -e "XFCE goodies installed" 2>&1 | logc
+				break
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e 2>&1 | logc
+				break
+			fi
+			break
+		done
+	}
+	installgnome(){
+		sudo pacman -S gnome gnome-tweaks --needed --noconfirm 2>&1 | lognoc
+		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
+		sudo systemctl enable gdm 2>&1 | lognoc
+		while read -p "Do you want to install extra applications for GNOME (email client, Web browser, etc...)? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Installing GNOME extra applications..." 2>&1 | logc
+				sudo pacman -S gnome-extra --needed --noconfirm 2>&1 | lognoc
+				echo -e "GNOME extra applications installed" 2>&1 | logc
+				break
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e 2>&1 | logc
+				break
+			fi
+			break
+		done
+	}
+	installkdeplasma(){
+		sudo pacman -S plasma-desktop sddm sddm-kcm --needed --noconfirm 2>&1 | lognoc
+		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
+		installdmenu && installst && installsurf
+		sudo systemctl enable sddm 2>&1 | lognoc
+		while read -p "Do you want to install the KDE applications? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Installing KDE applications..." 2>&1 | logc
+				sudo pacman -S kde-applications --needed --noconfirm 2>&1 | lognoc
+				echo -e "KDE applications installed" 2>&1 | logc
+				break
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e 2>&1 | logc
+				break
+			fi
+			break
+		done
 	}
 fi
 
@@ -994,6 +1044,9 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 		echo -e "[2] LeftWM"
 		echo -e "[3] Openbox"
 		echo -e "[4] XFCE"
+		echo -e "You can also choose these environments, but they will be vanilla (no customisation):"
+		echo -e "[5] GNOME"
+		echo -e "[6] KDE/Plasma"
 		echo -e "[9] Cancel"
 		while read -p "Choose (ex.: type 1 for DWM): " -n 1 -r; do
 			echo -e 2>&1 | logc
@@ -1028,25 +1081,37 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "XFCE installed" 2>&1 | logc
 				echo -e 2>&1 | logc
+			elif [[ "$REPLY" == 5 ]]; then
+				echo -e "Installing GNOME..." 2>&1 | logc
+				installgnome && installdmenu && installst && installsurf
+				echo -e "GNOME installed" 2>&1 | logc
+				echo -e 2>&1 | logc
+			elif [[ "$REPLY" == 6 ]]; then
+				echo -e "Installing KDE/Plasma..." 2>&1 | logc
+				installkdeplasma && installdmenu && installst && installsurf
+				echo -e "KDE/Plasma installed" 2>&1 | logc
+				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 9 ]]; then
 				echo -e 2>&1 | logc
 				break
 			fi
-			echo -e "The default login method is made via Xinit (preferred method)"
-			echo -e "However, it is possible to use a graphical login manager such as LightDM"
-			while read -p "Do you want to use a graphical login manager? (Y/n): " -n 1 -r; do
-				echo -e 2>&1 | logc
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Installing LightDM..." 2>&1 | logc
-					installgreeter
-					echo -e "LightDM installed" 2>&1 | logc
+			if ! type gdm > /dev/null 2>&1 || ! type sddm > /dev/null 2>&1; then
+				echo -e "The default login method is made via Xinit (preferred method)"
+				echo -e "However, it is possible to use a graphical login manager such as LightDM"
+				while read -p "Do you want to use a graphical login manager? (Y/n): " -n 1 -r; do
 					echo -e 2>&1 | logc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e 2>&1 | logc
-					break
-				fi
-			done
+					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+						echo -e "Installing LightDM..." 2>&1 | logc
+						installgreeter
+						echo -e "LightDM installed" 2>&1 | logc
+						echo -e 2>&1 | logc
+						break
+					elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+						echo -e 2>&1 | logc
+						break
+					fi
+				done
+			fi
 		break
 		done
 		# Replace DMenu by Rofi
