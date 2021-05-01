@@ -1093,7 +1093,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				echo -e 2>&1 | logc
 				break
 			fi
-			if [[ ! -f /usr/bin/gdm ]] > /dev/null 2>&1 || [[ ! -f /usr/bin/sddm ]] > /dev/null 2>&1; then
+			if [[ ! -f /usr/bin/gdm ]] > /dev/null 2>&1 && [[ ! -f /usr/bin/sddm ]] > /dev/null 2>&1; then
 				echo -e "The default login method is made via Xinit (preferred method)"
 				echo -e "However, it is possible to use a graphical login manager such as LightDM"
 				while read -p "Do you want to use a graphical login manager? (Y/n): " -n 1 -r; do
