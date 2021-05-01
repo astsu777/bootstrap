@@ -336,7 +336,7 @@ if [[ ! -h /etc/arch-release ]]; then
 	installgnome(){
 		sudo pacman -S gnome gnome-tweaks --needed --noconfirm 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
-		sudo systemctl enable gdm 2>&1 | lognoc
+		sudo systemctl enable gdm -f 2>&1 | lognoc
 		while read -p "Do you want to install extra applications for GNOME (email client, Web browser, etc...)? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -354,7 +354,7 @@ if [[ ! -h /etc/arch-release ]]; then
 		sudo pacman -S plasma-desktop sddm sddm-kcm --needed --noconfirm 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
 		installdmenu && installst && installsurf
-		sudo systemctl enable sddm 2>&1 | lognoc
+		sudo systemctl enable sddm -f 2>&1 | lognoc
 		while read -p "Do you want to install the KDE applications? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
