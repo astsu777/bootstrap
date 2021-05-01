@@ -345,7 +345,6 @@ if [[ ! -h /etc/arch-release ]]; then
 				echo -e "GNOME extra applications installed" 2>&1 | logc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e 2>&1 | logc
 				break
 			fi
 			break
@@ -364,7 +363,6 @@ if [[ ! -h /etc/arch-release ]]; then
 				echo -e "KDE applications installed" 2>&1 | logc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e 2>&1 | logc
 				break
 			fi
 			break
