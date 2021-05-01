@@ -165,10 +165,16 @@ WADR,testssl.sh
 WADR,traceroute
 WADRC,docker
 WADRC,xca
+WAM,inetutils
 WC,rambox
 WC,tunnelblick
 WCY,teamviewer
 WCY,tor-browser
+WD,inetutils-ftp
+WD,inetutils-ping
+WD,inetutils-telnet
+WD,inetutils-tools
+WD,inetutils-traceroute
 WD,netcat
 WDR,gns3
 WDRC,wireshark
