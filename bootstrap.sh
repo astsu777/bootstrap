@@ -103,10 +103,9 @@ elif type apt-get > /dev/null 2>&1; then
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		sudo apt-get update 2>&1 | lognoc && sudo apt-get install ebtables iptables qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager -y 2>&1 | lognoc
+		sudo apt-get update 2>&1 | lognoc && sudo apt-get install ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager -y 2>&1 | lognoc
 		sudo systemctl enable libvirtd.service 2>&1 | lognoc && sudo systemctl start libvirtd.service 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
-		sudo newgrp libvirt 2>&1 | lognoc && sudo newgrp libvirt-qemu 2>&1 | lognoc
 	}
 elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -124,7 +123,7 @@ elif type yum > /dev/null 2>&1; then
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		sudo yum update -y 2>&1 | lognoc && sudo yum install qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables -y 2>&1 | lognoc
+		sudo yum update -y 2>&1 | lognoc && sudo yum install dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables -y 2>&1 | lognoc
 		sudo systemctl enable libvirtd.service 2>&1 | lognoc && sudo systemctl start libvirtd.service 2>&1 | lognoc
 	}
 elif type pacman yay > /dev/null 2>&1; then
@@ -146,10 +145,10 @@ elif type pacman yay > /dev/null 2>&1; then
 		yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S virtualbox-ext-oracle 2>&1 | lognoc
 	}
 	installkvm(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables iptables-nft libguestfs --needed --noconfirm 2>&1 | lognoc
+		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs --needed --noconfirm --ask 4 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
-		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo newgrp libvirt 2>&1 | lognoc
+		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
 		sudo systemctl enable libvirtd.service 2>&1 | lognoc && sudo systemctl start libvirtd.service 2>&1 | lognoc
 	}
 elif type pacman > /dev/null 2>&1; then
@@ -168,10 +167,10 @@ elif type pacman > /dev/null 2>&1; then
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables iptables-nft libguestfs --needed --noconfirm 2>&1 | lognoc
+		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs --needed --noconfirm --ask 4 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_group/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_rw_perms/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
-		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo newgrp libvirt 2>&1 | lognoc
+		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
 		sudo systemctl enable libvirtd.service 2>&1 | lognoc && sudo systemctl start libvirtd.service 2>&1 | lognoc
 	}
 fi
