@@ -1425,6 +1425,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/sxhkd/sxhkdrc "$HOME"/.old-dotfiles/sxhkdrc > /dev/null 2>&1
 				mv "$HOME"/.config/amfora/config.toml "$HOME"/.old-dotfiles/amfora.toml > /dev/null 2>&1
 				mv "$HOME"/.config/qutebrowser/config.py "$HOME"/.old-dotfiles/qutebrowser.py > /dev/null 2>&1
+				mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
 				if [[ -d "$HOME"/.moc ]]; then mv "$HOME"/.moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; else mv "$HOME"/.config/moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; fi
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -1470,6 +1471,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/sxhkd/sxhkdrc
 				rm -Rf "$HOME"/.config/amfora/config.toml
 				rm -Rf "$HOME"/.config/qutebrowser/config.py
+				rm -Rf "$HOME"/.jwmrc
 				if [[ -d "$HOME"/.moc ]]; then rm -Rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
 				break
 			fi
@@ -1681,6 +1683,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/qutebrowser 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/qutebrowser/config.py "$HOME"/.config/qutebrowser/ 2>&1 | lognoc
+		fi
+		if type jwm > /dev/null 2>&1; then
+			ln -sf "$dfloc"/jwmrc "$HOME"/.jwmrc 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
