@@ -351,11 +351,12 @@ if [[ ! -h /etc/arch-release ]]; then
 		ln -sf "$dfloc"/config/leftwm "$HOME"/.config/ > /dev/null 2>&1
 	}
 	installopenbox(){
-		sudo pacman --noconfirm --needed -S openbox obconf menumaker lxappearance 2>&1 | lognoc
-		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S obkey polybar arc-dark-osx-openbox-theme-git 2>&1 | lognoc
+		sudo pacman --noconfirm --needed -S openbox menumaker tint2 2>&1 | lognoc
+		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S arc-dark-osx-openbox-theme-git 2>&1 | lognoc
 		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
-		ln -sf "$dfloc"/config/openbox "$HOME"/.config/ 2>&1 | lognoc
-		ln -sf "$dfloc"/config/openbox/polybar "$HOME"/.config/ 2>&1 | lognoc
+		if [[ ! -d "$HOME"/.config/tint2 ]]; then mkdir -pv "$HOME"/.config/tint2 > /dev/null 2>&1 ; fi
+		ln -sf "$dfloc"/config/tint2/tint2rc "$HOME"/.config/tint2/ > /dev/null 2>&1
+		ln -sf "$dfloc"/config/openbox "$HOME"/.config/ > /dev/null 2>&1
 	}
 	installxfce(){
 		sudo pacman --noconfirm --needed -S xfce4 2>&1 | lognoc
