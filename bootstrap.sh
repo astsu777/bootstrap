@@ -1389,6 +1389,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/.msmtprc ]]; then mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1; else mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; else mv "$HOME"/.config/tmux/tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.screenrc ]]; then mv "$HOME"/.screenrc "$HOME"/.old-dotfiles/screenrc > /dev/null 2>&1; else mv "$HOME"/.config/screen/screenrc "$HOME"/.old-dotfiles/screenrc > /dev/null 2>&1; fi
+				if [[ -f "$HOME"/.Xresources ]]; then mv "$HOME"/.Xresources "$HOME"/.old-dotfiles/Xresources > /dev/null 2>&1; else mv "$HOME"/.config/X11/Xresources "$HOME"/.old-dotfiles/Xresources > /dev/null 2>&1; fi
 				mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
 				mv "$HOME"/.vimrc "$HOME"/.old-dotfiles/vimrc > /dev/null 2>&1
 				if [[ -f "$HOME"/.p10k.zsh ]]; then mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; fi
@@ -1426,6 +1427,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/starship.toml ]]; then rm -Rf "$HOME"/starship.toml; elif [[ -f "$HOME"/.config/starship.toml ]]; then rm -Rf "$HOME"/.config/starship.toml; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then rm -Rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
 				if [[ -f "$HOME"/screenrc ]]; then rm -Rf "$HOME"/screenrc; else rm -Rf "$HOME"/.config/screen/screenrc; fi
+				if [[ -f "$HOME"/.Xresources ]]; then rm -Rf "$HOME"/.Xresources; else rm -Rf "$HOME"/.config/X11/Xresources; fi
 				if [[ "$OSTYPE" == "linux-gnu" ]]; then rm -Rf "$HOME"/.config/mimeapps.list ; fi
 				rm -Rf "$HOME"/.vim
 				rm -Rf "$HOME"/.vimrc
@@ -1522,6 +1524,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/git 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/gitconfig "$HOME"/.config/git/config 3>&1 | lognoc
+		fi
+		if type xrdb > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/X11 ]]; then
+				mkdir -pv "$HOME"/.config/X11 2>&1 | lognoc
+			fi
+			ln -sf "$dfloc"/config/X11/Xresources "$HOME"/.config/X11/ 3>&1 | lognoc
 		fi
 		if type weechat > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/weechat ]]; then
