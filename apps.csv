@@ -256,6 +256,7 @@ X,xautolock
 X,xdotool
 X,xorg
 X,xorg-xinit
+X,xorg-xrdb
 X,xss-lock
 X,xterm
 X,zenity
