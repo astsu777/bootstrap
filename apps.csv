@@ -121,6 +121,8 @@ MADR,newsboat
 MADR,nnn
 MADR,openssl
 MADR,p7zip
+MADR,pass
+MADR,pass-otp
 MADR,perl
 MADR,pwgen
 MADR,restic
@@ -136,6 +138,7 @@ MADR,weechat
 MADR,wget
 MADR,xz
 MADR,youtube-dl
+MADR,zbar
 MADR,zip
 MADRI,glances
 MADRI,htop
