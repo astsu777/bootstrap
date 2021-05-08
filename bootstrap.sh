@@ -1579,9 +1579,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
 			fi
 		fi
-		if [[ -d /Applications/iTerm.app ]]; then
-			ln -sf "$dfloc"/iterm2 "$HOME"/.iterm5 > /dev/null 2>&1
-		fi
 		if type w3m > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.w3m ]]; then
 				mkdir -pv "$HOME"/.w3m 2>&1 | lognoc
