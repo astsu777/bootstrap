@@ -94,6 +94,7 @@ I,etckeeper
 I,fd-find
 M,ansifilter
 M,findutils
+M,gotop
 M,mas
 M,msmtp
 MAD,cpanminus
@@ -263,6 +264,7 @@ X,xss-lock
 X,xterm
 X,zenity
 Y,cointop
+Y,gotop-bin
 Y,hypnotix
 Y,mailspring-libre
 Y,tuir
