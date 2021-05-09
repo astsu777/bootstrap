@@ -308,7 +308,7 @@ if [[ ! -h /etc/arch-release ]]; then
 		sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
 		sudo make -C "$dwmloc" clean install > /dev/null 2>&1
 		if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
-		sudo cp "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
+		sudo cp -f "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
 	}
 	installdmenu(){
 		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dmenuloc" > /dev/null 2>&1 ; fi
@@ -319,6 +319,7 @@ if [[ ! -h /etc/arch-release ]]; then
 		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
 		sudo git clone --depth 1 "$strepo" "$stloc" > /dev/null 2>&1
 		sudo make -C "$stloc" clean install > /dev/null 2>&1
+		sudo cp -f "$stloc"/st.desktop /usr/share/applications/ > /dev/null 2>&1
 	}
 	installslock(){
 		if [[ -d "$slockloc" ]]; then sudo rm -Rf "$slockloc" > /dev/null 2>&1; fi
