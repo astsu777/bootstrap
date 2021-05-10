@@ -1596,13 +1596,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.config/newsboat ]]; then
 				mkdir -pv "$HOME"/.config/newsboat 2>&1 | lognoc
 			fi
-			if type tsp > /dev/null 2>&1; then
-				ln -sf "$dfloc"/config/newsboat/config-tsp "$HOME"/.config/newsboat/config 2>&1 | lognoc
-				ln -sf "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
-			else
-				ln -sf "$dfloc"/config/newsboat/config-ts "$HOME"/.config/newsboat/config 2>&1 | lognoc
-				ln -sf "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
-			fi
+			ln -sf "$dfloc"/config/newsboat/config "$HOME"/.config/newsboat/config 2>&1 | lognoc
+			ln -sf "$dfloc"/config/newsboat/urls "$HOME"/.config/newsboat/urls 2>&1 | lognoc
 		fi
 		if type screen > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/screen ]]; then
