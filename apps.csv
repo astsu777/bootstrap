@@ -96,6 +96,7 @@ M,ansifilter
 M,findutils
 M,mas
 M,msmtp
+MAD,atomicparsley
 MAD,cpanminus
 MAD,streamlink
 MADR,bash
@@ -147,6 +148,7 @@ MADRI,nethogs
 MADRI,tmux
 MDRY,urlview
 MY,ccat
+R,Atomicparsley
 R,bind-utils
 R,jetbrains-mono-fonts
 R,perl-App-cpanminus
