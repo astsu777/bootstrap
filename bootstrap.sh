@@ -50,6 +50,8 @@ dwmrepo="https://github.com/GSquad934/dwm.git"
 dwmloc="/opt/dwm"
 dmenurepo="https://github.com/GSquad934/dmenu.git"
 dmenuloc="/opt/dmenu"
+sentrepo="https://github.com/GSquad934/sent.git"
+sentloc="/opt/sent"
 strepo="https://github.com/GSquad934/st.git"
 stloc="/opt/st"
 slockrepo="https://github.com/GSquad934/slock.git"
@@ -314,6 +316,12 @@ if [[ ! -h /etc/arch-release ]]; then
 		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dmenuloc" > /dev/null 2>&1 ; fi
 		sudo git clone --depth 1 "$dmenurepo" "$dmenuloc" > /dev/null 2>&1
 		sudo make -C "$dmenuloc" clean install > /dev/null 2>&1
+	}
+	installsent(){
+		if [[ -d "$sentloc" ]]; then sudo rm -Rf "$sentloc" > /dev/null 2>&1; fi
+		sudo git clone --depth 1 "$sentrepo" "$sentloc" > /dev/null 2>&1
+		sudo make -C "$sentloc" clean install > /dev/null 2>&1
+		sudo cp -f "$sentloc"/st.desktop /usr/share/applications/ > /dev/null 2>&1
 	}
 	installst(){
 		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
@@ -642,7 +650,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					fi
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-				greppkg && installpkg
+				greppkg && installpkg && installsent
 				if [[ -f /etc/arch-release ]] && type yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
 					grepgitrepo && installgitrepo
@@ -1007,7 +1015,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 			if type teamviewer > /dev/null 2>&1; then sudo systemctl enable teamviewerd 2>&1 | lognoc; fi
 			if type nmtui > /dev/null 2>&1; then sudo systemctl enable NetworkManager 2>&1 | lognoc; fi
 			if type ntpd > /dev/null 2>&1; then sudo systemctl enable ntpd 2>&1 | lognoc; fi
-			sudo systemctl enable systemd-timesyncd 2>&1 | lognoc; fi
+			sudo systemctl enable systemd-timesyncd 2>&1 | lognoc
 			if type avahi-daemon > /dev/null 2>&1; then sudo systemctl enable avahi-daemon 2>&1 | lognoc; fi
 			if type cupsd > /dev/null 2>&1; then sudo systemctl enable cups 2>&1 | lognoc; fi
 			if type crond > /dev/null 2>&1; then sudo systemctl enable cronie 2>&1 | lognoc; fi

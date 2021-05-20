@@ -90,6 +90,7 @@ C,signal
 CA,alacritty
 D,dnsutils
 DRY,redshift
+DY,farbfeld
 G,https://github.com/raylee/tldr-sh-client
 I,etckeeper
 I,fd-find
