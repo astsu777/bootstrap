@@ -184,7 +184,11 @@ grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' 
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
-
+installsent(){
+	if [[ -d "$sentloc" ]]; then sudo rm -Rf "$sentloc" > /dev/null 2>&1; fi
+	sudo git clone --depth 1 "$sentrepo" "$sentloc" > /dev/null 2>&1
+	sudo make -C "$sentloc" clean install > /dev/null 2>&1
+}
 installperldeps(){
 	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
 	# Nikto
@@ -316,12 +320,6 @@ if [[ ! -h /etc/arch-release ]]; then
 		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dmenuloc" > /dev/null 2>&1 ; fi
 		sudo git clone --depth 1 "$dmenurepo" "$dmenuloc" > /dev/null 2>&1
 		sudo make -C "$dmenuloc" clean install > /dev/null 2>&1
-	}
-	installsent(){
-		if [[ -d "$sentloc" ]]; then sudo rm -Rf "$sentloc" > /dev/null 2>&1; fi
-		sudo git clone --depth 1 "$sentrepo" "$sentloc" > /dev/null 2>&1
-		sudo make -C "$sentloc" clean install > /dev/null 2>&1
-		sudo cp -f "$sentloc"/st.desktop /usr/share/applications/ > /dev/null 2>&1
 	}
 	installst(){
 		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
