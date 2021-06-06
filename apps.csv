@@ -188,6 +188,7 @@ WG,https://github.com/payloadsecurity/vxapi.git
 WG,https://github.com/sullo/nikto.git
 WM,geoip
 WM,testssl
+WMA,xh
 WMAD,httpie
 WMADR,ansible
 WMADR,hping
