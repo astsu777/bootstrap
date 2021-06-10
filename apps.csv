@@ -59,6 +59,7 @@ ADR,zathura
 ADR,zathura-djvu
 ADR,zathura-pdf-mupdf
 ADR,zathura-ps
+ADRC,chromium
 ADRC,gimp
 ADRC,inkscape
 ADRC,keepassxc
@@ -77,7 +78,6 @@ AX,ttf-jetbrains-mono
 AX,ttf-joypixels
 AX,xdg-user-dirs
 C,amethyst
-C,brave-browser
 C,cyberduck
 C,gpg-suite-no-mail
 C,keycastr
@@ -153,7 +153,6 @@ R,Atomicparsley
 R,bind-utils
 R,jetbrains-mono-fonts
 R,perl-App-cpanminus
-RY,brave-bin
 RY,plex-media-player
 RY,ytop
 S,1116599239 nordvpn ike
