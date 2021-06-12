@@ -223,6 +223,15 @@ if type pacman > /dev/null 2>&1; then
 		sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
 		sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
 		fi
+		# Ungoogled-chromium
+		if ! grep '^\[home_ungoogled_chromium_Arch\]' /etc/pacman.conf > /dev/null 2>&1; then
+			sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
+			[home_ungoogled_chromium_Arch]
+			SigLevel = Required TrustAll
+			Server = https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/$arch
+			EOF
+			curl -s 'https://download.opensuse.org/repositories/home:/ungoogled_chromium/Arch/x86_64/home_ungoogled_chromium_Arch.key' | sudo pacman-key -a - > /dev/null 2>&1 | lognoc
+		fi
 	}
 fi
 
