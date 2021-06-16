@@ -90,7 +90,6 @@ C,signal
 CA,alacritty
 D,dnsutils
 DRY,redshift
-DRY,task-spooler
 DY,farbfeld
 G,https://github.com/raylee/tldr-sh-client
 I,etckeeper
@@ -149,6 +148,7 @@ MADRI,inxi
 MADRI,ncdu
 MADRI,nethogs
 MADRI,tmux
+MDRY,task-spooler
 MDRY,urlview
 MY,ccat
 R,Atomicparsley
