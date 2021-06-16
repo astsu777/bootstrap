@@ -90,6 +90,7 @@ C,signal
 CA,alacritty
 D,dnsutils
 DRY,redshift
+DRY,task-spooler
 DY,farbfeld
 G,https://github.com/raylee/tldr-sh-client
 I,etckeeper
@@ -270,6 +271,5 @@ X,zenity
 Y,cointop
 Y,hypnotix
 Y,mailspring-libre
-Y,task-spooler
 Y,tuir
 Y,ytfzf
