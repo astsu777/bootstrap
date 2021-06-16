@@ -98,7 +98,7 @@ elif type apt-get > /dev/null 2>&1; then
 		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
 	}
 	installvirtualbox(){
-		sudo apt-get update 2>&1 | lognoc && sudo apt-get install virtualbox -y 2>&1 | lognoc
+		sudo apt-get update 2>&1 | lognoc && sudo apt-get install virtualbox linux-headers -y 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
@@ -118,7 +118,7 @@ elif type yum > /dev/null 2>&1; then
 		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
 	}
 	installvirtualbox(){
-		sudo yum update -y 2>&1 | lognoc && sudo yum install VirtualBox -y 2>&1 | lognoc
+		sudo yum update -y 2>&1 | lognoc && sudo yum install VirtualBox linux-headers -y 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
@@ -141,7 +141,7 @@ elif type pacman yay > /dev/null 2>&1; then
 	installaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
 	installworkaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 	installvirtualbox(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S virtualbox --needed --noconfirm 2>&1 | lognoc
+		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S virtualbox linux-headers --needed --noconfirm 2>&1 | lognoc
 		yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S virtualbox-ext-oracle 2>&1 | lognoc
 	}
 	installkvm(){
@@ -162,7 +162,7 @@ elif type pacman > /dev/null 2>&1; then
 		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
 	}
 	installvirtualbox(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S virtualbox --needed --noconfirm 2>&1 | lognoc
+		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S virtualbox linux-headers --needed --noconfirm 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
