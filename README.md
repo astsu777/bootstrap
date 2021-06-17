@@ -39,13 +39,12 @@ This script has been fully validated with the following systems:
 
 | OS | Compatibility | Comment |
 |:-:|:-:|:-|
-| macOS 10 (Catalina) | ✅ | Fully compatible |
-| macOS 11 (Big Sur) | ❓| It would probably work, but not tested |
+| macOS 10/11 (Big Sur) | ✅| Fully compatible |
 | Arch Linux & derivatives | ✅ | Fully compatible |
-| Debian (+ distros based on it) | ✅ | Some software may be missing |
-| Red Hat (+ distros based on it) | ✅ | Some software may be missing |
+| Debian (+ distros based on it) | ✅ | Fully compatible |
+| Red Hat (+ distros based on it) | ✅ | Fully compatible |
 | BSD | ❌ | Not compatible yet |
-| Windows Subsystem for Linux (WSL) | ❗ | Graphical software won't instlal/work and dotfiles not behave as intented |
+| Windows Subsystem for Linux (WSL) | ❗ | Graphical software won't install/work and dotfiles not behave as intended |
 
 Depending on the packages availability in the repositories, some software may be missing and/or not be compatible. Also, the script supports the following package managers for now:
 
