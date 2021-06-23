@@ -1513,7 +1513,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		if type bash > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config > /dev/null 2>&1; fi
 			ln -sf "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
-			ln -sf "$dfloc"/shellconfig/inputrc "$HOME"/.config/inputc 2>&1 | lognoc
+			ln -sf "$dfloc"/shellconfig/inputrc "$HOME"/.config/inputrc 2>&1 | lognoc
 			touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
 		fi
 		if type zsh > /dev/null 2>&1; then
