@@ -1393,6 +1393,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				fi
 				mv "$HOME"/.bash_profile "$HOME"/.old-dotfiles/bash_profile > /dev/null 2>&1
 				mv "$HOME"/.bashrc "$HOME"/.old-dotfiles/bashrc > /dev/null 2>&1
+				if [[ -f "$HOME"/.inputrc ]]; then mv "$HOME"/.inputrc "$HOME"/.old-dotfiles/inputrc > /dev/null 2>&1; else mv "$HOME"/.config/inputrc "$HOME"/.old-dotfiles/inputrc > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.gitconfig ]]; then mv "$HOME"/.gitconfig "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1; else mv "$HOME"/.config/git/config "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.msmtprc ]]; then mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1; else mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.tmux.conf ]]; then mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; else mv "$HOME"/.config/tmux/tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; fi
@@ -1428,6 +1429,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -Rf "$HOME"/.bash_profile
 				rm -Rf "$HOME"/.bashrc
+				if [[ -f "$HOME"/.inputrc ]]; then rm -Rf "$HOME"/.inputrc; else rm -Rf "$HOME"/.config/inputrc; fi
 				if [[ -f "$HOME"/.gitconfig ]]; then rm -Rf "$HOME"/.gitconfig; else rm -Rf "$HOME"/.config/git/config; fi
 				if [[ -f "$HOME"/.msmtprc ]]; then rm -Rf "$HOME"/.msmtprc; else rm -Rf "$HOME"/.config/msmtp; fi
 				if [[ -f "$HOME"/.p10k.zsh ]]; then rm -Rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
@@ -1509,7 +1511,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		ln -sf "$dfloc"/local/bin/statusbar/* "$scriptsloc/statusbar/" 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config 2>&1 | lognoc ; fi
 		if type bash > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config > /dev/null 2>&1; fi
 			ln -sf "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
+			ln -sf "$dfloc"/shellconfig/inputrc "$HOME"/.config/inputc 2>&1 | lognoc
 			touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
 		fi
 		if type zsh > /dev/null 2>&1; then
