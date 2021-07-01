@@ -1,6 +1,6 @@
 # Bootstrap
 
-![](https://hostr.co/file/oHIBPxwQrXJq/bootstrap_output.png)
+![](https://i.postimg.cc/vZkGP5k2/screenshot-20210324-001.png)
 
 This repository hosts a BASH bootstrap script that can be used to setup workstations and personal computers running on either Linux or macOS. The script has the following abilities:
 
@@ -129,7 +129,7 @@ When being executed, the script will try to determine if the machine is a laptop
 
 
 # Server
-![](https://hostr.co/file/giAJxqsaku8v/bootstrap_server_output.png)
+![](https://i.postimg.cc/wvcHTZvn/screenshot-20210324-002.png)
 
 If the script is ran via a SSH connection, it will consider it is running on a remote server and adapt its behavior. It will then only propose two operations:
 
