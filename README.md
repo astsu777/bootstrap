@@ -2,21 +2,21 @@
 
 ![](https://i.postimg.cc/vZkGP5k2/screenshot-20210324-001.png)
 
-This repository hosts a BASH bootstrap script that can be used to setup workstations and personal computers running on either Linux or macOS. The script has the following abilities:
+This repository hosts a *BASH* bootstrap script that can be used to setup workstations and personal computers running on either Linux or macOS. The script has the following abilities:
 
 * Modular usage: only desired operations can be performed (Ex.: only deploy dotfiles without installing any software)
 * Setup 3rd party repositories to install software not available in the system default ones
 * Automatically install TUI & GUI software (also from the macOS App Store)
 * Install professional software for a workstation
-* Deploy 3rd party fonts commonly used such as JetBrainsMono, etc...
-* Configure the prompt automatically (BASH & ZSH supported). The script will ask to set ZSH as the default shell too
-* Install TMUX and necessary plugins
+* Deploy 3rd party fonts commonly used such as *JetBrainsMono*, etc...
+* Configure the prompt automatically (*BASH* & *ZSH* supported). The script will ask to set ZSH as the default shell too
+* Install *TMUX* and necessary plugins
 * Configure the system to personal preferences
 * Detect a laptop and propose to install power management
 * Detect a server connection (=SSH) and adjust the authorized operations
 * Clean output to the console, but all operations are logged to a log file
 * On a bare Arch Linux installation, deploy necessary packages for a GUI & (optional) deploy a GUI environment (WM & DE)
-* When installing a GUI environment, offers the choice to login via Xinit (text mode) or with LightDM
+* When installing a GUI environment, offers the choice to login via *Xinit* (text mode) or with *LightDM*
 * Deploy custom GTK/QT theme for GUI applications
 
 ⚠️ **This script should not be used to setup a server!** Please use a proper automation framework such as [Ansible](https://www.ansible.com/) to do so.
@@ -105,7 +105,7 @@ The file *bootstrap&#46;sh* has a lot of variables defined at the very beginning
 * **wallpapers**: this variable indicates what repository of wallpapers can be downloaded
 * **wallpapersloc**: this variable defines where downloaded wallpapers will be stored. Default value is *$HOME/.local/share/wallpapers*
 
-Other variables define URLs for custom fonts, a plugin manager for TMUX, etc... They are self-explanatory and can also be customized.
+Other variables define URLs for custom fonts, a plugin manager for *TMUX*, etc... They are self-explanatory and can also be customized.
 
 ### Execution
 Once everything is customized to your needs, execute the following command:
