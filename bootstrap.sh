@@ -1099,7 +1099,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			elif [[ "$REPLY" == 2 ]]; then
 				echo -e "Installing LeftWM..." 2>&1 | logc
 				installxinitrc
-				installleftwm && installdmenu && installst && installslock && installsurf
+				installleftwm & installdmenu && installst && installslock && installsurf
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="leftwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "LeftWM installed" 2>&1 | logc
