@@ -12,6 +12,7 @@ This repository hosts a *BASH* bootstrap script that can be used to setup workst
 * Configure the prompt automatically (*BASH* & *ZSH* supported). The script will ask to set ZSH as the default shell too
 * Install *TMUX* and necessary plugins
 * Configure the system to personal preferences
+* Detect the computer's video card and install the proper driver (open-source only)
 * Detect a laptop and propose to install power management
 * Detect a server connection (=SSH) and adjust the authorized operations
 * Clean output to the console, but all operations are logged to a log file
