@@ -1082,25 +1082,17 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			exit 1
 		fi
 		echo -e "Choose a custom environment from the following options:"
-		echo -e "[1] DWM"
-		echo -e "[2] BSPWM"
+		echo -e "[1] BSPWM"
+		echo -e "[2] DWM"
 		echo -e "[3] Openbox"
 		echo -e "[4] XFCE"
 		echo -e "You can also choose these environments, but they will be vanilla (no customisation):"
 		echo -e "[5] GNOME"
 		echo -e "[6] KDE/Plasma"
 		echo -e "[9] Cancel"
-		while read -p "Choose (ex.: type 1 for DWM): " -n 1 -r; do
+		while read -p "Choose (ex.: type 2 for DWM): " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" == 1 ]]; then
-				echo -e "Installing DWM..." 2>&1 | logc
-				installxinitrc
-				installdwm && installdmenu && installst && installslock && installsurf
-				installlibxftbgra
-				sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
-				echo -e "DWM installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 2 ]]; then
 				echo -e "Installing BSPWM..." 2>&1 | logc
 				installxinitrc
 				installbspwm && installdmenu && installst && installslock && installsurf
@@ -1108,6 +1100,14 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				sed -i '/export SESSION="*"/c export SESSION="bspwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "BSPWM installed" 2>&1 | logc
 				echo -e "If you have multiple monitors, please read the documentation at https://github.com/GSquad934/dotfiles/tree/master/config/bspwm" 2>&1 | logc
+				echo -e 2>&1 | logc
+			elif [[ "$REPLY" == 2 ]]; then
+				echo -e "Installing DWM..." 2>&1 | logc
+				installxinitrc
+				installdwm && installdmenu && installst && installslock && installsurf
+				installlibxftbgra
+				sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+				echo -e "DWM installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 3 ]]; then
 				echo -e "Installing Openbox..." 2>&1 | logc
