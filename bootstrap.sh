@@ -340,6 +340,13 @@ if [[ ! -h /etc/arch-release ]]; then
 		cp -R "$surfloc"/styles/*.css "$HOME"/.config/surf/styles/ > /dev/null 2>&1
 		sudo make -C "$surfloc" clean install > /dev/null 2>&1
 	}
+	installbspwm(){
+		sudo pacman --noconfirm --needed -S bspwm sxhkd 2>&1 | lognoc
+		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S polybar 2>&1 | lognoc
+		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
+		ln -sf "$dfloc"/config/bspwm "$HOME"/.config/ > /dev/null 2>&1
+		ln -sf "$dfloc"/config/sxhkd "$HOME"/.config/ > /dev/null 2>&1
+	}
 	installopenbox(){
 		sudo pacman --noconfirm --needed -S openbox menumaker tint2 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S arc-dark-osx-openbox-theme-git 2>&1 | lognoc
@@ -1074,11 +1081,12 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 		fi
 		echo -e "Choose a custom environment from the following options:"
 		echo -e "[1] DWM"
-		echo -e "[2] Openbox"
-		echo -e "[3] XFCE"
+		echo -e "[2] BSPWM"
+		echo -e "[3] Openbox"
+		echo -e "[4] XFCE"
 		echo -e "You can also choose these environments, but they will be vanilla (no customisation):"
-		echo -e "[4] GNOME"
-		echo -e "[5] KDE/Plasma"
+		echo -e "[5] GNOME"
+		echo -e "[6] KDE/Plasma"
 		echo -e "[9] Cancel"
 		while read -p "Choose (ex.: type 1 for DWM): " -n 1 -r; do
 			echo -e 2>&1 | logc
@@ -1091,6 +1099,15 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				echo -e "DWM installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 2 ]]; then
+				echo -e "Installing BSPWM..." 2>&1 | logc
+				installxinitrc
+				installbspwm && installdmenu && installst && installslock && installsurf
+				installlibxftbgra
+				sed -i '/export SESSION="*"/c export SESSION="bspwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+				echo -e "BSPWM installed" 2>&1 | logc
+				echo -e "If you have multiple monitors, please read the documentation at https://github.com/GSquad934/dotfiles/tree/master/config/bspwm" 2>&1 | logc
+				echo -e 2>&1 | logc
+			elif [[ "$REPLY" == 3 ]]; then
 				echo -e "Installing Openbox..." 2>&1 | logc
 				installxinitrc
 				installopenbox && installdmenu && installst && installslock && installsurf
@@ -1098,19 +1115,19 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "Openbox installed" 2>&1 | logc
 				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 3 ]]; then
+			elif [[ "$REPLY" == 4 ]]; then
 				echo -e "Installing XFCE..." 2>&1 | logc
 				installxinitrc
 				installxfce && installdmenu && installst && installslock && installsurf
 				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "XFCE installed" 2>&1 | logc
 				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 4 ]]; then
+			elif [[ "$REPLY" == 5 ]]; then
 				echo -e "Installing GNOME..." 2>&1 | logc
 				installgnome && installdmenu && installst && installsurf
 				echo -e "GNOME installed" 2>&1 | logc
 				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 5 ]]; then
+			elif [[ "$REPLY" == 6 ]]; then
 				echo -e "Installing KDE/Plasma..." 2>&1 | logc
 				installkdeplasma && installdmenu && installst && installsurf
 				echo -e "KDE/Plasma installed" 2>&1 | logc
