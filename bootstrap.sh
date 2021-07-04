@@ -344,8 +344,10 @@ if [[ ! -h /etc/arch-release ]]; then
 		sudo pacman --noconfirm --needed -S bspwm sxhkd 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S polybar 2>&1 | lognoc
 		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
-		ln -sf "$dfloc"/config/bspwm "$HOME"/.config/ > /dev/null 2>&1
-		ln -sf "$dfloc"/config/sxhkd "$HOME"/.config/ > /dev/null 2>&1
+		if [[ ! -d "$HOME"/.config/bspwm ]]; then mkdir -pv "$HOME"/.config/bspwm > /dev/null 2>&1 ; fi
+		if [[ ! -d "$HOME"/.config/sxhkd ]]; then mkdir -pv "$HOME"/.config/sxhkd > /dev/null 2>&1 ; fi
+		ln -sf "$dfloc"/config/bspwm/* "$HOME"/.config/bspwm/ > /dev/null 2>&1
+		ln -sf "$dfloc"/config/sxhkd/sxhkdrc "$HOME"/.config/sxhkd/ > /dev/null 2>&1
 	}
 	installopenbox(){
 		sudo pacman --noconfirm --needed -S openbox menumaker tint2 2>&1 | lognoc
