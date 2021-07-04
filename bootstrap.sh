@@ -272,11 +272,11 @@ if [[ ! -h /etc/arch-release ]]; then
 		esac
 	}
 	setupkeyring(){
-		if ! grep '^auth[ \t]*optional[ \t]*pam_gnome_keyring.so$' /etc/pam.d/login; then
-			sudo awk -i inplace 'FNR==NR{ if (/auth/) p=NR; next} 1; FNR==p{ print "auth       optional     pam_gnome_keyring.so" }' /etc/pam.d/login /etc/pam.d/login
+		if ! grep '^auth[ \t]*optional[ \t]*pam_gnome_keyring.so$' /etc/pam.d/login > /dev/null 2>&1; then
+			sudo awk -i inplace 'FNR==NR{ if (/auth/) p=NR; next} 1; FNR==p{ print "auth       optional     pam_gnome_keyring.so" }' /etc/pam.d/login /etc/pam.d/login 2>&1 | lognoc
 		fi
-		if ! grep '^session[ \t]*optional[ \t]*pam_gnome_keyring.so auto_start$' /etc/pam.d/login; then
-			sudo awk -i inplace 'FNR==NR{ if (/session/) p=NR; next} 1; FNR==p{ print "session    optional     pam_gnome_keyring.so auto_start" }' /etc/pam.d/login /etc/pam.d/login
+		if ! grep '^session[ \t]*optional[ \t]*pam_gnome_keyring.so auto_start$' /etc/pam.d/login > /dev/null 2>&1; then
+			sudo awk -i inplace 'FNR==NR{ if (/session/) p=NR; next} 1; FNR==p{ print "session    optional     pam_gnome_keyring.so auto_start" }' /etc/pam.d/login /etc/pam.d/login 2>&1 | lognoc
 		fi
 	}
 	setupcompositor(){
