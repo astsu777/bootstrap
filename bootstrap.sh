@@ -347,7 +347,7 @@ if [[ ! -h /etc/arch-release ]]; then
 		if [[ ! -d "$HOME"/.config/bspwm ]]; then mkdir -pv "$HOME"/.config/bspwm > /dev/null 2>&1 ; fi
 		if [[ ! -d "$HOME"/.config/sxhkd ]]; then mkdir -pv "$HOME"/.config/sxhkd > /dev/null 2>&1 ; fi
 		ln -sf "$dfloc"/config/bspwm/* "$HOME"/.config/bspwm/ > /dev/null 2>&1
-		ln -sf "$dfloc"/config/sxhkd/sxhkdrc "$HOME"/.config/sxhkd/ > /dev/null 2>&1
+		ln -sf "$dfloc"/config/sxhkd/* "$HOME"/.config/sxhkd/ > /dev/null 2>&1
 	}
 	installopenbox(){
 		sudo pacman --noconfirm --needed -S openbox menumaker tint2 2>&1 | lognoc
@@ -1425,6 +1425,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/dunst/dunstrc "$HOME"/.old-dotfiles/dunstrc > /dev/null 2>&1
 				mv "$HOME"/.config/rofi/config.rasi "$HOME"/.old-dotfiles/rofi-config.rasi > /dev/null 2>&1
 				mv "$HOME"/.config/sxhkd/sxhkdrc "$HOME"/.old-dotfiles/sxhkdrc > /dev/null 2>&1
+				mv "$HOME"/.config/sxhkd/sxhkdrc_bspwm "$HOME"/.old-dotfiles/sxhkdrc_bspwm > /dev/null 2>&1
 				mv "$HOME"/.config/amfora/config.toml "$HOME"/.old-dotfiles/amfora.toml > /dev/null 2>&1
 				mv "$HOME"/.config/qutebrowser/config.py "$HOME"/.old-dotfiles/qutebrowser.py > /dev/null 2>&1
 				mv "$HOME"/.config/ytfzf/config.sh "$HOME"/.old-dotfiles/ytfzf-conf.sh > /dev/null 2>&1
@@ -1472,6 +1473,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/dunst/dunstrc
 				rm -Rf "$HOME"/.config/rofi/config.rasi
 				rm -Rf "$HOME"/.config/sxhkd/sxhkdrc
+				rm -Rf "$HOME"/.config/sxhkd/sxhkdrc_bspwm
 				rm -Rf "$HOME"/.config/amfora/config.toml
 				rm -Rf "$HOME"/.config/qutebrowser/config.py
 				rm -Rf "$HOME"/.config/ytfzf/config.sh
@@ -1674,7 +1676,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.config/sxhkd ]]; then
 				mkdir -pv "$HOME"/.config/sxhkd 2>&1 | lognoc
 			fi
-			ln -sf "$dfloc"/config/sxhkd/sxhkdrc "$HOME"/.config/sxhkd/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/sxhkd/* "$HOME"/.config/sxhkd/ 2>&1 | lognoc
 		fi
 		if type amfora > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/amfora ]]; then
