@@ -1430,7 +1430,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/sxhkd/sxhkdrc_bspwm "$HOME"/.old-dotfiles/sxhkdrc_bspwm > /dev/null 2>&1
 				mv "$HOME"/.config/amfora/config.toml "$HOME"/.old-dotfiles/amfora.toml > /dev/null 2>&1
 				mv "$HOME"/.config/qutebrowser/config.py "$HOME"/.old-dotfiles/qutebrowser.py > /dev/null 2>&1
-				mv "$HOME"/.config/ytfzf/config.sh "$HOME"/.old-dotfiles/ytfzf-conf.sh > /dev/null 2>&1
 				mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
 				if [[ -d "$HOME"/.moc ]]; then mv "$HOME"/.moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; else mv "$HOME"/.config/moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; fi
 				break
@@ -1478,7 +1477,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/sxhkd/sxhkdrc_bspwm
 				rm -Rf "$HOME"/.config/amfora/config.toml
 				rm -Rf "$HOME"/.config/qutebrowser/config.py
-				rm -Rf "$HOME"/.config/ytfzf/config.sh
 				rm -Rf "$HOME"/.jwmrc
 				if [[ -d "$HOME"/.moc ]]; then rm -Rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
 				break
@@ -1607,12 +1605,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.w3m 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
-		fi
-		if type ytfzf > /dev/null 2>&1; then
-			if [[ ! -d "$HOME"/.config/ytfzf ]]; then
-				mkdir -pv "$HOME"/.config/ytfzf 2>&1 | lognoc
-			fi
-			ln -sf "$dfloc"/config/ytfzf/conf.sh "$HOME"/.config/ytfzf/ 2>&1 | lognoc
 		fi
 		if type surfraw > /dev/null 2>&1 || type sr > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/surfraw ]]; then
