@@ -17,7 +17,6 @@ A,syslog-ng
 A,ueberzug
 A,xorg-server-xephyr
 A,xsel
-AC,discord
 AD,ufw
 ADC,telegram-desktop
 ADR,arandr
