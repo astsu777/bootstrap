@@ -1722,24 +1722,30 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					echo -e "Installing GTK/QT theme..." 2>&1 | logc
-					# GTK 3 & 2
+					# GTK 2/3/4
+					if [[ ! -d "$HOME"/.config/gtk-2.0 ]]; then
+						mkdir -pv "$HOME"/.config/gtk-2.0 2>&1 | lognoc
+					elif [[ -f "$HOME"/.config/gtk-2.0/gtkrc ]]; then
+						rm -Rf "$HOME"/.config/gtk-2.0/gtkrc
+					fi
 					if [[ ! -d "$HOME"/.config/gtk-3.0 ]]; then
 						mkdir -pv "$HOME"/.config/gtk-3.0 2>&1 | lognoc
 					elif [[ -f "$HOME"/.config/gtk-3.0/settings.ini ]]; then
 						rm -Rf "$HOME"/.config/gtk-3.0/settings.ini
 					fi
-					if [[ ! -d "$HOME"/.config/gtk-2.0 ]]; then
-						mkdir -pv "$HOME"/.config/gtk-2.0 2>&1 | lognoc
-					elif [[ -f "$HOME"/.config/gtk-2.0/gtkrc ]]; then
-						rm -Rf "$HOME"/.config/gtk-2.0/gtkrc
+					if [[ ! -d "$HOME"/.config/gtk-4.0 ]]; then
+						mkdir -pv "$HOME"/.config/gtk-4.0 2>&1 | lognoc
+					elif [[ -f "$HOME"/.config/gtk-4.0/settings.ini ]]; then
+						rm -Rf "$HOME"/.config/gtk-4.0/settings.ini
 					fi
 					if [[ ! -d "$HOME"/.icons ]]; then
 						mkdir -pv "$HOME"/.icons/default 2>&1 | lognoc
 					elif [[ -f "$HOME"/.icons/default/index.theme ]]; then
 						rm -Rf "$HOME"/.icons/default/index.theme
 					fi
-					ln -sf "$dfloc"/config/gtk-3.0/settings.ini "$HOME"/.config/gtk-3.0/ 2>&1 | lognoc
 					ln -sf "$dfloc"/config/gtk-2.0/gtkrc "$HOME"/.config/gtk-2.0/ 2>&1 | lognoc
+					ln -sf "$dfloc"/config/gtk-3.0/settings.ini "$HOME"/.config/gtk-3.0/ 2>&1 | lognoc
+					ln -sf "$dfloc"/config/gtk-3.0/settings.ini "$HOME"/.config/gtk-4.0/ 2>&1 | lognoc
 					ln -sf "$dfloc"/icons/default/index.theme "$HOME"/.icons/default/ 2>&1 | lognoc
 					if type pcmanfm > /dev/null 2>&1; then
 						if [[ ! -d "$HOME"/.config/libfm ]]; then
