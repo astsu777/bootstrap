@@ -223,6 +223,8 @@ if type pacman > /dev/null 2>&1; then
 		sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
 		sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
 		fi
+		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
+		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
 	}
 fi
 
