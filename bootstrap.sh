@@ -34,9 +34,6 @@ applist="https://raw.githubusercontent.com/GSquad934/bootstrap/master/apps.csv"
 mononoki_regular="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf"
 mononoki_bold="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Bold/complete/mononoki%20Bold%20Nerd%20Font%20Complete.ttf"
 mononoki_italic="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Italic/complete/mononoki%20Italic%20Nerd%20Font%20Complete.ttf"
-jetbrainsmono_regular="https://github.com/JetBrains/JetBrainsMono/blob/master/fonts/ttf/JetBrainsMono-Regular.ttf"
-jetbrainsmono_bold="https://github.com/JetBrains/JetBrainsMono/blob/master/fonts/ttf/JetBrainsMono-Bold.ttf"
-jetbrainsmono_italic="https://github.com/JetBrains/JetBrainsMono/blob/master/fonts/ttf/JetBrainsMono-Italic.ttf"
 powerline_fonts="https://github.com/powerline/fonts"
 
 # TMUX Plugins
@@ -740,17 +737,11 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; t
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_regular" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_bold" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$jetbrainsmono_italic" 2>&1 | lognoc
 				elif type curl > /dev/null 2>&1; then
 					cd "$HOME"/fonts || exit
 					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
 					curl -fSLO "$mononoki_bold" 2>&1 | lognoc
 					curl -fSLO "$mononoki_italic" 2>&1 | lognoc
-					curl -fSLO "$jetbrainsmono_regular" 2>&1 | lognoc
-					curl -fSLO "$jetbrainsmono_bold" 2>&1 | lognoc
-					curl -fSLO "$jetbrainsmono_italic" 2>&1 | lognoc
 					for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
 				fi
 				if [[ "$OSTYPE" == "darwin"* ]]; then

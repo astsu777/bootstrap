@@ -72,9 +72,15 @@ ADRX,xclip
 ADX,xdo
 AR,nextcloud-client
 AX,nerd-fonts-jetbrains-mono
+AX,noto-fonts
+AX,noto-fonts-emoji
+AX,noto-fonts-emoji
 AX,pulsemixer
+AX,ttf-dejavu
+AX,ttf-droid
 AX,ttf-jetbrains-mono
 AX,ttf-joypixels
+AX,ttf-liberation
 AX,xdg-user-dirs
 C,amethyst
 C,cyberduck
