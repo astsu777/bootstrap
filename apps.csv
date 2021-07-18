@@ -158,8 +158,8 @@ R,Atomicparsley
 R,bind-utils
 R,jetbrains-mono-fonts
 R,perl-App-cpanminus
+R,ytop
 RY,plex-media-player
-RY,ytop
 S,1116599239 nordvpn ike
 S,1233048948 boom 3d
 S,1452453066 hidden bar
@@ -278,3 +278,4 @@ Y,mailspring-libre
 Y,spotify
 Y,tuir
 Y,ytfzf
+Y,ytop-bin
