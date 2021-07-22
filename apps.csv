@@ -154,11 +154,11 @@ MADRI,tmux
 MDRY,task-spooler
 MDRY,urlview
 MY,ccat
+MY,gotop-bin
 R,Atomicparsley
 R,bind-utils
 R,jetbrains-mono-fonts
 R,perl-App-cpanminus
-R,ytop
 RY,plex-media-player
 S,1116599239 nordvpn ike
 S,1233048948 boom 3d
@@ -279,4 +279,3 @@ Y,spotify
 Y,ttf-ms-win10-auto
 Y,tuir
 Y,ytfzf
-Y,ytop-bin
