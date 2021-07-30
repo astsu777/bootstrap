@@ -1,7 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#===================================================
+# Author: Gaetan (gaetan@ictpourtous.com)
+# Creation: Sun Mar 2020 19:49:21
+# Last modified: Fri Jul 2021 08:51:44
+# Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
 # Compatibility: it works for both macOS and Linux
+#===================================================
 
 #=============
 # Global Variables
@@ -1411,7 +1417,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/wget "$HOME"/.old-dotfiles/wget > /dev/null 2>&1
 				mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
 				mv "$HOME"/.config/kitty "$HOME"/.old-dotfiles/kitty > /dev/null 2>&1
-				mv "$HOME"/.w3m "$HOME"/.old-dotfiles/w3m > /dev/null 2>&1
 				mv "$HOME"/.config/surfraw/conf "$HOME"/.old-dotfiles/surfraw > /dev/null 2>&1
 				mv "$HOME"/.config/newsboat/config "$HOME"/.old-dotfiles/newsboat-config > /dev/null 2>&1
 				mv "$HOME"/.config/newsboat/urls "$HOME"/.old-dotfiles/newsboat-urls > /dev/null 2>&1
@@ -1424,6 +1429,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/amfora/config.toml "$HOME"/.old-dotfiles/amfora.toml > /dev/null 2>&1
 				mv "$HOME"/.config/qutebrowser/config.py "$HOME"/.old-dotfiles/qutebrowser.py > /dev/null 2>&1
 				mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
+				mv "$HOME"/.links "$HOME"/.old-dotfiles/links > /dev/null 2>&1
 				if [[ -d "$HOME"/.moc ]]; then mv "$HOME"/.moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; else mv "$HOME"/.config/moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; fi
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -1447,7 +1453,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/wget
 				rm -Rf "$HOME"/.config/alacritty
 				rm -Rf "$HOME"/.config/kitty
-				rm -Rf "$HOME"/.w3m
+				rm -Rf "$HOME"/.links
 				rm -Rf "$HOME"/.config/surfraw/conf
 				rm -Rf "$HOME"/.config/newsboat/config
 				rm -Rf "$HOME"/.config/newsboat/urls
@@ -1593,11 +1599,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
 			fi
 		fi
-		if type w3m > /dev/null 2>&1; then
-			if [[ ! -d "$HOME"/.w3m ]]; then
-				mkdir -pv "$HOME"/.w3m 2>&1 | lognoc
+		if type links > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.links ]]; then
+				mkdir -pv "$HOME"/.links 2>&1 | lognoc
 			fi
-			ln -sf "$dfloc"/w3m/config "$HOME"/.w3m/config 2>&1 | lognoc
+			ln -sf "$dfloc"/links/links.cfg "$HOME"/.links/links.cfg 2>&1 | lognoc
+			ln -sf "$dfloc"/links/html.cfg "$HOME"/.links/html.cfg 2>&1 | lognoc
 		fi
 		if type surfraw > /dev/null 2>&1 || type sr > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/surfraw ]]; then

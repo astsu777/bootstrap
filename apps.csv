@@ -120,6 +120,7 @@ MADR,git
 MADR,grep
 MADR,kitty
 MADR,lame
+MADR,links
 MADR,mpv
 MADR,neovim
 MADR,newsboat
@@ -137,7 +138,6 @@ MADR,shellcheck
 MADR,surfraw
 MADR,transmission-cli
 MADR,tree
-MADR,w3m
 MADR,watch
 MADR,weechat
 MADR,wget
