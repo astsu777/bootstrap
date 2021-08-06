@@ -18,6 +18,7 @@ This repository hosts a *BASH* bootstrap script that can be used to setup workst
 * Clean output to the console, but all operations are logged to a log file
 * On a bare Arch Linux installation, deploy necessary packages for a GUI & (optional) deploy a GUI environment (WM & DE)
 * When installing a GUI environment, offers the choice to login via *Xinit* (text mode) or with *LightDM*
+* Deploy custom theme for CLI applications, but also proposes Gruvbox as an alternative
 * Deploy custom GTK/QT theme for GUI applications
 
 ⚠️ **This script should not be used to setup a server!** Please use a proper automation framework such as [Ansible](https://www.ansible.com/) to do so.
