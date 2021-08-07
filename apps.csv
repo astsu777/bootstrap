@@ -30,6 +30,7 @@ ADR,gparted
 ADR,libreoffice
 ADR,logrotate
 ADR,lsof
+ADR,maim
 ADR,man-db
 ADR,man-pages
 ADR,mlocate
