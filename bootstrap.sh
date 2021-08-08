@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun Aug 2021 14:52:50
+# Last modified: Sun Aug 2021 15:06:20
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1731,14 +1731,14 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 					fi
 					# BSPWM
 					if [[ -f "$HOME"/.config/bspwm/bspwmrc ]]; then
-						sed -i '/^bspc config active_border_color/c bspc config active_border_color \\#282828' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
-						sed -i '/^bspc config normal_border_color/c bspc config normal_border_color \\#282828' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
-						sed -i '/^bspc config focused_border_color/c bspc config focused_border_color \\#79520e' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
+						sed -i --follow-symlinks '/^bspc config active_border_color/c bspc config active_border_color \\#282828' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
+						sed -i --follow-symlinks '/^bspc config normal_border_color/c bspc config normal_border_color \\#282828' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
+						sed -i --follow-symlinks '/^bspc config focused_border_color/c bspc config focused_border_color \\#79520e' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
 					fi
 					if [[ -f "$HOME"/.config/bspwm/polybar.config ]]; then
-						sed -i '/^background =/c background = #282828' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
-						sed -i '/^foreground =/c foreground = #acacac' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
-						sed -i '/^primary =/c primary = #c98918' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
+						sed -i --follow-symlinks '/^background = #/c background = #282828' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
+						sed -i --follow-symlinks '/^foreground = #/c foreground = #acacac' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
+						sed -i --follow-symlinks '/^primary = #/c primary = #c98918' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
 					fi
 					# DWM
 					if [[ -f "$dwmloc"/config.h ]]; then
