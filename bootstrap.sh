@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri Aug 2021 13:15:56
+# Last modified: Sun Aug 2021 12:16:11
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1210,7 +1210,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Installing power management software..." 2>&1 | logc
-				sudo pacman -S tlp xfce4-power-manager --needed --noconfirm 2>&1 | lognoc
+				sudo pacman -S tlp xfce4-power-manager powertop --needed --noconfirm 2>&1 | lognoc
 				sudo systemctl enable tlp 2>&1 | lognoc
 				sudo systemctl enable upower 2>&1 | lognoc
 				echo -e "Power management software installed" 2>&1 | logc
