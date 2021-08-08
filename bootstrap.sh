@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun Aug 2021 15:06:20
+# Last modified: Sun Aug 2021 15:18:02
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1720,11 +1720,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			while read -p "Do you want to use the Gruvbox theme? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Installing Gruvbox theme..." 2>&1 | logc
 					# VIM
 					if [[ -f "$HOME"/.vimrc ]]; then
 						sed -i --follow-symlinks 's/^colorscheme kuroi/colorscheme gruvbox-material/' "$HOME"/.vimrc 2>&1 | lognoc
 						sed -i --follow-symlinks "s/^let g:lightline = {'colorscheme': 'jellybeans'}/let g:lightline = {'colorscheme': 'gruvbox_material'}/" "$HOME"/.vimrc 2>&1 | lognoc
-						if ! grep "^\sPlug 'sainnhe/gruvbox-material" "$HOME"/.vimrc > /dev/null 2>&1; then
+						if ! grep "^\s*Plug 'sainnhe/gruvbox-material'" "$HOME"/.vimrc > /dev/null 2>&1; then
 							sed -i --follow-symlinks "/^call plug#begin/a \ \ \ \ \"\" Colorscheme" "$HOME"/.vimrc 2>&1 | lognoc
 							sed -i --follow-symlinks "/\"\" Colorscheme/a \ \ \ \ Plug 'sainnhe\/gruvbox-material'" "$HOME"/.vimrc 2>&1 | lognoc
 						fi
@@ -1750,15 +1751,13 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 						sudo sed -i '/^static const char col_border\[\]/c static const char col_border\[\]\ \ \ \ \ \ \ = "#79520e";' "$dwmloc"/config.h 2>&1 | lognoc
 						sudo make -C "$dwmloc" clean install > /dev/null 2>&1
 					fi
+					echo -e "Gruvbox theme installed" 2>&1 | logc
 					break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
 					break
 				fi
 			done
-			echo -e "Gruvbox theme installed" 2>&1 | logc
 			echo -e 2>&1 | logc
-			break
 		fi
 
 		# Install GTK config files if no DE is detected
@@ -1823,7 +1822,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
 					break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
 					break
 				fi
 			done
