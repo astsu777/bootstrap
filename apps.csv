@@ -48,6 +48,7 @@ ADR,obs-studio
 ADR,python
 ADR,python-pip
 ADR,rofi
+ADR,ruby
 ADR,smbclient
 ADR,sxhkd
 ADR,sxiv
