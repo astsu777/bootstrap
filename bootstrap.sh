@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun Aug 2021 15:18:02
+# Last modified: Sun Aug 2021 16:11:04
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1723,8 +1723,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 					echo -e "Installing Gruvbox theme..." 2>&1 | logc
 					# VIM
 					if [[ -f "$HOME"/.vimrc ]]; then
-						sed -i --follow-symlinks 's/^colorscheme kuroi/colorscheme gruvbox-material/' "$HOME"/.vimrc 2>&1 | lognoc
-						sed -i --follow-symlinks "s/^let g:lightline = {'colorscheme': 'jellybeans'}/let g:lightline = {'colorscheme': 'gruvbox_material'}/" "$HOME"/.vimrc 2>&1 | lognoc
+						sed -i --follow-symlinks '/^colorscheme kuroi/c colorscheme gruvbox-material' "$HOME"/.vimrc 2>&1 | lognoc
+						sed -i --follow-symlinks "/^let g:lightline = {'colorscheme'/c let g:lightline = {'colorscheme': 'gruvbox_material'}" "$HOME"/.vimrc 2>&1 | lognoc
 						if ! grep "^\s*Plug 'sainnhe/gruvbox-material'" "$HOME"/.vimrc > /dev/null 2>&1; then
 							sed -i --follow-symlinks "/^call plug#begin/a \ \ \ \ \"\" Colorscheme" "$HOME"/.vimrc 2>&1 | lognoc
 							sed -i --follow-symlinks "/\"\" Colorscheme/a \ \ \ \ Plug 'sainnhe\/gruvbox-material'" "$HOME"/.vimrc 2>&1 | lognoc
