@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun Aug 2021 14:46:11
+# Last modified: Sun Aug 2021 14:52:50
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
