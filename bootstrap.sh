@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun Aug 2021 16:11:04
+# Last modified: Tue Aug 2021 11:19:10
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -72,6 +72,18 @@ logfile="$HOME/bootstrap_log_$date.txt"
 logc(){ tee -a "$logfile" ;}
 lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
 
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	if type systemctl >> /dev/null 2>&1; then
+		initSystem="systemd"
+		enableSvc() { sudo systemctl enable "$1" ;}
+		startSvc() { sudo systemctl start "$1" ;}
+	elif type rc-update >> /dev/null 2>&1; then
+		initSystem="openrc"
+		enableSvc() { sudo rc-update add "$1" ;}
+		startSvc() { sudo rc-service "$1" start ;}
+	fi
+fi
+
 if type brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
@@ -90,6 +102,12 @@ if type brew > /dev/null 2>&1; then
 	}
 	installvirtualbox(){ brew update 2>&1 | lognoc && brew install --cask virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 elif type apt-get > /dev/null 2>&1; then
+	if [[ "$initSystem" == "openrc" ]]; then
+		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
+		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
+		installopenrcpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
+		installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+	fi
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
@@ -106,10 +124,17 @@ elif type apt-get > /dev/null 2>&1; then
 	}
 	installkvm(){
 		sudo apt-get update 2>&1 | lognoc && sudo apt-get install ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager -y 2>&1 | lognoc
-		sudo systemctl enable libvirtd.service 2>&1 | lognoc && sudo systemctl start libvirtd.service 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then sudo apt-get install libvirt-openrc -y 2>&1 | lognoc; fi
+		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
 	}
 elif type yum > /dev/null 2>&1; then
+	if [[ "$initSystem" == "openrc" ]]; then
+		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
+		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
+		installopenrcpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
+		installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+	fi
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
@@ -126,9 +151,16 @@ elif type yum > /dev/null 2>&1; then
 	}
 	installkvm(){
 		sudo yum update -y 2>&1 | lognoc && sudo yum install dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables -y 2>&1 | lognoc
-		sudo systemctl enable libvirtd.service 2>&1 | lognoc && sudo systemctl start libvirtd.service 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then sudo yum install libvirt-openrc -y 2>&1 | lognoc; fi
+		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 elif type pacman yay > /dev/null 2>&1; then
+	if [[ "$initSystem" == "openrc" ]]; then
+		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
+		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
+		installopenrcpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
+		installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+	fi
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
@@ -151,9 +183,16 @@ elif type pacman yay > /dev/null 2>&1; then
 		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
-		sudo systemctl enable libvirtd.service 2>&1 | lognoc && sudo systemctl start libvirtd.service 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S libvirt-openrc --needed --noconfirm --ask 4 2>&1 | lognoc; fi
+		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 elif type pacman > /dev/null 2>&1; then
+	if [[ "$initSystem" == "openrc" ]]; then
+		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
+		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
+		installopenrcpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
+		installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+	fi
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
@@ -173,7 +212,8 @@ elif type pacman > /dev/null 2>&1; then
 		sudo sed -i 's/^#unix_sock_group/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_rw_perms/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
-		sudo systemctl enable libvirtd.service 2>&1 | lognoc && sudo systemctl start libvirtd.service 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S libvirt-openrc --needed --noconfirm --ask 4 2>&1 | lognoc; fi
+		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 fi
 
@@ -228,6 +268,26 @@ if type pacman > /dev/null 2>&1; then
 		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
 		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
 	}
+	if [[ -f /etc/artix-release ]]; then
+		# Arch Linux repos for Artix
+		setuparchrepos(){
+			sudo pacman -S --needed --noconfirm artix-archlinux-support 2>&1 | lognoc
+			sudo pacman-key --populate archlinux 2>&1 | lognoc
+			if ! grep '^Include = \/etc\/pacman\.d\/mirrorlist-arch' /etc/pacman.conf > /dev/null 2>&1; then
+				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
+				# ARCHLINUX REPOS
+				[extra]
+				Include = /etc/pacman.d/mirrorlist-arch
+
+				[community]
+				Include = /etc/pacman.d/mirrorlist-arch
+
+				#[multilib]
+				#Include = /etc/pacman.d/mirrorlist-arch
+				EOF
+			fi
+		}
+	fi
 fi
 
 if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
@@ -262,7 +322,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 	fi
 fi
 
-if [[ ! -h /etc/arch-release ]]; then
+if [[ -f /etc/arch-release ]]; then
 	grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
 	installxpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 	# TEMP until the library is fixed
@@ -302,6 +362,7 @@ if [[ ! -h /etc/arch-release ]]; then
 	}
 	installgreeter(){
 		sudo pacman -S --needed --noconfirm lightdm lightdm-gtk-greeter 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S --needed --noconfirm --ask 4 lightdm-openrc 2>&1 | lognoc; fi
 		if [[ -f "$HOME"/.xprofile ]]; then
 			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     		mv "$HOME"/.xprofile "$HOME"/.xprofile.orig > /dev/null 2>&1
@@ -311,7 +372,7 @@ if [[ ! -h /etc/arch-release ]]; then
     		ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.xprofile 2>&1 | lognoc
 		fi
 		sudo cp -f "$dfloc"/config/X11/lightdm/* /etc/lightdm/ 2>&1 | lognoc
-		if [[ -f "$HOME"/.xprofile ]]; then sudo systemctl enable lightdm 2>&1 | lognoc ; fi
+		if [[ -f "$HOME"/.xprofile ]]; then enableSvc lightdm 2>&1 | lognoc ; fi
 	}
 	installdwm(){
 		if [[ -d "$dwmloc" ]]; then sudo rm -Rf "$dwmloc" > /dev/null 2>&1 ; fi
@@ -383,7 +444,8 @@ if [[ ! -h /etc/arch-release ]]; then
 	installgnome(){
 		sudo pacman -S gnome gnome-tweaks --needed --noconfirm 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
-		sudo systemctl enable gdm -f 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S --noconfirm --needed --ask 4 gdm-openrc 2>&1 | lognoc; fi
+		enableSvc gdm -f 2>&1 | lognoc
 		while read -p "Do you want to install extra applications for GNOME (email client, Web browser, etc...)? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -400,8 +462,9 @@ if [[ ! -h /etc/arch-release ]]; then
 	installkdeplasma(){
 		sudo pacman -S plasma-desktop sddm sddm-kcm --needed --noconfirm 2>&1 | lognoc
 		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S --noconfirm --needed --ask 4 sddm-openrc 2>&1 | lognoc; fi
 		installdmenu && installst && installsurf
-		sudo systemctl enable sddm -f 2>&1 | lognoc
+		enableSvc sddm -f 2>&1 | lognoc
 		while read -p "Do you want to install the KDE applications? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1010,19 +1073,19 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" 
 			if type updatedb > /dev/null 2>&1; then	sudo updatedb 2>&1 | lognoc; fi
 
 			# Enable services at boot
-			if type docker > /dev/null 2>&1; then sudo systemctl enable docker 2>&1 | lognoc; fi
-			if type containerd > /dev/null 2>&1; then sudo systemctl enable containerd 2>&1 | lognoc; fi
-			if type teamviewer > /dev/null 2>&1; then sudo systemctl enable teamviewerd 2>&1 | lognoc; fi
-			if type nmtui > /dev/null 2>&1; then sudo systemctl enable NetworkManager 2>&1 | lognoc; fi
-			if type ntpd > /dev/null 2>&1; then sudo systemctl enable ntpd 2>&1 | lognoc; fi
-			sudo systemctl enable systemd-timesyncd 2>&1 | lognoc
-			if type avahi-daemon > /dev/null 2>&1; then sudo systemctl enable avahi-daemon 2>&1 | lognoc; fi
-			if type cupsd > /dev/null 2>&1; then sudo systemctl enable cups 2>&1 | lognoc; fi
-			if type crond > /dev/null 2>&1; then sudo systemctl enable cronie 2>&1 | lognoc; fi
-			if type pritunl-client > /dev/null 2>&1; then sudo systemctl enable pritunl-client 2>&1 | lognoc; fi
-			if type syslog-ng > /dev/null 2>&1; then sudo systemctl enable syslog-ng@default.service 2>&1 | lognoc; fi
+			if type docker > /dev/null 2>&1; then enableSvc docker 2>&1 | lognoc; fi
+			if type containerd > /dev/null 2>&1; then enableSvc containerd 2>&1 | lognoc; fi
+			if type teamviewer > /dev/null 2>&1; then enableSvc teamviewerd 2>&1 | lognoc; fi
+			if type nmtui > /dev/null 2>&1; then enableSvc NetworkManager 2>&1 | lognoc; fi
+			if type ntpd > /dev/null 2>&1; then enableSvc ntpd 2>&1 | lognoc; fi
+			if [[ "$initSystem" == "systemd" ]]; then enableSvc systemd-timesyncd 2>&1 | lognoc; fi
+			if type avahi-daemon > /dev/null 2>&1; then enableSvc avahi-daemon 2>&1 | lognoc; fi
+			if type cupsd > /dev/null 2>&1; then enableSvc cups 2>&1 | lognoc; fi
+			if type crond > /dev/null 2>&1; then enableSvc cronie 2>&1 | lognoc; fi
+			if type pritunl-client > /dev/null 2>&1; then enableSvc pritunl-client 2>&1 | lognoc; fi
+			if type syslog-ng > /dev/null 2>&1; then enableSvc syslog-ng@default 2>&1 | lognoc; fi
 			if [ -f /usr/bin/ufw ]; then sudo /usr/bin/ufw enable 2>&1 | lognoc; fi
-			sudo systemctl enable bluetooth 2>&1 | lognoc
+			enableSvc bluetooth 2>&1 | lognoc
 
 			# Add current to 'wireshark' group if need be
 			if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
@@ -1046,7 +1109,7 @@ fi
 #=====================
 # Arch Linux - GUI Requirements
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ ! -h /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -f /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
 	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1070,7 +1133,7 @@ fi
 #=====================
 # Arch Linux - DE/WM Installation
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ ! -h /etc/arch-release ]] && type Xorg > /dev/null 2>&1; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] && type Xorg > /dev/null 2>&1; then
 while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1204,22 +1267,22 @@ fi
 # 22 Storage Chassis
 # 23 Rack Mount Chassis
 # 24 Sealed-Case PC
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ ! -h /etc/arch-release ]] && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
 	if type tlp > /dev/null 2>&1; then
 		while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Installing power management software..." 2>&1 | logc
 				sudo pacman -S tlp xfce4-power-manager powertop --needed --noconfirm 2>&1 | lognoc
-				sudo systemctl enable tlp 2>&1 | lognoc
-				sudo systemctl enable upower 2>&1 | lognoc
+				enableSvc tlp 2>&1 | lognoc
+				enableSvc upower 2>&1 | lognoc
 				echo -e "Power management software installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 				if [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]] && [[ $(cat /sys/class/dmi/id/chassis_version) =~ ^Mac ]]; then
 					echo -e "[MACBOOK DETECTED] Configuring hardware..." 2>&1 | logc
 					# Program to use the ambient light sensor
 					yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S macbook-lighter 2>&1 | lognoc
-					sudo systemctl enable macbook-lighter 2>&1 | lognoc
+					enableSvc macbook-lighter 2>&1 | lognoc
 				 	# Install proper Broadcom WiFi drivers for BCM43
 				 	if lspci | grep BCM43 > /dev/null ; then
 				 		sudo pacman -S linux-headers --needed --noconfirm 2>&1 | lognoc

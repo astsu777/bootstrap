@@ -1,5 +1,5 @@
 # TAG, PROGRAM
-# Tags: W=Work, M=macOS brew, A=Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools,
+# Tags: W=Work, M=macOS brew, A=Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools, O=OpenRC
 # Y=Yay, G=Git Repo, X=Arch Xorg
 A,amfora
 A,base-devel
@@ -159,6 +159,12 @@ MDRY,task-spooler
 MDRY,urlview
 MY,ccat
 MY,gotop-bin
+O,avahi-openrc
+O,bluez-openrc
+O,docker-openrc
+O,networkmanager-openrc
+O,ntp-openrc
+O,syslog-ng-openrc
 R,Atomicparsley
 R,bind-utils
 R,jetbrains-mono-fonts
@@ -280,6 +286,6 @@ Y,cointop
 Y,hypnotix
 Y,mailspring-libre
 Y,spotify
-Y,ttf-ms-win10-auto
+#Y,ttf-ms-win10-auto
 Y,tuir
 Y,ytfzf

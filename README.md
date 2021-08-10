@@ -42,13 +42,16 @@ This script has been fully validated with the following systems:
 | OS | Compatibility | Comment |
 |:-:|:-:|:-|
 | macOS 10/11 (Big Sur) | ✅| Fully compatible |
-| Arch Linux & derivatives | ✅ | Fully compatible |
+| Arch Linux & SystemD derivatives | ✅ | Fully compatible |
+| Artix Linux & OpenRC derivatives | ✅ | Fully compatible |
 | Debian (+ distros based on it) | ✅ | Fully compatible |
 | Red Hat (+ distros based on it) | ✅ | Fully compatible |
 | BSD | ❌ | Not compatible yet |
 | Windows Subsystem for Linux (WSL) | ❗ | Graphical software won't install/work and dotfiles not behave as intended |
 
-Depending on the packages availability in the repositories, some software may be missing and/or not be compatible. Also, the script supports the following package managers for now:
+Depending on the packages availability in the repositories, some software may be missing and/or not be compatible. If your system is using *OpenRC*, some scripts may not be available for services. In that case, check the documentation.
+
+The script supports the following package managers for now:
 
 * APT (commands: **apt** and **apt-get**)
 * YUM aka *Yellowdog Update Modified* & DNF (commands: **yum** and **dnf**)
