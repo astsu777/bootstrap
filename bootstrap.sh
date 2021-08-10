@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 11:19:10
+# Last modified: Tue Aug 2021 11:53:15
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -322,7 +322,7 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' 
 	fi
 fi
 
-if [[ -f /etc/arch-release ]]; then
+if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
 	grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
 	installxpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 	# TEMP until the library is fixed
@@ -635,7 +635,7 @@ fi
 #======================
 # Arch Linux - Install AUR Helper (Requirement)
 #======================
-if [[ "$OSTYPE" == "linux-gnu" ]] && [[ -f /etc/arch-release ]] && ! type yay > /dev/null 2>&1; then
+if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -720,7 +720,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				greppkg && installpkg && installsent
-				if [[ -f /etc/arch-release ]] && type yay > /dev/null 2>&1; then
+				if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && type yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
 					grepgitrepo && installgitrepo
 				fi
@@ -771,7 +771,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				grepworkpkg && installworkpkg
-				if [[ -f /etc/arch-release ]] && type yay > /dev/null 2>&1; then
+				if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && type yay > /dev/null 2>&1; then
 					grepworkaurpkg && installworkaurpkg
 					grepworkgitrepo && installworkgitrepo
 				fi
@@ -1109,7 +1109,7 @@ fi
 #=====================
 # Arch Linux - GUI Requirements
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -f /etc/arch-release ]] && [[ "$TERM" == "linux" ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && [[ "$TERM" == "linux" ]]; then
 	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1133,7 +1133,7 @@ fi
 #=====================
 # Arch Linux - DE/WM Installation
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] && type Xorg > /dev/null 2>&1; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && type Xorg > /dev/null 2>&1; then
 while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1267,7 +1267,7 @@ fi
 # 22 Storage Chassis
 # 23 Rack Mount Chassis
 # 24 Sealed-Case PC
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
+if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
 	if type tlp > /dev/null 2>&1; then
 		while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
