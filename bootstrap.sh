@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 12:03:39
+# Last modified: Tue Aug 2021 12:06:26
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -270,23 +270,21 @@ if type pacman > /dev/null 2>&1; then
 	}
 	if [[ -f /etc/artix-release ]]; then
 		# Arch Linux repos for Artix
-		setuparchrepos(){
-			sudo pacman -S --needed --noconfirm artix-archlinux-support 2>&1 | lognoc
-			sudo pacman-key --populate archlinux 2>&1 | lognoc
-			if ! grep '^Include = \/etc\/pacman\.d\/mirrorlist-arch' /etc/pacman.conf > /dev/null 2>&1; then
-				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
-				# ARCHLINUX REPOS
-				[extra]
-				Include = /etc/pacman.d/mirrorlist-arch
+		sudo pacman -S --needed --noconfirm artix-archlinux-support 2>&1 | lognoc
+		sudo pacman-key --populate archlinux 2>&1 | lognoc
+		if ! grep '^Include = \/etc\/pacman\.d\/mirrorlist-arch' /etc/pacman.conf > /dev/null 2>&1; then
+			sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
+			# ARCHLINUX REPOS
+			[extra]
+			Include = /etc/pacman.d/mirrorlist-arch
 
-				[community]
-				Include = /etc/pacman.d/mirrorlist-arch
+			[community]
+			Include = /etc/pacman.d/mirrorlist-arch
 
-				#[multilib]
-				#Include = /etc/pacman.d/mirrorlist-arch
-				EOF
-			fi
-		}
+			#[multilib]
+			#Include = /etc/pacman.d/mirrorlist-arch
+			EOF
+		fi
 	fi
 fi
 
