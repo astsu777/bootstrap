@@ -1,6 +1,7 @@
 # TAG, PROGRAM
 # Tags: W=Work, M=macOS brew, A=Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools, O=OpenRC
 # Y=Yay, G=Git Repo, X=Arch Xorg
+#Y,ttf-ms-win10-auto
 A,amfora
 A,base-devel
 A,ca-certificates-mozilla
@@ -24,6 +25,7 @@ ADR,aspell
 ADR,audacity
 ADR,avahi
 ADR,ca-certificates
+ADR,chromium
 ADR,cifs-utils
 ADR,flameshot
 ADR,galculator
@@ -61,7 +63,6 @@ ADR,zathura
 ADR,zathura-djvu
 ADR,zathura-pdf-mupdf
 ADR,zathura-ps
-ADRC,chromium
 ADRC,gimp
 ADRC,inkscape
 ADRC,keepassxc
@@ -86,6 +87,7 @@ AX,ttf-jetbrains-mono
 AX,ttf-joypixels
 AX,xdg-user-dirs
 C,amethyst
+C,brave-browser
 C,cyberduck
 C,gpg-suite-no-mail
 C,keycastr
@@ -286,6 +288,5 @@ Y,cointop
 Y,hypnotix
 Y,mailspring-libre
 Y,spotify
-#Y,ttf-ms-win10-auto
 Y,tuir
 Y,ytfzf
