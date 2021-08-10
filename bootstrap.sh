@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 11:53:15
+# Last modified: Tue Aug 2021 12:03:39
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -290,7 +290,7 @@ if type pacman > /dev/null 2>&1; then
 	fi
 fi
 
-if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
+if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
 	if type apt-get > /dev/null 2>&1; then
 		if [[ "$EUID" = 0 ]]; then
@@ -635,7 +635,7 @@ fi
 #======================
 # Arch Linux - Install AUR Helper (Requirement)
 #======================
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
+if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -720,7 +720,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				greppkg && installpkg && installsent
-				if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && type yay > /dev/null 2>&1; then
+				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
 					grepgitrepo && installgitrepo
 				fi
@@ -771,7 +771,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				grepworkpkg && installworkpkg
-				if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && type yay > /dev/null 2>&1; then
+				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
 					grepworkaurpkg && installworkaurpkg
 					grepworkgitrepo && installworkgitrepo
 				fi
@@ -790,7 +790,7 @@ fi
 #=====================
 # Workstation - Install Fonts
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type git > /dev/null 2>&1; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type git > /dev/null 2>&1; then
 	while read -p "Do you want to install custom fonts? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -843,7 +843,7 @@ fi
 #=====================
 # Install TMUX Plugin Manager
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && type tmux > /dev/null 2>&1; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type tmux > /dev/null 2>&1; then
 	if [[ -d "$HOME"/.config/tmux/plugins/tpm ]]; then
 		while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
@@ -881,7 +881,7 @@ fi
 #======================
 # Install server packages
 #======================
-if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]]; then
+if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	while read -p "[SERVER SESSION DETECTED] Do you want to install useful tools? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -923,7 +923,7 @@ fi
 #=====================
 # macOS Workstation - Configuration
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]]; then
 	while read -p "Do you want to setup System Preferences? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1054,7 +1054,7 @@ fi
 #=====================
 # Linux Workstation - Configuration
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-gnu" ]]; then
 	while read -p "Do you want to configure preferences? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1109,7 +1109,7 @@ fi
 #=====================
 # Arch Linux - GUI Requirements
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && [[ "$TERM" == "linux" ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && [[ "$TERM" == "linux" ]]; then
 	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1133,7 +1133,7 @@ fi
 #=====================
 # Arch Linux - DE/WM Installation
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && type Xorg > /dev/null 2>&1; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type Xorg > /dev/null 2>&1; then
 while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1267,7 +1267,7 @@ fi
 # 22 Storage Chassis
 # 23 Rack Mount Chassis
 # 24 Sealed-Case PC
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
 	if type tlp > /dev/null 2>&1; then
 		while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
@@ -1308,7 +1308,7 @@ fi
 #=======================
 # Git Repositories
 #=======================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ -d "$gitrepoloc" ]]; then
 	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
 	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir -pv "$gitrepoloc/bin" 2>&1 | lognoc ; fi
 	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -sf '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
@@ -1320,7 +1320,7 @@ fi
 #=====================
 # Virtual Machines
 #=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && grep -E --color '(vmx|svm)' /proc/cpuinfo > /dev/null 2>&1; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && grep -E --color '(vmx|svm)' /proc/cpuinfo > /dev/null 2>&1; then
 	echo -e "Your computer supports the creation of virtual machines"
 	while read -p "Do you want to install the necessary software to create VMs? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
@@ -1341,7 +1341,7 @@ fi
 #=======================
 # Perl Dependencies
 #=======================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && type perl > /dev/null 2>&1; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ -d "$gitrepoloc" ]] && type perl > /dev/null 2>&1; then
 	echo -e "Installing Perl dependencies..." 2>&1 | logc
 	installperldeps
 	echo -e "Perl dependencies installed" 2>&1 | logc
@@ -1351,7 +1351,7 @@ fi
 #=======================
 # Python Dependencies
 #=======================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ -d "$gitrepoloc" ]] && type python > /dev/null 2>&1; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ -d "$gitrepoloc" ]] && type python > /dev/null 2>&1; then
 	echo -e "Installing Python dependencies..." 2>&1 | logc
 	installpythondeps
 	echo -e "Python dependencies installed" 2>&1 | logc
@@ -1362,7 +1362,7 @@ fi
 # Workstation - Shell & Prompt
 #=====================
 # Define ZSH as default prompt
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$SHELL" != *"zsh" ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$SHELL" != *"zsh" ]]; then
 	echo -e "Your current shell is \"$SHELL\""
 	while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
@@ -1779,7 +1779,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 
 		# Propose Gruvbox theme if not detected
-		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && ! grep "^colorscheme gruvbox-material" "$HOME"/.vimrc > /dev/null 2>&1; then
+		if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && ! grep "^colorscheme gruvbox-material" "$HOME"/.vimrc > /dev/null 2>&1; then
 			while read -p "Do you want to use the Gruvbox theme? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1824,7 +1824,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 
 		# Install GTK config files if no DE is detected
-		if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "linux-gnu" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
+		if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-gnu" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
 			while read -p "Do you want to install the GTK/QT theme (dark)? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1899,7 +1899,7 @@ done
 #=======================
 # macOS Workstation - Amethyst Configuration
 #=======================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
 	while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
