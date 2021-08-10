@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 12:06:26
+# Last modified: Tue Aug 2021 12:14:01
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -267,7 +267,6 @@ if type pacman > /dev/null 2>&1; then
 		fi
 		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
 		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
-	}
 	if [[ -f /etc/artix-release ]]; then
 		# Arch Linux repos for Artix
 		sudo pacman -S --needed --noconfirm artix-archlinux-support 2>&1 | lognoc
@@ -286,6 +285,7 @@ if type pacman > /dev/null 2>&1; then
 			EOF
 		fi
 	fi
+	}
 fi
 
 if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
