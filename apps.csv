@@ -26,6 +26,7 @@ ADR,arandr
 ADR,aspell
 ADR,audacity
 ADR,avahi
+ADR,biber
 ADR,ca-certificates
 ADR,chromium
 ADR,cifs-utils
