@@ -15,6 +15,8 @@ A,pritunl-client-electron
 A,reflector
 A,signal-desktop
 A,syslog-ng
+A,texlive-lang
+A,texlive-most
 A,ueberzug
 A,xorg-server-xephyr
 A,xsel
@@ -98,6 +100,7 @@ C,pritunl
 C,signal
 CA,alacritty
 D,dnsutils
+D,texlive-full
 DRY,redshift
 DY,farbfeld
 G,https://github.com/raylee/tldr-sh-client
@@ -105,6 +108,7 @@ I,etckeeper
 I,fd-find
 M,ansifilter
 M,findutils
+M,mactex-no-gui
 M,mas
 M,msmtp
 MAD,atomicparsley
@@ -133,6 +137,7 @@ MADR,newsboat
 MADR,nnn
 MADR,openssl
 MADR,p7zip
+MADR,pandoc
 MADR,pass
 MADR,pass-otp
 MADR,perl
@@ -171,6 +176,7 @@ R,Atomicparsley
 R,bind-utils
 R,jetbrains-mono-fonts
 R,perl-App-cpanminus
+R,texlive-scheme-full
 RY,plex-media-player
 S,1116599239 nordvpn ike
 S,1233048948 boom 3d
