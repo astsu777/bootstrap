@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 12:19:44
+# Last modified: Fri Aug 2021 14:42:58
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -377,6 +377,8 @@ if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
 		sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
 		sudo make -C "$dwmloc" clean install > /dev/null 2>&1
 		if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
+		if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
+		cp -rf "$dwmloc"/statusbar "$scriptsloc" > /dev/null 2>&1
 		sudo cp -f "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
 	}
 	installdmenu(){
@@ -388,6 +390,8 @@ if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
 		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
 		sudo git clone --depth 1 "$strepo" "$stloc" > /dev/null 2>&1
 		sudo make -C "$stloc" clean install > /dev/null 2>&1
+		if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
+		sudo cp -f "$stloc"/st-* "$scriptsloc" > /dev/null 2>&1
 		sudo cp -f "$stloc"/st.desktop /usr/share/applications/ > /dev/null 2>&1
 	}
 	installslock(){
