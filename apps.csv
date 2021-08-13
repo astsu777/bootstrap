@@ -28,7 +28,6 @@ ADR,audacity
 ADR,avahi
 ADR,biber
 ADR,ca-certificates
-ADR,chromium
 ADR,cifs-utils
 ADR,flameshot
 ADR,galculator
@@ -175,6 +174,7 @@ O,ntp-openrc
 O,syslog-ng-openrc
 R,Atomicparsley
 R,bind-utils
+R,brave
 R,jetbrains-mono-fonts
 R,perl-App-cpanminus
 R,texlive-scheme-full
@@ -291,6 +291,7 @@ X,xss-lock
 X,xterm
 X,zenity
 Y,android-messages-desktop-bin
+Y,brave-bin
 Y,cointop
 Y,hypnotix
 Y,mailspring-libre
