@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun Aug 2021 18:54:07
+# Last modified: Sun Aug 2021 19:40:17
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1661,8 +1661,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
+				ln -sf "$dfloc"/config/kitty/{custom,gruvbox}_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
+				ln -sf "$dfloc"/config/kitty/{custom,gruvbox}_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
 			fi
 		fi
 		if type links > /dev/null 2>&1; then
