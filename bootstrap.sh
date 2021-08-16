@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 01:33:42
+# Last modified: Tue Aug 2021 01:36:27
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -344,7 +344,7 @@ installdwm(){
 	sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
 	sudo make -C "$dwmloc" clean install > /dev/null 2>&1
 	if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
-	sudo cp -rf "$dwmloc"/statusbar /usr/local/sbin/ > /dev/null 2>&1
+	sudo cp -rf "$dwmloc"/statusbar/* /usr/local/sbin/ > /dev/null 2>&1
 	sudo cp -f "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
 }
 installdmenu(){
