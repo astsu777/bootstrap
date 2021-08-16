@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun Aug 2021 19:40:17
+# Last modified: Tue Aug 2021 00:29:31
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -69,9 +69,12 @@ logfile="$HOME/bootstrap_log_$date.txt"
 #=======================
 # Functions
 #=======================
+
+# Log to/out of the console
 logc(){ tee -a "$logfile" ;}
 lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
 
+# Determine init system in Linux
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	if type systemctl >> /dev/null 2>&1; then
 		initSystem="systemd"
@@ -79,182 +82,131 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		startSvc() { sudo systemctl start "$1" ;}
 	elif type rc-update >> /dev/null 2>&1; then
 		initSystem="openrc"
+		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
+		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
 		enableSvc() { sudo rc-update add "$1" ;}
 		startSvc() { sudo rc-service "$1" start ;}
 	fi
 fi
 
+# List packages to install
+grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
+grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
+grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
+grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
+grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
+grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
+grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
+grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
+grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
+grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
+
+# Package managers
 if type brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
-	installpkg(){ brew update 2>&1 | lognoc && while IFS= read -r line; do brew install "$line" 2>&1 | lognoc; done < "$pkg" ;}
-	installguipkg(){ brew update 2>&1 | lognoc && while IFS= read -r line; do brew install --cask "$line" 2>&1 | lognoc; done < "$guipkg" ;}
-	installworkpkg(){ brew update 2>&1 | lognoc && while IFS= read -r line; do brew install "$line" 2>&1 | lognoc; done < "$workpkg" ;}
-	installworkguipkg(){ brew update 2>&1 | lognoc && while IFS= read -r line; do brew install --cask "$line" 2>&1 | lognoc; done < "$workguipkg" ;}
-	installzsh() {
-		brew install zsh 2>&1 | lognoc
-		chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
-		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
-		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
-		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-	}
+	update() { brew update 2>&1 | lognoc ;}
+	install() { brew install "$1" 2>&1 | lognoc ;}
+	installgui() { brew install --cask "$1" 2>&1 | lognoc ;}
 	installvirtualbox(){ brew update 2>&1 | lognoc && brew install --cask virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 elif type apt-get > /dev/null 2>&1; then
-	if [[ "$initSystem" == "openrc" ]]; then
-		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
-		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
-		installopenrcpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
-		installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
-	fi
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	installpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
-	installworkpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
-	installsudo(){ apt-get update 2>&1 | lognoc && apt-get install -y sudo 2>&1 | lognoc ;}
-	installzsh(){
-		sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y zsh 2>&1 | lognoc
-		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-	}
+	update() { sudo apt-get update 2>&1 | lognoc ;}
+	install() { sudo apt-get install -y "$1" 2>&1 | lognoc ;}
 	installvirtualbox(){
-		sudo apt-get update 2>&1 | lognoc && sudo apt-get install virtualbox linux-headers -y 2>&1 | lognoc
+		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		sudo apt-get update 2>&1 | lognoc && sudo apt-get install ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager -y 2>&1 | lognoc
-		if [[ "$initSystem" == "openrc" ]]; then sudo apt-get install libvirt-openrc -y 2>&1 | lognoc; fi
+		update 2>&1 | lognoc && install ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
 	}
 elif type yum > /dev/null 2>&1; then
-	if [[ "$initSystem" == "openrc" ]]; then
-		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
-		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
-		installopenrcpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
-		installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
-	fi
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	installpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$pkg" ;}
-	installworkpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$workpkg" ;}
-	installsudo(){ yum update -y 2>&1 | lognoc && yum install -y sudo 2>&1 | lognoc ;}
-	installzsh(){
-		sudo yum update -y 2>&1 | lognoc && sudo yum install -y zsh 2>&1 | lognoc
-		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-	}
+	update() { sudo yum update -y 2>&1 | lognoc ;}
+	install() { sudo yum install -y "$1" 2>&1 | lognoc ;}
 	installvirtualbox(){
-		sudo yum update -y 2>&1 | lognoc && sudo yum install VirtualBox linux-headers -y 2>&1 | lognoc
+		update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		sudo yum update -y 2>&1 | lognoc && sudo yum install dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables -y 2>&1 | lognoc
-		if [[ "$initSystem" == "openrc" ]]; then sudo yum install libvirt-openrc -y 2>&1 | lognoc; fi
+		update 2>&1 | lognoc && install dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 elif type pacman yay > /dev/null 2>&1; then
-	if [[ "$initSystem" == "openrc" ]]; then
-		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
-		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
-		installopenrcpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
-		installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
-	fi
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
-	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
-	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc
-		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-	}
-	grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
-	grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
-	installaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
-	installworkaurpkg(){ while IFS= read -r line; do yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
+	update() { sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
+	install() { sudo pacman -S "$1" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
+	installaur() { yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$1" 2>&1 | lognoc ;}
 	installvirtualbox(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S virtualbox linux-headers --needed --noconfirm 2>&1 | lognoc
-		yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S virtualbox-ext-oracle 2>&1 | lognoc
+		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+		installaur virtualbox-ext-oracle 2>&1 | lognoc
 	}
 	installkvm(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs --needed --noconfirm --ask 4 2>&1 | lognoc
+		update 2>&1 | lognoc && install qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
-		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S libvirt-openrc --needed --noconfirm --ask 4 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
+	setupcustomrepos(){
+		if [[ -f /etc/artix-release ]]; then
+			# Arch Linux repos for Artix
+			sudo pacman -S --needed --noconfirm artix-archlinux-support 2>&1 | lognoc
+			sudo pacman-key --populate archlinux 2>&1 | lognoc
+			if ! grep '^Include = \/etc\/pacman\.d\/mirrorlist-arch' /etc/pacman.conf > /dev/null 2>&1; then
+				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
+				# ARCHLINUX REPOS
+				[extra]
+				Include = /etc/pacman.d/mirrorlist-arch
+
+				[community]
+				Include = /etc/pacman.d/mirrorlist-arch
+
+				#[multilib]
+				#Include = /etc/pacman.d/mirrorlist-arch
+				EOF
+			fi
+		fi
+		# Pritunl
+		if ! grep '^\[pritunl\]' /etc/pacman.conf > /dev/null 2>&1; then
+			sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
+			[pritunl]
+			Server = https://repo.pritunl.com/stable/pacman
+			EOF
+		sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
+		sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
+		fi
+		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
+		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
+	}
 elif type pacman > /dev/null 2>&1; then
-	if [[ "$initSystem" == "openrc" ]]; then
-		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
-		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
-		installopenrcpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
-		installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
-	fi
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	installpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$pkg" ;}
-	installworkpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$workpkg" ;}
-	installsudo(){ pacman -Syu --noconfirm 2>&1 | lognoc && pacman --noconfirm --needed -S sudo 2>&1 | lognoc ;}
-	installzsh(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman --needed --noconfirm -S zsh 2>&1 | lognoc
-		git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
-	}
+	update() { sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
+	install() { sudo pacman -S "$1" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
 	installvirtualbox(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S virtualbox linux-headers --needed --noconfirm 2>&1 | lognoc
+		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		sudo pacman -Syu --noconfirm 2>&1 | lognoc && sudo pacman -S qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs --needed --noconfirm --ask 4 2>&1 | lognoc
-		sudo sed -i 's/^#unix_sock_group/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
-		sudo sed -i 's/^#unix_sock_rw_perms/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
+		update 2>&1 | lognoc && install qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
+		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
+		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
-		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S libvirt-openrc --needed --noconfirm --ask 4 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
-fi
-
-grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
-grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
-installstoreapp(){ if type mas > /dev/null 2>&1; then < "$storeapp" xargs mas install 2>&1 | lognoc; fi ;}
-installworkstoreapp(){ if type mas > /dev/null 2>&1; then < "$workstoreapp" xargs mas install 2>&1 | lognoc; fi ;}
-
-grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
-grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
-installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
-installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
-installsent(){
-	if [[ -d "$sentloc" ]]; then sudo rm -Rf "$sentloc" > /dev/null 2>&1; fi
-	sudo git clone --depth 1 "$sentrepo" "$sentloc" > /dev/null 2>&1
-	sudo make -C "$sentloc" clean install > /dev/null 2>&1
-}
-installperldeps(){
-	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
-	# Nikto
-	if [[ "$perlx" =~ nikto.pl ]]; then
-		if ! perl -MNet::SSLeay -e 1 > /dev/null 2>&1; then
-			if type apt-get > /dev/null 2>&1; then
-				sudo apt-get update 2>&1 | lognoc && sudo apt-get install -y libnet-ssleay-perl 2>&1 | lognoc
-			elif type cpanm > /dev/null 2>&1; then
-				# sudo cpanm --force Net::SSLeay 2>&1 | lognoc
-				sudo cpanm Net::SSLeay 2>&1 | lognoc
-			fi
-		fi
-	fi
-}
-
-installpythondeps(){
-	pythonx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.py')
-	# VxAPI
-	if type pip > /dev/null 2>&1 && [[ "$pythonx" =~ vxapi.py ]]; then
-		pip install requests colorama 2>&1 | lognoc
-	fi
-}
-
-if type pacman > /dev/null 2>&1; then
 	setupcustomrepos(){
 		if [[ -f /etc/artix-release ]]; then
 			# Arch Linux repos for Artix
@@ -288,198 +240,228 @@ if type pacman > /dev/null 2>&1; then
 	}
 fi
 
-if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
-	grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
-	if type apt-get > /dev/null 2>&1; then
-		if [[ "$EUID" = 0 ]]; then
-			installsrvpkg(){ apt-get update 2>&1 | lognoc && while IFS= read -r line; do apt-get install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-		elif ! type sudo > /dev/null 2>&1; then
-			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
-			exit 1
-		else
-			installsrvpkg(){ sudo apt-get update 2>&1 | lognoc && while IFS= read -r line; do sudo apt-get install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-		fi
-	elif type yum > /dev/null 2>&1; then
-		if [[ "$EUID" = 0 ]]; then
-			installsrvpkg(){ yum update -y 2>&1 | lognoc && while IFS= read -r line; do yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-		elif ! type sudo > /dev/null 2>&1; then
-			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
-			exit 1
-		else
-			installsrvpkg(){ sudo yum update -y 2>&1 | lognoc && while IFS= read -r line; do sudo yum install -y "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-		fi
-	elif type pacman > /dev/null 2>&1; then
-		if [[ "$EUID" = 0 ]]; then
-			installsrvpkg(){ pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-		elif ! type sudo > /dev/null 2>&1; then
-			echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
-			exit 1
-		else
-			installsrvpkg(){ sudo pacman --noconfirm -Syu 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+# Install packages
+installsrvpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
+installstoreapp(){ if type mas > /dev/null 2>&1; then < "$storeapp" xargs mas install 2>&1 | lognoc; fi ;}
+installworkstoreapp(){ if type mas > /dev/null 2>&1; then < "$workstoreapp" xargs mas install 2>&1 | lognoc; fi ;}
+installsudo(){ update 2>&1 | lognoc && install sudo 2>&1 | lognoc ;}
+installpkg(){ update && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$pkg" ;}
+installguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do installgui "$line" 2>&1 | lognoc; done < "$guipkg" ;}
+installworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$workpkg" ;}
+installworkguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$workguipkg" ;}
+installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
+installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
+installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
+installlibxftbgra(){ update 2>&1 | lognoc && yes | installaur libxft-bgra 2>&1 | lognoc ;}
+installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
+installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
+if [[ "$initSystem" == "openrc" ]]; then
+	installopenrcpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
+	installworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+fi
+installzsh() {
+	install zsh 2>&1 | lognoc
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		chmod g-w "$(brew --prefix)/share" 2>&1 | lognoc
+		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
+		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
+	else
+		update 2>&1 | lognoc && install zsh 2>&1 | lognoc
+	fi
+	git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
+}
+installvideodriver(){
+	case "$(lspci -v | grep -A1 -e VGA -e 3D)" in
+		*NVIDIA*) install xf86-video-nouveau 2>&1 | lognoc ;;
+		*AMD*) install xf86-video-amdgpu 2>&1 | lognoc ;;
+		*Intel*) install xf86-video-intel 2>&1 | lognoc ;;
+		*) install xf86-video-fbdev 2>&1 | lognoc ;;
+	esac
+}
+installperldeps(){
+	perlx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.pl')
+	# Nikto
+	if [[ "$perlx" =~ nikto.pl ]]; then
+		if ! perl -MNet::SSLeay -e 1 > /dev/null 2>&1; then
+			if type apt-get > /dev/null 2>&1; then
+				update 2>&1 | lognoc && install libnet-ssleay-perl 2>&1 | lognoc
+			elif type cpanm > /dev/null 2>&1; then
+				# sudo cpanm --force Net::SSLeay 2>&1 | lognoc
+				sudo cpanm Net::SSLeay 2>&1 | lognoc
+			fi
 		fi
 	fi
-fi
+}
+installpythondeps(){
+	pythonx=$(find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -name '*.py')
+	# VxAPI
+	if type pip > /dev/null 2>&1 && [[ "$pythonx" =~ vxapi.py ]]; then
+		pip install requests colorama 2>&1 | lognoc
+	fi
+}
+setupkeyring(){
+	if ! grep '^auth[ \t]*optional[ \t]*pam_gnome_keyring.so$' /etc/pam.d/login > /dev/null 2>&1; then
+		sudo awk -i inplace 'FNR==NR{ if (/auth/) p=NR; next} 1; FNR==p{ print "auth       optional     pam_gnome_keyring.so" }' /etc/pam.d/login /etc/pam.d/login 2>&1 | lognoc
+	fi
+	if ! grep '^session[ \t]*optional[ \t]*pam_gnome_keyring.so auto_start$' /etc/pam.d/login > /dev/null 2>&1; then
+		sudo awk -i inplace 'FNR==NR{ if (/session/) p=NR; next} 1; FNR==p{ print "session    optional     pam_gnome_keyring.so auto_start" }' /etc/pam.d/login /etc/pam.d/login 2>&1 | lognoc
+	fi
+}
+setupcompositor(){
+	sudo sed -i '/^  tooltip/c \ \ tooltip = { fade = false; shadow = false; opacity = 1; focus = true; full-shadow = false; };' /etc/xdg/picom.conf 2>&1 | lognoc
+	sudo sed -i '/^  popup_menu/c \ \ popup_menu = { opacity = 1; };' /etc/xdg/picom.conf 2>&1 | lognoc
+	sudo sed -i '/^  dropdown_menu/c \ \ dropdown_menu = { opacity = 1; };' /etc/xdg/picom.conf 2>&1 | lognoc
+	sudo sed -i 's/^shadow = true/shadow = false/' /etc/xdg/picom.conf 2>&1 | lognoc
+	sudo sed -i 's/^fading = true/fading = false/' /etc/xdg/picom.conf 2>&1 | lognoc
+}
+installxinitrc(){
+	if [[ -f "$HOME"/.xinitrc ]]; then
+		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    	mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
+    	ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
+    else
+		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    	ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
+	fi
+}
+installgreeter(){
+	install lightdm lightdm-gtk-greeter 2>&1 | lognoc
+	if [[ "$initSystem" == "openrc" ]]; then install lightdm-openrc 2>&1 | lognoc; fi
+	if [[ -f "$HOME"/.xprofile ]]; then
+		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    	mv "$HOME"/.xprofile "$HOME"/.xprofile.orig > /dev/null 2>&1
+    	ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.xprofile 2>&1 | lognoc
+    else
+		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
+    	ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.xprofile 2>&1 | lognoc
+	fi
+	sudo cp -f "$dfloc"/config/X11/lightdm/* /etc/lightdm/ 2>&1 | lognoc
+	if [[ -f "$HOME"/.xprofile ]]; then enableSvc lightdm 2>&1 | lognoc ; fi
+}
+installdwm(){
+	if [[ -d "$dwmloc" ]]; then sudo rm -Rf "$dwmloc" > /dev/null 2>&1 ; fi
+	sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
+	sudo make -C "$dwmloc" clean install > /dev/null 2>&1
+	if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
+	if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
+	cp -rf "$dwmloc"/statusbar "$scriptsloc" > /dev/null 2>&1
+	sudo cp -f "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
+}
+installdmenu(){
+	if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dmenuloc" > /dev/null 2>&1 ; fi
+	sudo git clone --depth 1 "$dmenurepo" "$dmenuloc" > /dev/null 2>&1
+	sudo make -C "$dmenuloc" clean install > /dev/null 2>&1
+}
+installsent(){
+	if [[ -d "$sentloc" ]]; then sudo rm -Rf "$sentloc" > /dev/null 2>&1; fi
+	sudo git clone --depth 1 "$sentrepo" "$sentloc" > /dev/null 2>&1
+	sudo make -C "$sentloc" clean install > /dev/null 2>&1
+}
+installst(){
+	if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
+	sudo git clone --depth 1 "$strepo" "$stloc" > /dev/null 2>&1
+	sudo make -C "$stloc" clean install > /dev/null 2>&1
+	if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
+	sudo cp -f "$stloc"/st-* "$scriptsloc" > /dev/null 2>&1
+	sudo cp -f "$stloc"/st.desktop /usr/share/applications/ > /dev/null 2>&1
+}
+installslock(){
+	if [[ -d "$slockloc" ]]; then sudo rm -Rf "$slockloc" > /dev/null 2>&1; fi
+	sudo git clone --depth 1 "$slockrepo" "$slockloc" > /dev/null 2>&1
+	sudo make -C "$slockloc" clean install > /dev/null 2>&1
+}
+installsurf(){
+	if [[ -d "$surfloc" ]]; then sudo rm -Rf "$surfloc" > /dev/null 2>&1; fi
+	sudo git clone --depth 1 "$surfrepo" "$surfloc" > /dev/null 2>&1
+	if [[ ! -d "$HOME"/.config/surf/styles ]]; then mkdir -pv "$HOME"/.config/surf/styles > /dev/null 2>&1; fi
+	cp "$surfloc"/script.js "$HOME"/.config/surf/ > /dev/null 2>&1
+	cp -R "$surfloc"/styles/*.css "$HOME"/.config/surf/styles/ > /dev/null 2>&1
+	sudo make -C "$surfloc" clean install > /dev/null 2>&1
+}
+installbspwm(){
+	install bspwm sxhkd 2>&1 | lognoc
+	yes "" | installaur polybar 2>&1 | lognoc
+	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
+	if [[ ! -d "$HOME"/.config/bspwm ]]; then mkdir -pv "$HOME"/.config/bspwm > /dev/null 2>&1 ; fi
+	if [[ ! -d "$HOME"/.config/sxhkd ]]; then mkdir -pv "$HOME"/.config/sxhkd > /dev/null 2>&1 ; fi
+	ln -sf "$dfloc"/config/bspwm/* "$HOME"/.config/bspwm/ > /dev/null 2>&1
+	ln -sf "$dfloc"/config/sxhkd/* "$HOME"/.config/sxhkd/ > /dev/null 2>&1
+}
+installopenbox(){
+	install openbox menumaker tint2 2>&1 | lognoc
+	yes "" | installaur arc-dark-osx-openbox-theme-git 2>&1 | lognoc
+	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
+	if [[ ! -d "$HOME"/.config/tint2 ]]; then mkdir -pv "$HOME"/.config/tint2 > /dev/null 2>&1 ; fi
+	ln -sf "$dfloc"/config/tint2/tint2rc "$HOME"/.config/tint2/ > /dev/null 2>&1
+	ln -sf "$dfloc"/config/openbox "$HOME"/.config/ > /dev/null 2>&1
+}
+installxfce(){
+	install xfce4 2>&1 | lognoc
+	yes "" | installaur pamac-aur 2>&1 | lognoc
+	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
+	ln -sf "$dfloc"/config/xfce4 "$HOME"/.config/ 2>&1 | lognoc
+	while read -p "Do you want to install the XFCE goodies/applications? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Installing XFCE goodies..." 2>&1 | logc
+			sudo pacman -S xfce4-goodies --needed --noconfirm 2>&1 | lognoc
+			echo -e "XFCE goodies installed" 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e 2>&1 | logc
+			break
+		fi
+		break
+	done
+}
+installgnome(){
+	install gnome gnome-tweaks 2>&1 | lognoc
+	yes "" | installaur pamac-aur 2>&1 | lognoc
+	if [[ "$initSystem" == "openrc" ]]; then install gdm-openrc 2>&1 | lognoc; fi
+	enableSvc gdm -f 2>&1 | lognoc
+	while read -p "Do you want to install extra applications for GNOME (email client, Web browser, etc...)? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Installing GNOME extra applications..." 2>&1 | logc
+			install gnome-extra 2>&1 | lognoc
+			echo -e "GNOME extra applications installed" 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			break
+		fi
+		break
+	done
+}
+installkdeplasma(){
+	install plasma-desktop sddm sddm-kcm 2>&1 | lognoc
+	yes "" | installaur pamac-aur 2>&1 | lognoc
+	if [[ "$initSystem" == "openrc" ]]; then install sddm-openrc 2>&1 | lognoc; fi
+	installdmenu && installst && installsurf
+	enableSvc sddm -f 2>&1 | lognoc
+	while read -p "Do you want to install the KDE applications? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Installing KDE applications..." 2>&1 | logc
+			install kde-applications 2>&1 | lognoc
+			echo -e "KDE applications installed" 2>&1 | logc
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			break
+		fi
+		break
+	done
+}
 
-if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
-	grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
-	installxpkg(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && while IFS= read -r line; do sudo pacman --noconfirm --needed -S "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
-	# TEMP until the library is fixed
-	installlibxftbgra(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc && yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S libxft-bgra 2>&1 | lognoc ;}
-	installvideodriver(){
-		case "$(lspci -v | grep -A1 -e VGA -e 3D)" in
-			*NVIDIA*) sudo pacman -S --needed --noconfirm xf86-video-nouveau 2>&1 | lognoc ;;
-			*AMD*) sudo pacman -S --needed --noconfirm xf86-video-amdgpu 2>&1 | lognoc ;;
-			*Intel*) sudo pacman -S --needed --noconfirm xf86-video-intel 2>&1 | lognoc ;;
-			*) sudo pacman -S --needed --noconfirm xf86-video-fbdev 2>&1 | lognoc ;;
-		esac
-	}
-	setupkeyring(){
-		if ! grep '^auth[ \t]*optional[ \t]*pam_gnome_keyring.so$' /etc/pam.d/login > /dev/null 2>&1; then
-			sudo awk -i inplace 'FNR==NR{ if (/auth/) p=NR; next} 1; FNR==p{ print "auth       optional     pam_gnome_keyring.so" }' /etc/pam.d/login /etc/pam.d/login 2>&1 | lognoc
-		fi
-		if ! grep '^session[ \t]*optional[ \t]*pam_gnome_keyring.so auto_start$' /etc/pam.d/login > /dev/null 2>&1; then
-			sudo awk -i inplace 'FNR==NR{ if (/session/) p=NR; next} 1; FNR==p{ print "session    optional     pam_gnome_keyring.so auto_start" }' /etc/pam.d/login /etc/pam.d/login 2>&1 | lognoc
-		fi
-	}
-	setupcompositor(){
-		sudo sed -i '/^  tooltip/c \ \ tooltip = { fade = false; shadow = false; opacity = 1; focus = true; full-shadow = false; };' /etc/xdg/picom.conf 2>&1 | lognoc
-		sudo sed -i '/^  popup_menu/c \ \ popup_menu = { opacity = 1; };' /etc/xdg/picom.conf 2>&1 | lognoc
-		sudo sed -i '/^  dropdown_menu/c \ \ dropdown_menu = { opacity = 1; };' /etc/xdg/picom.conf 2>&1 | lognoc
-		sudo sed -i 's/^shadow = true/shadow = false/' /etc/xdg/picom.conf 2>&1 | lognoc
-		sudo sed -i 's/^fading = true/fading = false/' /etc/xdg/picom.conf 2>&1 | lognoc
-	}
-	installxinitrc(){
-		if [[ -f "$HOME"/.xinitrc ]]; then
-			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
-    		mv "$HOME"/.xinitrc "$HOME"/.xinitrc.orig > /dev/null 2>&1
-    		ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-    	else
-			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
-    		ln -sf "$dfloc"/config/X11/xinitrc "$HOME"/.xinitrc 2>&1 | lognoc
-		fi
-	}
-	installgreeter(){
-		sudo pacman -S --needed --noconfirm lightdm lightdm-gtk-greeter 2>&1 | lognoc
-		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S --needed --noconfirm --ask 4 lightdm-openrc 2>&1 | lognoc; fi
-		if [[ -f "$HOME"/.xprofile ]]; then
-			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
-    		mv "$HOME"/.xprofile "$HOME"/.xprofile.orig > /dev/null 2>&1
-    		ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.xprofile 2>&1 | lognoc
-    	else
-			if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
-    		ln -sf "$dfloc"/config/X11/xprofile "$HOME"/.xprofile 2>&1 | lognoc
-		fi
-		sudo cp -f "$dfloc"/config/X11/lightdm/* /etc/lightdm/ 2>&1 | lognoc
-		if [[ -f "$HOME"/.xprofile ]]; then enableSvc lightdm 2>&1 | lognoc ; fi
-	}
-	installdwm(){
-		if [[ -d "$dwmloc" ]]; then sudo rm -Rf "$dwmloc" > /dev/null 2>&1 ; fi
-		sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
-		sudo make -C "$dwmloc" clean install > /dev/null 2>&1
-		if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
-		if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
-		cp -rf "$dwmloc"/statusbar "$scriptsloc" > /dev/null 2>&1
-		sudo cp -f "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
-	}
-	installdmenu(){
-		if [[ -d "$dmenuloc" ]]; then sudo rm -Rf "$dmenuloc" > /dev/null 2>&1 ; fi
-		sudo git clone --depth 1 "$dmenurepo" "$dmenuloc" > /dev/null 2>&1
-		sudo make -C "$dmenuloc" clean install > /dev/null 2>&1
-	}
-	installst(){
-		if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
-		sudo git clone --depth 1 "$strepo" "$stloc" > /dev/null 2>&1
-		sudo make -C "$stloc" clean install > /dev/null 2>&1
-		if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
-		sudo cp -f "$stloc"/st-* "$scriptsloc" > /dev/null 2>&1
-		sudo cp -f "$stloc"/st.desktop /usr/share/applications/ > /dev/null 2>&1
-	}
-	installslock(){
-		if [[ -d "$slockloc" ]]; then sudo rm -Rf "$slockloc" > /dev/null 2>&1; fi
-		sudo git clone --depth 1 "$slockrepo" "$slockloc" > /dev/null 2>&1
-		sudo make -C "$slockloc" clean install > /dev/null 2>&1
-	}
-	installsurf(){
-		if [[ -d "$surfloc" ]]; then sudo rm -Rf "$surfloc" > /dev/null 2>&1; fi
-		sudo git clone --depth 1 "$surfrepo" "$surfloc" > /dev/null 2>&1
-		if [[ ! -d "$HOME"/.config/surf/styles ]]; then mkdir -pv "$HOME"/.config/surf/styles > /dev/null 2>&1; fi
-		cp "$surfloc"/script.js "$HOME"/.config/surf/ > /dev/null 2>&1
-		cp -R "$surfloc"/styles/*.css "$HOME"/.config/surf/styles/ > /dev/null 2>&1
-		sudo make -C "$surfloc" clean install > /dev/null 2>&1
-	}
-	installbspwm(){
-		sudo pacman --noconfirm --needed -S bspwm sxhkd 2>&1 | lognoc
-		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S polybar 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
-		if [[ ! -d "$HOME"/.config/bspwm ]]; then mkdir -pv "$HOME"/.config/bspwm > /dev/null 2>&1 ; fi
-		if [[ ! -d "$HOME"/.config/sxhkd ]]; then mkdir -pv "$HOME"/.config/sxhkd > /dev/null 2>&1 ; fi
-		ln -sf "$dfloc"/config/bspwm/* "$HOME"/.config/bspwm/ > /dev/null 2>&1
-		ln -sf "$dfloc"/config/sxhkd/* "$HOME"/.config/sxhkd/ > /dev/null 2>&1
-	}
-	installopenbox(){
-		sudo pacman --noconfirm --needed -S openbox menumaker tint2 2>&1 | lognoc
-		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S arc-dark-osx-openbox-theme-git 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
-		if [[ ! -d "$HOME"/.config/tint2 ]]; then mkdir -pv "$HOME"/.config/tint2 > /dev/null 2>&1 ; fi
-		ln -sf "$dfloc"/config/tint2/tint2rc "$HOME"/.config/tint2/ > /dev/null 2>&1
-		ln -sf "$dfloc"/config/openbox "$HOME"/.config/ > /dev/null 2>&1
-	}
-	installxfce(){
-		sudo pacman --noconfirm --needed -S xfce4 2>&1 | lognoc
-		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
-		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
-		ln -sf "$dfloc"/config/xfce4 "$HOME"/.config/ 2>&1 | lognoc
-		while read -p "Do you want to install the XFCE goodies/applications? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Installing XFCE goodies..." 2>&1 | logc
-				sudo pacman -S xfce4-goodies --needed --noconfirm 2>&1 | lognoc
-				echo -e "XFCE goodies installed" 2>&1 | logc
-				break
-			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e 2>&1 | logc
-				break
-			fi
-			break
-		done
-	}
-	installgnome(){
-		sudo pacman -S gnome gnome-tweaks --needed --noconfirm 2>&1 | lognoc
-		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
-		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S --noconfirm --needed --ask 4 gdm-openrc 2>&1 | lognoc; fi
-		enableSvc gdm -f 2>&1 | lognoc
-		while read -p "Do you want to install extra applications for GNOME (email client, Web browser, etc...)? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Installing GNOME extra applications..." 2>&1 | logc
-				sudo pacman -S gnome-extra --needed --noconfirm 2>&1 | lognoc
-				echo -e "GNOME extra applications installed" 2>&1 | logc
-				break
-			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				break
-			fi
-			break
-		done
-	}
-	installkdeplasma(){
-		sudo pacman -S plasma-desktop sddm sddm-kcm --needed --noconfirm 2>&1 | lognoc
-		yes "" | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S pamac-aur 2>&1 | lognoc
-		if [[ "$initSystem" == "openrc" ]]; then sudo pacman -S --noconfirm --needed --ask 4 sddm-openrc 2>&1 | lognoc; fi
-		installdmenu && installst && installsurf
-		enableSvc sddm -f 2>&1 | lognoc
-		while read -p "Do you want to install the KDE applications? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Installing KDE applications..." 2>&1 | logc
-				sudo pacman -S kde-applications --needed --noconfirm 2>&1 | lognoc
-				echo -e "KDE applications installed" 2>&1 | logc
-				break
-			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				break
-			fi
-			break
-		done
-	}
+# Servers
+if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
+	if [[ "$EUID" = 0 ]]; then
+		installsrvpkg
+	elif ! type sudo > /dev/null 2>&1; then
+		echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
+		exit 1
+	else
+		installsrvpkg
+	fi
 fi
 
 #=======================
@@ -569,7 +551,6 @@ fi
 #======================
 # macOS - Install XCode Command Line Tools (Requirement)
 #======================
-
 # Attempt headless installation
 if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
 	TOUCH=$(which touch)
@@ -1227,7 +1208,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 		fi
 		# Install Clipmenu (clipboard manager)
 		if ! type clipmenu > /dev/null 2>&1; then
-			sudo pacman -S xsel clipnotify --needed --noconfirm 2>&1 | lognoc
+			install xsel clipnotify 2>&1 | lognoc
 			sudo git clone --depth 1 "$clipmenurepo" /opt/clipmenu 2>&1 | lognoc
 			cd /opt/clipmenu && sudo make install 2>&1 | lognoc
 			cd "$HOME" || exit
@@ -1275,7 +1256,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Installing power management software..." 2>&1 | logc
-				sudo pacman -S tlp xfce4-power-manager powertop --needed --noconfirm 2>&1 | lognoc
+				install tlp xfce4-power-manager powertop 2>&1 | lognoc
 				enableSvc tlp 2>&1 | lognoc
 				enableSvc upower 2>&1 | lognoc
 				echo -e "Power management software installed" 2>&1 | logc
@@ -1287,8 +1268,8 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-
 					enableSvc macbook-lighter 2>&1 | lognoc
 				 	# Install proper Broadcom WiFi drivers for BCM43
 				 	if lspci | grep BCM43 > /dev/null ; then
-				 		sudo pacman -S linux-headers --needed --noconfirm 2>&1 | lognoc
-				 		sudo pacman -S broadcom-wl-dkms --needed --noconfirm 2>&1 | lognoc
+				 		install linux-headers 2>&1 | lognoc
+				 		install broadcom-wl-dkms 2>&1 | lognoc
 				 	fi
 					# Make function keys work properly (F1-12 by default)
 				 	echo "options hid_apple fnmode=2" | sudo tee /etc/modprobe.d/hid_apple.conf >/dev/null
