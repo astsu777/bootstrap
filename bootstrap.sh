@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 01:23:00
+# Last modified: Tue Aug 2021 01:27:34
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -146,6 +146,7 @@ elif type pacman yay > /dev/null 2>&1; then
 	update() { sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
 	install() { sudo pacman -S "$1" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
 	installaur() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$1" 2>&1 | lognoc ;}
+	installaurconfirm() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S "$1" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		installaur virtualbox-ext-oracle 2>&1 | lognoc
@@ -252,7 +253,7 @@ installworkguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install
 installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
-installlibxftbgra(){ update 2>&1 | lognoc && yes | installaur libxft-bgra 2>&1 | lognoc ;}
+installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 if [[ "$initSystem" == "openrc" ]]; then
