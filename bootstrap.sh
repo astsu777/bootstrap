@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 00:29:31
+# Last modified: Tue Aug 2021 00:59:09
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1047,7 +1047,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-
 			sudo -v
 
 			# Add current user to necessary groups
-			sudo usermod -a -G wheel,video,audio,group,network,sys,lp "$(whoami)" 2>&1 | lognoc
+			sudo usermod -a -G wheel,video,audio,network,sys,lp "$(whoami)" 2>&1 | lognoc
 
 			# Enable Master channel sound output
 			if type amixer > /dev/null 2>&1; then amixer sset Master unmute 2>&1 | lognoc; fi
