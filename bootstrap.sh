@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 00:59:09
+# Last modified: Tue Aug 2021 01:03:26
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1764,51 +1764,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 
 		echo -e "New dotfiles installed" 2>&1 | logc
 		echo -e 2>&1 | logc
-
-		# Propose Gruvbox theme if not detected
-		if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && ! grep "^colorscheme gruvbox-material" "$HOME"/.vimrc > /dev/null 2>&1; then
-			while read -p "Do you want to use the Gruvbox theme? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | logc
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Installing Gruvbox theme..." 2>&1 | logc
-					# VIM
-					if [[ -f "$HOME"/.vimrc ]]; then
-						sed -i --follow-symlinks '/^colorscheme kuroi/c colorscheme gruvbox-material' "$HOME"/.vimrc 2>&1 | lognoc
-						sed -i --follow-symlinks "/^let g:lightline = {'colorscheme'/c let g:lightline = {'colorscheme': 'gruvbox_material'}" "$HOME"/.vimrc 2>&1 | lognoc
-						if ! grep "^\s*Plug 'sainnhe/gruvbox-material'" "$HOME"/.vimrc > /dev/null 2>&1; then
-							sed -i --follow-symlinks "/^call plug#begin/a \ \ \ \ \"\" Colorscheme" "$HOME"/.vimrc 2>&1 | lognoc
-							sed -i --follow-symlinks "/\"\" Colorscheme/a \ \ \ \ Plug 'sainnhe\/gruvbox-material'" "$HOME"/.vimrc 2>&1 | lognoc
-						fi
-					fi
-					# BSPWM
-					if [[ -f "$HOME"/.config/bspwm/bspwmrc ]]; then
-						sed -i --follow-symlinks '/^bspc config active_border_color/c bspc config active_border_color \\#282828' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
-						sed -i --follow-symlinks '/^bspc config normal_border_color/c bspc config normal_border_color \\#282828' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
-						sed -i --follow-symlinks '/^bspc config focused_border_color/c bspc config focused_border_color \\#79520e' "$HOME"/.config/bspwm/bspwmrc 2>&1 | lognoc
-					fi
-					if [[ -f "$HOME"/.config/bspwm/polybar.config ]]; then
-						sed -i --follow-symlinks '/^background = #/c background = #282828' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
-						sed -i --follow-symlinks '/^foreground = #/c foreground = #acacac' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
-						sed -i --follow-symlinks '/^primary = #/c primary = #c98918' "$HOME"/.config/bspwm/polybar.config 2>&1 | lognoc
-					fi
-					# DWM
-					if [[ -f "$dwmloc"/config.h ]]; then
-						sudo sed -i '/^static const char col_gray1\[\]/c static const char col_gray1\[\]\ \ \ \ \ \ \ = "#282828";' "$dwmloc"/config.h 2>&1 | lognoc
-						sudo sed -i '/^static const char col_gray2\[\]/c static const char col_gray2\[\]\ \ \ \ \ \ \ = "#282828";' "$dwmloc"/config.h 2>&1 | lognoc
-						sudo sed -i '/^static const char col_gray3\[\]/c static const char col_gray3\[\]\ \ \ \ \ \ \ = "#acacac";' "$dwmloc"/config.h 2>&1 | lognoc
-						sudo sed -i '/^static const char col_gray4\[\]/c static const char col_gray4\[\]\ \ \ \ \ \ \ = "#282828";' "$dwmloc"/config.h 2>&1 | lognoc
-						sudo sed -i '/^static const char col_cyan\[\]/c static const char col_cyan\[\]\ \ \ \ \ \ \ = "#c98918";' "$dwmloc"/config.h 2>&1 | lognoc
-						sudo sed -i '/^static const char col_border\[\]/c static const char col_border\[\]\ \ \ \ \ \ \ = "#79520e";' "$dwmloc"/config.h 2>&1 | lognoc
-						sudo make -C "$dwmloc" clean install > /dev/null 2>&1
-					fi
-					echo -e "Gruvbox theme installed" 2>&1 | logc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					break
-				fi
-			done
-			echo -e 2>&1 | logc
-		fi
 
 		# Install GTK config files if no DE is detected
 		if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-gnu" ]] && [[ -z "$XDG_CURRENT_DESKTOP" ]] && [[ -d /usr/share/themes/Adwaita-dark ]] && [[ -d /usr/share/icons/Papirus-Dark ]]; then
