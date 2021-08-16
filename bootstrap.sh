@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 01:27:34
+# Last modified: Tue Aug 2021 01:33:42
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -344,8 +344,7 @@ installdwm(){
 	sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
 	sudo make -C "$dwmloc" clean install > /dev/null 2>&1
 	if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
-	if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
-	cp -rf "$dwmloc"/statusbar "$scriptsloc" > /dev/null 2>&1
+	sudo cp -rf "$dwmloc"/statusbar /usr/local/sbin/ > /dev/null 2>&1
 	sudo cp -f "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
 }
 installdmenu(){
@@ -362,8 +361,7 @@ installst(){
 	if [[ -d "$stloc" ]]; then sudo rm -Rf "$stloc" > /dev/null 2>&1; fi
 	sudo git clone --depth 1 "$strepo" "$stloc" > /dev/null 2>&1
 	sudo make -C "$stloc" clean install > /dev/null 2>&1
-	if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
-	sudo cp -f "$stloc"/st-* "$scriptsloc" > /dev/null 2>&1
+	sudo cp -f "$stloc"/st-* /usr/local/sbin/ > /dev/null 2>&1
 	sudo cp -f "$stloc"/st.desktop /usr/share/applications/ > /dev/null 2>&1
 }
 installslock(){
