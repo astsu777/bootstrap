@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 01:03:26
+# Last modified: Tue Aug 2021 01:23:00
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -145,7 +145,7 @@ elif type pacman yay > /dev/null 2>&1; then
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
 	install() { sudo pacman -S "$1" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
-	installaur() { yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$1" 2>&1 | lognoc ;}
+	installaur() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$1" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		installaur virtualbox-ext-oracle 2>&1 | lognoc
@@ -1264,7 +1264,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-
 				if [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]] && [[ $(cat /sys/class/dmi/id/chassis_version) =~ ^Mac ]]; then
 					echo -e "[MACBOOK DETECTED] Configuring hardware..." 2>&1 | logc
 					# Program to use the ambient light sensor
-					yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S macbook-lighter 2>&1 | lognoc
+					yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S macbook-lighter 2>&1 | lognoc
 					enableSvc macbook-lighter 2>&1 | lognoc
 				 	# Install proper Broadcom WiFi drivers for BCM43
 				 	if lspci | grep BCM43 > /dev/null ; then
