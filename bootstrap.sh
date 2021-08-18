@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 18:01:56
+# Last modified: Wed Aug 2021 18:22:35
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -106,6 +106,7 @@ grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' 
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
 grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
 grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
+grepxvoidpkg(){ voidxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "V1[^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$voidxpkg" ;}
 
 # Package managers
 if type brew > /dev/null 2>&1; then
@@ -277,6 +278,7 @@ installworkguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install
 installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
+installvoidxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$voidxpkg" ;}
 installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
@@ -1124,6 +1126,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-relea
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
+			if [[ -d /usr/share/xbps.d ]]; then grepvoidxpkg && installvoidxpkg; fi
 			grepxpkg && installxpkg
  	 	 	setupkeyring
  	 	 	setupcompositor

@@ -1,6 +1,6 @@
 # TAG, PROGRAM
 # Tags: W=Work, M=macOS brew, A=Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools
-# Y=Yay, O=OpenRC, Q=Runit, V=Void XBPS, G=Git Repo, X=Arch Xorg
+# Y=Yay, O=OpenRC, Q=Runit, V=Void XBPS, G=Git Repo, X=Arch Xorg, V1=Void Xorg
 #Y,ttf-ms-win10-auto
 A,ca-certificates-mozilla
 A,etcher
@@ -194,23 +194,23 @@ S,568494494 pocket
 S,876540291 copy'em paste
 S,946798523 antisleep
 V,Signal-Desktop
-V,dejavu-fonts-ttf
-V,fonts-droid-ttf
 V,galculator-gtk3
 V,gotop
 V,gst-plugins-good1
-V,liberation-fonts-ttf
-V,noto-fonts-ttf
 V,obs
-V,pcmanfm
-V,pulseaudio
 V,rsyslog
 V,spotify-qt
 V,transmission
 V,trayer-srg
 V,wol
-V,xinit
-V,xrdb
+V1,dejavu-fonts-ttf
+V1,fonts-droid-ttf
+V1,liberation-fonts-ttf
+V1,noto-fonts-ttf
+V1,pcmanfm
+V1,pulseaudio
+V1,xinit
+V1,xrdb
 WA,gnu-netcat
 WA,wireshark-qt
 WADRCV,docker
