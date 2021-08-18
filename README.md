@@ -46,10 +46,11 @@ This script has been fully validated with the following systems:
 | Artix Linux & OpenRC derivatives | ✅ | Fully compatible |
 | Debian (+ distros based on it) | ✅ | Fully compatible |
 | Red Hat (+ distros based on it) | ✅ | Fully compatible |
+| Void Linux | ✅ | Fully compatible |
 | BSD | ❌ | Not compatible yet |
 | Windows Subsystem for Linux (WSL) | ❗ | Graphical software won't install/work and dotfiles not behave as intended |
 
-Depending on the packages availability in the repositories, some software may be missing and/or not be compatible. If your system is using *OpenRC*, some scripts may not be available for services. In that case, check the documentation.
+Depending on the packages availability in the repositories, some software may be missing and/or not be compatible. If your system is using *OpenRC* or *Runit*, some scripts may not be available for services. In that case, check the documentation.
 
 The script supports the following package managers for now:
 
@@ -59,6 +60,7 @@ The script supports the following package managers for now:
 * YAY aka *Yet Another Yogurt* as the AUR helper (command: **yay**)
 * Homebrew for macOS (command: **brew**)
 * Mac App Store for macOS (command: **mas**)
+* XBPS aka *X Binary Package System* (commands: xbps-install/query/etc...)
 
 # Usage
 The configuration has two parts: the list of applications needed to be installed and some variables to define (latter is optional).

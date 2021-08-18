@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 10:43:52
+# Last modified: Wed Aug 2021 23:10:00
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -24,7 +24,7 @@ resourcesloc="$HOME/.local/share"
 gitrepoloc="$HOME/.sources/repos"
 
 # Software sources location
-sourcesloc="$HOME/.sources"
+# sourcesloc="$HOME/.sources"
 
 # Wallpapers
 wallpapers="https://github.com/GSquad934/wallpapers.git"
@@ -86,6 +86,12 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
 		enableSvc() { sudo rc-update add "$1" ;}
 		startSvc() { sudo rc-service "$1" start ;}
+	elif type sv >> /dev/null 2>&1; then
+		initSystem="runit"
+		greprunitpkg(){ runitpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Q][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$runitpkg" ;}
+		grepworkrunitpkg(){ runitworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Q][^,]*" | sed 's/^.*,//g' > "$runitworkpkg" ;}
+		enableSvc() { sudo ln -s /etc/sv/"$1" /var/service/ ;}
+		startSvc() { sudo sv start "$1" ;}
 	fi
 fi
 
@@ -100,20 +106,21 @@ grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' 
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
 grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
 grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
+grepvoidxpkg(){ voidxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "V1[^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$voidxpkg" ;}
 
 # Package managers
 if type brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { brew update 2>&1 | lognoc ;}
-	install() { brew install "$1" 2>&1 | lognoc ;}
-	installgui() { brew install --cask "$1" 2>&1 | lognoc ;}
+	install() { brew install "$@" 2>&1 | lognoc ;}
+	installgui() { brew install --cask "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){ brew update 2>&1 | lognoc && brew install --cask virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo apt-get update 2>&1 | lognoc ;}
-	install() { sudo apt-get install -y "$1" 2>&1 | lognoc ;}
+	install() { sudo apt-get install -y "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -129,7 +136,7 @@ elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo yum update -y 2>&1 | lognoc ;}
-	install() { sudo yum install -y "$1" 2>&1 | lognoc ;}
+	install() { sudo yum install -y "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -144,9 +151,9 @@ elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
-	install() { sudo pacman -S "$1" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
-	installaur() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$1" 2>&1 | lognoc ;}
-	installaurconfirm() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S "$1" 2>&1 | lognoc ;}
+	install() { sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
+	installaur() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$@" 2>&1 | lognoc ;}
+	installaurconfirm() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		installaur virtualbox-ext-oracle 2>&1 | lognoc
@@ -194,7 +201,7 @@ elif type pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
-	install() { sudo pacman -S "$1" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
+	install() { sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -239,6 +246,24 @@ elif type pacman > /dev/null 2>&1; then
 		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
 		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
 	}
+elif type xbps-install > /dev/null 2>&1; then
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	update() { sudo xbps-install -Syu 2>&1 | lognoc ;}
+	install() { sudo xbps-install -Sy "$@" 2>&1 | lognoc ;}
+	installvirtualbox(){
+		update 2>&1 | lognoc && install virtualbox-ose linux-headers 2>&1 | lognoc
+		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	}
+	installkvm(){
+		update 2>&1 | lognoc && install qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
+		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
+		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
+		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
+	}
 fi
 
 # Install packages
@@ -253,12 +278,17 @@ installworkguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install
 installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
+installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc sudo xbps-remove -y lxsession && while IFS= read -r line; do install "$line" 2>&1 | lognoc && sudo ln -sf bash /bin/sh 2>&1 | lognoc; done < "$voidxpkg" ;}
 installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
+installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)" ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 if [[ "$initSystem" == "openrc" ]]; then
 	installopenrcpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
-	installworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+	installopenrcworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+elif [[ "$initSystem" == "runit" ]]; then
+	installrunitpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$runitpkg" ;}
+	installrunitworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$runitworkpkg" ;}
 fi
 installzsh() {
 	install zsh 2>&1 | lognoc
@@ -344,7 +374,11 @@ installdwm(){
 	sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
 	sudo make -C "$dwmloc" clean install > /dev/null 2>&1
 	if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
-	sudo cp -rf "$dwmloc"/statusbar/* /usr/local/sbin/ > /dev/null 2>&1
+	if [[ -d /usr/share/xbps.d ]]; then
+		sudo cp -rf "$dwmloc"/statusbar-txt/* /usr/local/sbin/ > /dev/null 2>&1
+	else
+		sudo cp -rf "$dwmloc"/statusbar/* /usr/local/sbin/ > /dev/null 2>&1
+	fi
 	sudo cp -f "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
 }
 installdmenu(){
@@ -378,7 +412,7 @@ installsurf(){
 	sudo make -C "$surfloc" clean install > /dev/null 2>&1
 }
 installbspwm(){
-	install bspwm sxhkd 2>&1 | lognoc
+	install bspwm sxhkd polybar 2>&1 | lognoc
 	yes "" | installaur polybar 2>&1 | lognoc
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
 	if [[ ! -d "$HOME"/.config/bspwm ]]; then mkdir -pv "$HOME"/.config/bspwm > /dev/null 2>&1 ; fi
@@ -515,6 +549,14 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			while read -p "What will be your username? " -r user; do
+				if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1; then
+					if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
+						if [[ ! -d /etc/sudoers.d ]]; then mkdir -pv /etc/sudoers.d 2>&1 | lognoc; fi
+						touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
+					else
+						sed -i 's/^#\ \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/' /etc/sudoers
+					fi
+				fi
 				if [[ "$user" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
 					useradd -m "$user" 2>&1 | lognoc
 					usermod -a -G wheel "$user" 2>&1 | lognoc
@@ -527,15 +569,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
 					echo -e 2>&1 | logc
 					continue
 				fi
-				if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1; then
-					if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
-						if [[ ! -d /etc/sudoers.d ]]; then mkdir -pv /etc/sudoers.d 2>&1 | lognoc; fi
-						touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
-					else
-						sed -i 's/^#\ \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/' /etc/sudoers
-					fi
-					break
-				fi
+				break
 			done
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
@@ -702,9 +736,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				greppkg && installpkg && installsent
+				grepgitrepo && installgitrepo
 				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
-					grepgitrepo && installgitrepo
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
@@ -1091,12 +1125,13 @@ fi
 #=====================
 # Arch Linux - GUI Requirements
 #=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && [[ "$TERM" == "linux" ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && [[ "$TERM" == "linux" ]]; then
 	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
+			if [[ -d /usr/share/xbps.d ]]; then grepvoidxpkg && installvoidxpkg && installjetbrainsmono; fi
 			grepxpkg && installxpkg
  	 	 	setupkeyring
  	 	 	setupcompositor
@@ -1115,7 +1150,7 @@ fi
 #=====================
 # Arch Linux - DE/WM Installation
 #=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type Xorg > /dev/null 2>&1; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && type Xorg > /dev/null 2>&1; then
 while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1249,7 +1284,7 @@ fi
 # 22 Storage Chassis
 # 23 Rack Mount Chassis
 # 24 Sealed-Case PC
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
 	if type tlp > /dev/null 2>&1; then
 		while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
