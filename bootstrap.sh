@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 22:36:34
+# Last modified: Wed Aug 2021 23:02:30
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -113,14 +113,14 @@ if type brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { brew update 2>&1 | lognoc ;}
-	install() { brew install "$1" 2>&1 | lognoc ;}
-	installgui() { brew install --cask "$1" 2>&1 | lognoc ;}
+	install() { brew install "$@" 2>&1 | lognoc ;}
+	installgui() { brew install --cask "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){ brew update 2>&1 | lognoc && brew install --cask virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo apt-get update 2>&1 | lognoc ;}
-	install() { sudo apt-get install -y "$1" 2>&1 | lognoc ;}
+	install() { sudo apt-get install -y "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -136,7 +136,7 @@ elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo yum update -y 2>&1 | lognoc ;}
-	install() { sudo yum install -y "$1" 2>&1 | lognoc ;}
+	install() { sudo yum install -y "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -151,9 +151,9 @@ elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
-	install() { sudo pacman -S "$1" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
-	installaur() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$1" 2>&1 | lognoc ;}
-	installaurconfirm() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S "$1" 2>&1 | lognoc ;}
+	install() { sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
+	installaur() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$@" 2>&1 | lognoc ;}
+	installaurconfirm() { yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		installaur virtualbox-ext-oracle 2>&1 | lognoc
@@ -201,7 +201,7 @@ elif type pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
-	install() { sudo pacman -S "$1" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
+	install() { sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -250,7 +250,7 @@ elif type xbps-install > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
 	update() { sudo xbps-install -Syu 2>&1 | lognoc ;}
-	install() { sudo xbps-install -Sy "$1" 2>&1 | lognoc ;}
+	install() { sudo xbps-install -Sy "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox-ose linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -280,7 +280,7 @@ installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | logno
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc && sudo ln -sf bash /bin/sh 2>&1 | lognoc; done < "$voidxpkg" ;}
 installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
-installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh > /dev/null 2>&1)" ;}
+installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)" ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 if [[ "$initSystem" == "openrc" ]]; then
