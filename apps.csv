@@ -130,7 +130,6 @@ MADRV,fd
 MADRV,ffmpeg
 MADRV,firefox
 MADRV,fzf
-MADRVX,git
 MADRV,grep
 MADRV,kitty
 MADRV,lame
@@ -157,6 +156,7 @@ MADRV,xz
 MADRV,youtube-dl
 MADRV,zbar
 MADRV,zip
+MADRVX,git
 MADV,atomicparsley
 MADV,cpanminus
 MADV,streamlink
@@ -250,6 +250,7 @@ WM,testssl
 WMA,xh
 WMADR,hping
 WMADR,mitmproxy
+WMADRI,lynis
 WMADRIV,mtr
 WMADRV,ansible
 WMADRV,ipcalc
