@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 15:43:50
+# Last modified: Wed Aug 2021 15:49:26
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -639,7 +639,7 @@ fi
 #======================
 # Arch Linux - Install AUR Helper (Requirement)
 #======================
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;}; then
+if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
