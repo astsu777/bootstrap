@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 15:49:26
+# Last modified: Wed Aug 2021 16:00:25
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -33,7 +33,7 @@ wallpapersloc="$HOME/.local/share/wallpapers"
 # Software lists
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
 aurhelper="https://aur.archlinux.org/yay.git"
-applist="https://raw.githubusercontent.com/GSquad934/bootstrap/master/apps.csv"
+applist="https://raw.githubusercontent.com/GSquad934/bootstrap/dev/apps.csv"
 
 # Font lists
 mononoki_regular="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf"
