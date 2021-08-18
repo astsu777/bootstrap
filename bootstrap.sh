@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 10:43:52
+# Last modified: Wed Aug 2021 15:32:13
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -86,6 +86,10 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
 		enableSvc() { sudo rc-update add "$1" ;}
 		startSvc() { sudo rc-service "$1" start ;}
+	elif type sv >> /dev/null 2>&1; then
+		initSystem="runit"
+		enableSvc() { sudo ln -s /etc/sv/"$1" /var/service/ ;}
+		startSvc() { sudo sv start "$1" ;}
 	fi
 fi
 
@@ -238,6 +242,24 @@ elif type pacman > /dev/null 2>&1; then
 		fi
 		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
 		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
+	}
+elif type xbps-install > /dev/null 2>&1; then
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	update() { sudo xbps-install -Syu 2>&1 | lognoc ;}
+	install() { sudo xbps-install -Sy "$1" 2>&1 | lognoc ;}
+	installvirtualbox(){
+		update 2>&1 | lognoc && install virtualbox-ose linux-headers 2>&1 | lognoc
+		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	}
+	installkvm(){
+		update 2>&1 | lognoc && install qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
+		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
+		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
+		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 fi
 
@@ -617,7 +639,7 @@ fi
 #======================
 # Arch Linux - Install AUR Helper (Requirement)
 #======================
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
+if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;}; then
 	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -702,9 +724,9 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				greppkg && installpkg && installsent
+				grepgitrepo && installgitrepo
 				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
-					grepgitrepo && installgitrepo
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
@@ -1091,7 +1113,7 @@ fi
 #=====================
 # Arch Linux - GUI Requirements
 #=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && [[ "$TERM" == "linux" ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && [[ "$TERM" == "linux" ]]; then
 	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1115,7 +1137,7 @@ fi
 #=====================
 # Arch Linux - DE/WM Installation
 #=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type Xorg > /dev/null 2>&1; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && type Xorg > /dev/null 2>&1; then
 while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1249,7 +1271,7 @@ fi
 # 22 Storage Chassis
 # 23 Rack Mount Chassis
 # 24 Sealed-Case PC
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
 	if type tlp > /dev/null 2>&1; then
 		while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
