@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 22:20:48
+# Last modified: Wed Aug 2021 22:36:34
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -61,9 +61,6 @@ slockloc="/opt/slock"
 surfrepo="https://github.com/GSquad934/surf.git"
 surfloc="/opt/surf"
 adwaitaqtrepo="https://github.com/FedoraQt/adwaita-qt.git"
-
-# Libxft with color emojis support (BGRA)
-bgraloc="https://github.com/uditkarode/libxft-bgra"
 
 # Logging
 date="$(date +%Y-%m-%d-%H%M%S)"
@@ -282,21 +279,7 @@ installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; d
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc && sudo ln -sf bash /bin/sh 2>&1 | lognoc; done < "$voidxpkg" ;}
-if [[ -d /usr/share/xbps.d ]]; then
-	installlibxftbgra(){
-		update 2>&1 | lognoc
-		if [[ ! -f /etc/xbps.d/10-ignore.conf ]]; then sudo touch /etc/xbps.d/10-ignore.conf; fi
-		echo "ignorepkg=libXft" | sudo tee /etc/xbps.d/10-ignore.conf 2>&1 | lognoc
-		sudo xbps-remove -Fy libXft 2>&1 | lognoc
-		git clone --depth=1 "$bgraloc" "$HOME"/libxft-bgra 2>&1 | lognoc
-		cd "$HOME"/libxft-bgra && ./autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man 2>&1 | lognoc
-		sudo make install 2>&1 | lognoc
-		cd "$HOME" || exit
-		sudo rm -rf "$HOME"/libxft-bgra 2>&1 | lognoc
-	}
-else
-	installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
-fi
+installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
 installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh > /dev/null 2>&1)" ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
@@ -391,7 +374,11 @@ installdwm(){
 	sudo git clone --depth 1 "$dwmrepo" "$dwmloc" > /dev/null 2>&1
 	sudo make -C "$dwmloc" clean install > /dev/null 2>&1
 	if [[ ! -d /usr/share/xsessions ]]; then sudo mkdir -pv /usr/share/xsessions > /dev/null 2>&1 ; fi
-	sudo cp -rf "$dwmloc"/statusbar/* /usr/local/sbin/ > /dev/null 2>&1
+	if [[ -d /usr/share/xbps.d ]]; then
+		sudo cp -rf "$dwmloc"/statusbar-txt/* /usr/local/sbin/ > /dev/null 2>&1
+	else
+		sudo cp -rf "$dwmloc"/statusbar/* /usr/local/sbin/ > /dev/null 2>&1
+	fi
 	sudo cp -f "$dwmloc"/dwm.desktop /usr/share/xsessions/ > /dev/null 2>&1
 }
 installdmenu(){
