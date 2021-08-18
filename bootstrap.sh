@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue Aug 2021 01:36:27
+# Last modified: Wed Aug 2021 10:43:52
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1557,8 +1557,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		ln -sf "$dfloc"/local/bin/* "$scriptsloc"/ 2>&1 | lognoc
 		if [[ ! -d "$resourcesloc" ]]; then mkdir -pv "$resourcesloc"/ 2>&1 | lognoc ; fi
 		ln -sf "$dfloc"/local/share/* "$resourcesloc" 2>&1 | lognoc
-		if [[ ! -d "$scriptsloc/statusbar" ]]; then mkdir -pv "$scriptsloc/statusbar" 2>&1 | lognoc ; fi
-		ln -sf "$dfloc"/local/bin/statusbar/* "$scriptsloc/statusbar/" 2>&1 | lognoc
 		if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config 2>&1 | lognoc ; fi
 		if type bash > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config > /dev/null 2>&1; fi
