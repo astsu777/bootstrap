@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 15:32:13
+# Last modified: Wed Aug 2021 15:35:20
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -558,6 +558,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
 					fi
 					break
 				fi
+				break
 			done
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
