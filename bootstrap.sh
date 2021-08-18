@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 15:35:20
+# Last modified: Wed Aug 2021 15:43:50
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -537,6 +537,14 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			while read -p "What will be your username? " -r user; do
+				if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1; then
+					if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
+						if [[ ! -d /etc/sudoers.d ]]; then mkdir -pv /etc/sudoers.d 2>&1 | lognoc; fi
+						touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
+					else
+						sed -i 's/^#\ \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/' /etc/sudoers
+					fi
+				fi
 				if [[ "$user" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
 					useradd -m "$user" 2>&1 | lognoc
 					usermod -a -G wheel "$user" 2>&1 | lognoc
@@ -548,15 +556,6 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
 					echo -e "Invalid username! The name should only contain alphanumeric characters" 2>&1 | logc
 					echo -e 2>&1 | logc
 					continue
-				fi
-				if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1; then
-					if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
-						if [[ ! -d /etc/sudoers.d ]]; then mkdir -pv /etc/sudoers.d 2>&1 | lognoc; fi
-						touch /etc/sudoers.d/99-wheel && echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/99-wheel
-					else
-						sed -i 's/^#\ \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/' /etc/sudoers
-					fi
-					break
 				fi
 				break
 			done
