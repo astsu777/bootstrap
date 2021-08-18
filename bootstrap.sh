@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 18:42:25
+# Last modified: Wed Aug 2021 20:58:56
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -24,7 +24,7 @@ resourcesloc="$HOME/.local/share"
 gitrepoloc="$HOME/.sources/repos"
 
 # Software sources location
-sourcesloc="$HOME/.sources"
+# sourcesloc="$HOME/.sources"
 
 # Wallpapers
 wallpapers="https://github.com/GSquad934/wallpapers.git"
@@ -61,6 +61,9 @@ slockloc="/opt/slock"
 surfrepo="https://github.com/GSquad934/surf.git"
 surfloc="/opt/surf"
 adwaitaqtrepo="https://github.com/FedoraQt/adwaita-qt.git"
+
+# Libxft with color emojis support (BGRA)
+bgraloc="https://github.com/uditkarode/libxft-bgra"
 
 # Logging
 date="$(date +%Y-%m-%d-%H%M%S)"
@@ -279,7 +282,20 @@ installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; d
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$voidxpkg" ;}
-installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
+if [[ -d /usr/share/xbps.d ]]; then
+	installlibxftbgra(){
+		update 2>&1 | lognoc
+		sudo xbps-remove -Fy libXft 2>&1 | lognoc
+		git clone --depth=1 "$bgraloc" "$HOME"/libxft-bgra 2>&1 | lognoc
+		cd "$HOME"/libxft-bgra && autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man 2>&1 | lognoc
+		sudo make clean install 2>&1 | lognoc
+		cd "$HOME" || exit
+		rm -rf "$HOME"/libxft-bgra 2>&1 | lognoc
+	}
+else
+	installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
+fi
+installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)" ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 if [[ "$initSystem" == "openrc" ]]; then
@@ -1126,7 +1142,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-relea
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
-			if [[ -d /usr/share/xbps.d ]]; then grepvoidxpkg && installvoidxpkg && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"; fi
+			if [[ -d /usr/share/xbps.d ]]; then grepvoidxpkg && installvoidxpkg && installjetbrainsmono; fi
 			grepxpkg && installxpkg
  	 	 	setupkeyring
  	 	 	setupcompositor
