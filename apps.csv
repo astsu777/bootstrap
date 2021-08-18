@@ -130,7 +130,7 @@ MADRV,fd
 MADRV,ffmpeg
 MADRV,firefox
 MADRV,fzf
-MADRV,git
+MADRVX,git
 MADRV,grep
 MADRV,kitty
 MADRV,lame
