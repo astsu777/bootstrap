@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 16:32:22
+# Last modified: Wed Aug 2021 18:01:56
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -88,6 +88,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		startSvc() { sudo rc-service "$1" start ;}
 	elif type sv >> /dev/null 2>&1; then
 		initSystem="runit"
+		greprunitpkg(){ runitpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Q][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$runitpkg" ;}
+		grepworkrunitpkg(){ runitworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Q][^,]*" | sed 's/^.*,//g' > "$runitworkpkg" ;}
 		enableSvc() { sudo ln -s /etc/sv/"$1" /var/service/ ;}
 		startSvc() { sudo sv start "$1" ;}
 	fi
@@ -280,7 +282,10 @@ installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /d
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 if [[ "$initSystem" == "openrc" ]]; then
 	installopenrcpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
-	installworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+	installopenrcworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
+elif [[ "$initSystem" == "runit" ]]; then
+	installrunitpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$runitpkg" ;}
+	installrunitworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$runitworkpkg" ;}
 fi
 installzsh() {
 	install zsh 2>&1 | lognoc

@@ -1,6 +1,6 @@
 # TAG, PROGRAM
 # Tags: W=Work, M=macOS brew, A=Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools
-# Y=Yay, O=OpenRC, V=Void XBPS, G=Git Repo, X=Arch Xorg
+# Y=Yay, O=OpenRC, Q=Runit, V=Void XBPS, G=Git Repo, X=Arch Xorg
 #Y,ttf-ms-win10-auto
 A,ca-certificates-mozilla
 A,etcher
@@ -171,6 +171,12 @@ O,docker-openrc
 O,networkmanager-openrc
 O,ntp-openrc
 O,syslog-ng-openrc
+Q,avahi-runit
+Q,bluez-runit
+Q,docker-runit
+Q,networkmanager-runit
+Q,ntp-runit
+Q,syslog-ng-runit
 R,Atomicparsley
 R,bind-utils
 R,brave
