@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 20:58:56
+# Last modified: Wed Aug 2021 21:02:24
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -281,7 +281,7 @@ installworkguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install
 installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
-installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$voidxpkg" ;}
+installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc && sudo ln -sf bash /bin/sh 2>&1 | lognoc; done < "$voidxpkg" ;}
 if [[ -d /usr/share/xbps.d ]]; then
 	installlibxftbgra(){
 		update 2>&1 | lognoc
