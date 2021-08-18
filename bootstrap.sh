@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 21:02:24
+# Last modified: Wed Aug 2021 22:12:31
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -285,12 +285,14 @@ installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while
 if [[ -d /usr/share/xbps.d ]]; then
 	installlibxftbgra(){
 		update 2>&1 | lognoc
+		if [[ ! -f /etc/xbps.d/10-ignore.conf ]]; then sudo touch /etc/xbps.d/10-ignore.conf; fi
+		echo "ignorepkg=libXft" | sudo tee /etc/xbps.d/10-ignore.conf 2>&1 | lognoc
 		sudo xbps-remove -Fy libXft 2>&1 | lognoc
 		git clone --depth=1 "$bgraloc" "$HOME"/libxft-bgra 2>&1 | lognoc
-		cd "$HOME"/libxft-bgra && autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man 2>&1 | lognoc
-		sudo make clean install 2>&1 | lognoc
+		cd "$HOME"/libxft-bgra && ./autogen.sh --sysconfdir=/etc --prefix=/usr --mandir=/usr/share/man 2>&1 | lognoc
+		sudo make install 2>&1 | lognoc
 		cd "$HOME" || exit
-		rm -rf "$HOME"/libxft-bgra 2>&1 | lognoc
+		sudo rm -rf "$HOME"/libxft-bgra 2>&1 | lognoc
 	}
 else
 	installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
