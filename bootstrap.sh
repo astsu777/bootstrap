@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 16:00:25
+# Last modified: Wed Aug 2021 16:32:22
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -400,7 +400,7 @@ installsurf(){
 	sudo make -C "$surfloc" clean install > /dev/null 2>&1
 }
 installbspwm(){
-	install bspwm sxhkd 2>&1 | lognoc
+	install bspwm sxhkd polybar 2>&1 | lognoc
 	yes "" | installaur polybar 2>&1 | lognoc
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
 	if [[ ! -d "$HOME"/.config/bspwm ]]; then mkdir -pv "$HOME"/.config/bspwm > /dev/null 2>&1 ; fi
