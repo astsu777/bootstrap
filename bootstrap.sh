@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu Aug 2021 14:08:12
+# Last modified: Thu Aug 2021 15:18:42
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1116,7 +1116,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-
 			fi
 
 			# Change default shell to Dash
-			if type dash > /dev/null 2>&1 && [[ ! $(ls -l /bin/sh | awk '{print $11}') =~ [dash|\/bin\/dash]$ ]]; then
+			if type dash > /dev/null 2>&1 && [[ ! $(ls -l /bin/sh | awk '{print $11}') =~ ^(dash|\/bin\/dash)$ ]]; then
 				while read -p "Do you want to change the default shell to Dash? (Y/n) " -n 1 -r; do
 					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 						sudo ln -sfT dash /bin/sh
