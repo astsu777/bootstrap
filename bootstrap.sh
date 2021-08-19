@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu Aug 2021 12:34:10
+# Last modified: Thu Aug 2021 14:08:12
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1113,6 +1113,21 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-
 			if [ -f /etc/pacman.conf ]; then
 				# Enable colors
 				sudo sed -i 's/^#Color/Color/' /etc/pacman.conf 2>&1 | lognoc
+			fi
+
+			# Change default shell to Dash
+			if type dash > /dev/null 2>&1 && [[ ! $(ls -l /bin/sh | awk '{print $11}') =~ [dash|\/bin\/dash]$ ]]; then
+				while read -p "Do you want to change the default shell to Dash? (Y/n) " -n 1 -r; do
+					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+						sudo ln -sfT dash /bin/sh
+						echo -e "Default shell changed to Dash" 2>&1 | logc
+						echo -e "The modification will take effect after a reboot" 2>&1 | logc
+						break
+					elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+						echo -e
+						break
+					fi
+				done
 			fi
 
 			echo -e "Preferences configured" 2>&1 | logc
