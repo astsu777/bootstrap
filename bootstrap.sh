@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed Aug 2021 23:10:00
+# Last modified: Thu Aug 2021 12:06:05
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -278,7 +278,7 @@ installworkguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install
 installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
-installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc sudo xbps-remove -y lxsession && while IFS= read -r line; do install "$line" 2>&1 | lognoc && sudo ln -sf bash /bin/sh 2>&1 | lognoc; done < "$voidxpkg" ;}
+installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc sudo xbps-remove -y lxsession && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$voidxpkg" ;}
 installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
 installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)" ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
