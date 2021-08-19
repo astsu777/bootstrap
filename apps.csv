@@ -112,6 +112,7 @@ M,mas
 M,msmtp
 MADR,transmission-cli
 MADR,watch
+MADRCV,highlight
 MADRIV,glances
 MADRIV,htop
 MADRIV,inxi
