@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu Aug 2021 12:07:03
+# Last modified: Thu Aug 2021 12:34:10
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -529,6 +529,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 		elif type pacman > /dev/null 2>&1; then
 			pacman -Sy 2>&1 | lognoc
 			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
+		elif type xbps-install > /dev/null 2>&1; then
+			xbps-install -Syu 2>&1 | lognoc
+			xbps-install -y sudo 2>&1 | lognoc
 		fi
 		if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers; then
 			if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
