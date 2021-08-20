@@ -2,7 +2,7 @@
 #===================================================
 # Author: Gaetan (gaetan@ictpourtous.com)
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu Aug 2021 17:49:39
+# Last modified: Fri Aug 2021 12:47:09
 # Version: 2.0
 #
 # Description: this script automates the installation of my personal computer
@@ -1544,6 +1544,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
 				mv "$HOME"/.links "$HOME"/.old-dotfiles/links > /dev/null 2>&1
 				if [[ -d "$HOME"/.moc ]]; then mv "$HOME"/.moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; else mv "$HOME"/.config/moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; fi
+				mv "$HOME"/.config/zathura/zathurarc "$HOME"/.old-dotfiles/zathurarc > /dev/null 2>&1
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -Rf "$HOME"/.bash_profile
@@ -1591,6 +1592,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/qutebrowser/config.py
 				rm -Rf "$HOME"/.jwmrc
 				if [[ -d "$HOME"/.moc ]]; then rm -Rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
+				rm -Rf "$HOME"/.config/zathura/zathurarc
 				break
 			fi
 		done
@@ -1801,6 +1803,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		fi
 		if type jwm > /dev/null 2>&1; then
 			ln -sf "$dfloc"/jwmrc "$HOME"/.jwmrc 2>&1 | lognoc
+		fi
+		if type zathura > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/zathura ]]; then
+				mkdir -pv "$HOME"/.config/zathura 2>&1 | lognoc
+			fi
+			ln -sf "$dfloc"/config/zathura/zathurarc "$HOME"/.config/zathura/ 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
