@@ -73,6 +73,7 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 | W | Mark the application as a *work* application (all other programs are considered as common) |
 | I | Mark the application as a *server* application. If this is the only defined tag, the program will only be installed on remote servers (package manager is auto-detected) |
 | X | Mark the application as a necessary package to install a GUI environment (Arch only for now) |
+| V1 | Mark the application as a necessary package to install a GUI environment (Void Linux only) |
 | A | The application can be installed with Pacman on Arch Linux & derivatives |
 | Y | The application can be installed with YAY (AUR) on Arch Linux & derivatives |
 | D | The application can be installed with APT on Debian & derivatives |
@@ -81,6 +82,9 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 | C | The application can be installed with Homebrew on macOS and is a GUI program |
 | S | The application can be installed from the macOS App Store |
 | G | The application can be cloned from a Git repository |
+| O | Application matching an OpenRC service script |
+| Q | Application matching a Runit service script |
+| V | The application can be installed with XBPS on Void Linux |
 
 The file is structured in this way because some applications have different names depending on the OS. Also, some applications are not available on some systems. Personally, I also use different applications on different systems depending on my workflow.
 
