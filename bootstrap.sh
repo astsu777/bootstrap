@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-#===================================================
-# Author: Gaetan (gaetan@ictpourtous.com)
+#=========================================================================
+# Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri Aug 2021 18:35:16
-# Version: 2.0
+# Last modified: Sun 22 Aug 2021 12:22:20
+# Version: 1.0
 #
-# Description: this script automates the installation of my personal computer
-# Compatibility: it works for both macOS and Linux
-#===================================================
+# Description: this script automates the setup of my personal computers
+#=========================================================================
 
 #=======================
 # Variables
