@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 23 Aug 2021 11:24:39
+# Last modified: Mon 23 Aug 2021 11:26:26
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -422,7 +422,8 @@ installbspwm(){
 }
 installi3(){
 	install i3-gaps polybar 2>&1 | lognoc
-	yes "" | installaur polybar 2>&1 | lognoc
+	install i3-gaps 2>&1 | lognoc
+	if ! pacman -Q polybar >/dev/null 2>&1; then yes "" | installaur polybar 2>&1 | lognoc ; fi
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
 	if [[ ! -d "$HOME"/.config/i3 ]]; then mkdir -pv "$HOME"/.config/i3 > /dev/null 2>&1 ; fi
 	ln -sf "$dfloc"/config/i3/* "$HOME"/.config/i3/ > /dev/null 2>&1
