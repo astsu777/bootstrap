@@ -246,11 +246,13 @@ WDRCV,wireshark
 WDV,netcat
 WG,https://github.com/payloadsecurity/vxapi.git
 WG,https://github.com/sullo/nikto.git
+WM,plow
 WM,testssl
 WMA,xh
 WMADR,hping
 WMADR,mitmproxy
 WMADRI,lynis
+WMADRIV,lnav
 WMADRIV,mtr
 WMADRV,ansible
 WMADRV,ipcalc
@@ -278,6 +280,7 @@ WS,1295203466 microsoft remote desktop
 WS,1422475219 zentermlite
 WY,bria
 WY,gns3-converter
+WY,plow-bin
 WY,rambox-bin
 WY,telnet-bsd
 WYV,gns3-gui
