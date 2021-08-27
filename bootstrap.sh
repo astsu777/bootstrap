@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 23 Aug 2021 11:26:26
+# Last modified: Fri 27 Aug 2021 12:19:17
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1526,6 +1526,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/.p10k.zsh ]]; then mv "$HOME"/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.p10k.zsh "$HOME"/.old-dotfiles/p10k.zsh > /dev/null 2>&1; fi
 				if [[ -f "$HOME"/.zshrc ]]; then mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; fi
 				if [[ "$OSTYPE" == "linux-gnu" ]]; then mv "$HOME"/.config/mimeapps.list "$HOME"/.old-dotfiles/mimeapps.list > /dev/null 2>&1 ; fi
+				if [[ "$OSTYPE" == "linux-gnu" ]]; then mv "$HOME"/.local/share/applications/mimeapps.list "$HOME"/.old-dotfiles/local_share_applications_mimeapps.list > /dev/null 2>&1 ; fi
 				mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
 				mv "$HOME"/.zshenv "$HOME"/.old-dotfiles/zshenv > /dev/null 2>&1
 				mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
@@ -1561,6 +1562,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/screenrc ]]; then rm -Rf "$HOME"/screenrc; else rm -Rf "$HOME"/.config/screen/screenrc; fi
 				if [[ -f "$HOME"/.Xresources ]]; then rm -Rf "$HOME"/.Xresources; else rm -Rf "$HOME"/.config/X11/Xresources; fi
 				if [[ "$OSTYPE" == "linux-gnu" ]]; then rm -Rf "$HOME"/.config/mimeapps.list ; fi
+				if [[ "$OSTYPE" == "linux-gnu" ]]; then rm -Rf "$HOME"/.local/share/applications/mimeapps.list ; fi
 				rm -Rf "$HOME"/.vim
 				rm -Rf "$HOME"/.vimrc
 				if [[ -f "$HOME"/.zshrc ]]; then rm -Rf "$HOME"/.zshrc; else rm -Rf "$HOME"/.config/zsh/.zshrc; fi
