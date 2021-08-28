@@ -205,6 +205,7 @@ V,wol
 V1,automake
 V1,base-devel
 V1,dejavu-fonts-ttf
+V1,elogind
 V1,fontconfig-devel
 V1,fonts-droid-ttf
 V1,freetype-devel
