@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 28 Aug 2021 11:39:55
+# Last modified: Sat 28 Aug 2021 21:07:13
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -411,7 +411,7 @@ installsurf(){
 	sudo make -C "$surfloc" clean install > /dev/null 2>&1
 }
 installbspwm(){
-	install bspwm sxhkd polybar 2>&1 | lognoc
+	if [[ -d /usr/share/xbps.d ]]; then install bspwm sxhkd polybar 2>&1 | lognoc ; fi
 	install bspwm sxhkd 2>&1 | lognoc
 	if ! pacman -Q polybar >/dev/null 2>&1; then yes "" | installaur polybar 2>&1 | lognoc ; fi
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
@@ -421,7 +421,7 @@ installbspwm(){
 	ln -sf "$dfloc"/config/sxhkd/* "$HOME"/.config/sxhkd/ > /dev/null 2>&1
 }
 installi3(){
-	install i3-gaps polybar 2>&1 | lognoc
+	if [[ -d /usr/share/xbps.d ]]; then install i3-gaps polybar 2>&1 | lognoc ; fi
 	install i3-gaps 2>&1 | lognoc
 	if ! pacman -Q polybar >/dev/null 2>&1; then yes "" | installaur polybar 2>&1 | lognoc ; fi
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
@@ -445,7 +445,8 @@ installxfce(){
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing XFCE goodies..." 2>&1 | logc
-			sudo pacman -S xfce4-goodies --needed --noconfirm 2>&1 | lognoc
+			if [[ -d /usr/share/xbps.d ]]; then install xfce4-plugins 2>&1 | lognoc ; fi
+			install xfce4-goodies 2>&1 | lognoc
 			echo -e "XFCE goodies installed" 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -464,6 +465,7 @@ installgnome(){
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing GNOME extra applications..." 2>&1 | logc
+			if [[ -d /usr/share/xbps.d ]]; then install gnome-apps 2>&1 | lognoc ; fi
 			install gnome-extra 2>&1 | lognoc
 			echo -e "GNOME extra applications installed" 2>&1 | logc
 			break
@@ -474,7 +476,8 @@ installgnome(){
 	done
 }
 installkdeplasma(){
-	install plasma-desktop sddm sddm-kcm 2>&1 | lognoc
+	if [[ -d /usr/share/xbps.d ]]; then install kde5 2>&1 | lognoc ; fi
+	install plasma sddm sddm-kcm 2>&1 | lognoc
 	yes "" | installaur pamac-aur 2>&1 | lognoc
 	if [[ "$initSystem" == "openrc" ]]; then install sddm-openrc 2>&1 | lognoc; fi
 	installdmenu && installst && installsurf
@@ -483,6 +486,7 @@ installkdeplasma(){
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing KDE applications..." 2>&1 | logc
+			if [[ -d /usr/share/xbps.d ]]; then install kde5-baseapps 2>&1 | lognoc ; fi
 			install kde-applications 2>&1 | lognoc
 			echo -e "KDE applications installed" 2>&1 | logc
 			break
