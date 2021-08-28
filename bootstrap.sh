@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 28 Aug 2021 09:53:44
+# Last modified: Sat 28 Aug 2021 11:39:55
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1197,6 +1197,9 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 		echo -e "[6] GNOME"
 		echo -e "[7] KDE/Plasma"
 		echo -e "[9] Cancel"
+		echo -e "WARNING: if you are running Void Linux, DWM will only display a text-only statusbar"
+		echo -e "See https://gitlab.freedesktop.org/xorg/lib/libxft/-/merge_requests/1 for more details"
+		echo -e
 		while read -p "Choose (ex.: type 2 for DWM): " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" == 1 ]]; then
