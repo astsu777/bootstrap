@@ -44,6 +44,7 @@ ADRV,net-tools
 ADRV,nfs-utils
 ADRV,ntfs-3g
 ADRV,ntp
+ADRV,playerctl
 ADRV,python
 ADRV,python-pip
 ADRV,rofi
@@ -99,6 +100,7 @@ C,signal
 CAV,alacritty
 D,dnsutils
 D,texlive-full
+DRYV,mpdris2
 DRYV,redshift
 DYV,farbfeld
 G,https://github.com/raylee/tldr-sh-client
