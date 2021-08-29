@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 28 Aug 2021 21:07:13
+# Last modified: Sun 29 Aug 2021 13:35:30
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1534,6 +1534,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				if [[ -f "$HOME"/.zshrc ]]; then mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; fi
 				if [[ "$OSTYPE" == "linux-gnu" ]]; then mv "$HOME"/.config/mimeapps.list "$HOME"/.old-dotfiles/mimeapps.list > /dev/null 2>&1 ; fi
 				if [[ "$OSTYPE" == "linux-gnu" ]]; then mv "$HOME"/.local/share/applications/mimeapps.list "$HOME"/.old-dotfiles/local_share_applications_mimeapps.list > /dev/null 2>&1 ; fi
+				mv "$HOME"/.local/share/applications/sxiview.desktop "$HOME"/.old-dotfiles/sxiview.desktop > /dev/null 2>&1
 				mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
 				mv "$HOME"/.zshenv "$HOME"/.old-dotfiles/zshenv > /dev/null 2>&1
 				mv "$HOME"/.config/nvim/init.vim "$HOME"/.old-dotfiles/init.vim > /dev/null 2>&1
@@ -1554,7 +1555,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/qutebrowser/config.py "$HOME"/.old-dotfiles/qutebrowser.py > /dev/null 2>&1
 				mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
 				mv "$HOME"/.links "$HOME"/.old-dotfiles/links > /dev/null 2>&1
-				if [[ -d "$HOME"/.moc ]]; then mv "$HOME"/.moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; else mv "$HOME"/.config/moc "$HOME"/.old-dotfiles/moc > /dev/null 2>&1; fi
+				mv "$HOME"/.config/mpd/mpd.conf "$HOME"/.old-dotfiles/mpd.conf > /dev/null 2>&1
+				mv "$HOME"/.config/ncmpcpp/config "$HOME"/.old-dotfiles/ncmpcpp/config > /dev/null 2>&1
+				mv "$HOME"/.config/ncmpcpp/bindings "$HOME"/.old-dotfiles/ncmpcpp/bindings > /dev/null 2>&1
 				mv "$HOME"/.config/zathura/zathurarc "$HOME"/.old-dotfiles/zathurarc > /dev/null 2>&1
 				mv "$HOME"/.config/sxiv/exec/key-handler "$HOME"/.old-dotfiles/sxiv-key-handler > /dev/null 2>&1
 				break
@@ -1573,6 +1576,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.vim
 				rm -Rf "$HOME"/.vimrc
 				if [[ -f "$HOME"/.zshrc ]]; then rm -Rf "$HOME"/.zshrc; else rm -Rf "$HOME"/.config/zsh/.zshrc; fi
+				rm -Rf "$HOME"/.local/share/applications/sxiview.desktop
+				rm -Rf "$HOME"/.zprofile
 				rm -Rf "$HOME"/.zprofile
 				rm -Rf "$HOME"/.zshenv
 				rm -Rf "$HOME"/.config/nvim/init.vim
@@ -1605,6 +1610,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/qutebrowser/config.py
 				rm -Rf "$HOME"/.jwmrc
 				if [[ -d "$HOME"/.moc ]]; then rm -Rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
+				rm -Rf "$HOME"/.config/mpd/mpd.conf
+				rm -Rf "$HOME"/.config/ncmpcpp/config
+				rm -Rf "$HOME"/.config/ncmpcpp/bindings
 				rm -Rf "$HOME"/.config/zathura/zathurarc
 				rm -Rf "$HOME"/.config/sxiv/exec/key-handler
 				break
@@ -1661,6 +1669,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.config/mimeapps.list 2>&1 | lognoc
 			if [[ -d "$HOME"/.local/share/applications ]]; then mkdir -pv "$HOME"/.local/share/applications 2>&1 | lognoc ; fi
 			ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.local/share/applications/mimeapps.list 2>&1 | lognoc
+			ln -sf "$dfloc"/local/share/applications/sxiview.desktop "$HOME"/.local/share/applications/ 2>&1 | lognoc
 		fi
 		if type git > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/git ]]; then
@@ -1768,12 +1777,18 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			ln -sf "$dfloc"/config/PulseEffects/output/MySettings.json "$HOME"/.config/PulseEffects/output/MySettings.json 2>&1 | lognoc
 		fi
-		if type mocp > /dev/null 2>&1; then
-			if [[ ! -d "$HOME"/.config/moc ]]; then
-				mkdir -pv "$HOME"/.config/moc 2>&1 | lognoc
+		if type mpd > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/mpd ]]; then
+				mkdir -pv "$HOME"/.config/mpd 2>&1 | lognoc
 			fi
-			ln -sf "$dfloc"/config/moc/config "$HOME"/.config/moc/ 2>&1 | lognoc
-			ln -sf "$dfloc"/config/moc/themes "$HOME"/.config/moc/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/mpd/mpd.conf "$HOME"/.config/mpd/ 2>&1 | lognoc
+		fi
+		if type ncmpcpp > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/ncmpcpp ]]; then
+				mkdir -pv "$HOME"/.config/ncmpcpp 2>&1 | lognoc
+			fi
+			ln -sf "$dfloc"/config/ncmpcpp/config "$HOME"/.config/ncmpcpp/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/ncmpcpp/bindings "$HOME"/.config/ncmpcpp/ 2>&1 | lognoc
 		fi
 		if type dunst > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/dunst ]]; then

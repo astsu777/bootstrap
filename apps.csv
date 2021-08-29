@@ -40,7 +40,6 @@ ADRV,maim
 ADRV,man-db
 ADRV,man-pages
 ADRV,mlocate
-ADRV,moc
 ADRV,net-tools
 ADRV,nfs-utils
 ADRV,ntfs-3g
@@ -135,7 +134,10 @@ MADRV,grep
 MADRV,kitty
 MADRV,lame
 MADRV,links
+MADRV,mdp
+MADRV,mpc
 MADRV,mpv
+MADRV,ncmpcpp
 MADRV,neovim
 MADRV,newsboat
 MADRV,nnn
