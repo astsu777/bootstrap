@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 29 Aug 2021 16:24:55
+# Last modified: Sun 29 Aug 2021 16:54:51
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1780,6 +1780,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 		if type mpd > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/mpd ]]; then
 				mkdir -pv "$HOME"/.config/mpd 2>&1 | lognoc
+			fi
+			if [[ ! -d "$HOME"/.local/share/mpd ]]; then
+				mkdir -pv "$HOME"/.local/share/mpd 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/mpd/mpd.conf "$HOME"/.config/mpd/ 2>&1 | lognoc
 		fi
