@@ -43,7 +43,7 @@ This script has been fully validated with the following systems:
 |:-:|:-:|:-|
 | macOS 10/11 (Big Sur) | ✅| Fully compatible |
 | Arch Linux & SystemD derivatives | ✅ | Fully compatible |
-| Artix Linux & OpenRC derivatives | ✅ | Fully compatible |
+| Artix Linux & OpenRC/Runit derivatives | ✅ | Fully compatible |
 | Debian (+ distros based on it) | ✅ | Fully compatible |
 | Red Hat (+ distros based on it) | ✅ | Fully compatible |
 | Void Linux | ✅ | Fully compatible |
@@ -136,7 +136,7 @@ cd bootstrap
 If you use my dotfiles, a [function called bootstrap](https://github.com/GSquad934/dotfiles/blob/master/shellconfig/functions#L56) will automatically call this script again.
 
 # Laptop
-When being executed, the script will try to determine if the machine is a laptop or not. If it is a laptop and Arch Linux is being installed, the script will say so and propose to install *tlp*, a power saver software that can greatly increase a laptop's battery life.
+When being executed, the script will try to determine if the machine is a laptop or not. If it is the case, the script will say so and propose to install *tlp*, a power saver software that can greatly increase a laptop's battery life.
 
 
 # Server
