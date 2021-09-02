@@ -43,14 +43,14 @@ This script has been fully validated with the following systems:
 |:-:|:-:|:-|
 | macOS 10/11 (Big Sur) | ✅| Fully compatible |
 | Arch Linux & SystemD derivatives | ✅ | Fully compatible |
-| Artix Linux & OpenRC/Runit derivatives | ✅ | Fully compatible |
+| Artix Linux & OpenRC/Runit/S6/66 derivatives | ✅ | Fully compatible |
 | Debian (+ distros based on it) | ✅ | Fully compatible |
 | Red Hat (+ distros based on it) | ✅ | Fully compatible |
 | Void Linux | ✅ | Fully compatible |
 | BSD | ❌ | Not compatible yet |
 | Windows Subsystem for Linux (WSL) | ❗ | Graphical software won't install/work and dotfiles not behave as intended |
 
-Depending on the packages availability in the repositories, some software may be missing and/or not be compatible. If your system is using *OpenRC* or *Runit*, some scripts may not be available for services. In that case, check the documentation.
+Depending on the packages availability in the repositories, some software may be missing and/or not be compatible. If your system is using *OpenRC*/*Runit*/*S6*/*Suite66*, some scripts may not be available for services. In that case, check the documentation.
 
 The script supports the following package managers for now:
 
@@ -84,6 +84,8 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 | G | The application can be cloned from a Git repository |
 | O | Application matching an OpenRC service script |
 | Q | Application matching a Runit service script |
+| 6 | Application matching a S6 service script |
+| 7 | Application matching a Suite66 service script |
 | V | The application can be installed with XBPS on Void Linux |
 
 The file is structured in this way because some applications have different names depending on the OS. Also, some applications are not available on some systems. Personally, I also use different applications on different systems depending on my workflow.

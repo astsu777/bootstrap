@@ -1,7 +1,19 @@
 # TAG, PROGRAM
 # Tags: W=Work, M=macOS brew, A=Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools
-# Y=Yay, O=OpenRC, Q=Runit, V=Void XBPS, G=Git Repo, X=Arch Xorg, V1=Void Xorg
+# Y=Yay, O=OpenRC, Q=Runit, 6=S6, 7=Suite66, V=Void XBPS, G=Git Repo, X=Arch Xorg, V1=Void Xorg
 #Y,ttf-ms-win10-auto
+6,avahi-s6
+6,bluez-s6
+6,docker-s6
+6,networkmanager-s6
+6,ntp-s6
+6,syslog-ng-s6
+7,avahi-suite66
+7,bluez-suite66
+7,docker-suite66
+7,networkmanager-suite66
+7,ntp-suite66
+7,syslog-ng-suite66
 A,ca-certificates-mozilla
 A,etcher
 A,pritunl-client-electron
