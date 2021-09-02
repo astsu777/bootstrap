@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 29 Aug 2021 16:54:51
+# Last modified: Thu 02 Sep 2021 12:21:36
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1553,6 +1553,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/sxhkd/sxhkdrc_bspwm "$HOME"/.old-dotfiles/sxhkdrc_bspwm > /dev/null 2>&1
 				mv "$HOME"/.config/amfora/config.toml "$HOME"/.old-dotfiles/amfora.toml > /dev/null 2>&1
 				mv "$HOME"/.config/qutebrowser/config.py "$HOME"/.old-dotfiles/qutebrowser.py > /dev/null 2>&1
+				mv "$HOME"/.config/qutebrowser/dark.css "$HOME"/.old-dotfiles/qutedark.css > /dev/null 2>&1
 				mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
 				mv "$HOME"/.links "$HOME"/.old-dotfiles/links > /dev/null 2>&1
 				mv "$HOME"/.config/mpd/mpd.conf "$HOME"/.old-dotfiles/mpd.conf > /dev/null 2>&1
@@ -1608,6 +1609,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/sxhkd/sxhkdrc_bspwm
 				rm -Rf "$HOME"/.config/amfora/config.toml
 				rm -Rf "$HOME"/.config/qutebrowser/config.py
+				rm -Rf "$HOME"/.config/qutebrowser/dark.css
 				rm -Rf "$HOME"/.jwmrc
 				if [[ -d "$HOME"/.moc ]]; then rm -Rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
 				rm -Rf "$HOME"/.config/mpd/mpd.conf
@@ -1832,6 +1834,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/qutebrowser 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/qutebrowser/config.py "$HOME"/.config/qutebrowser/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/qutebrowser/dark.css "$HOME"/.config/qutebrowser/ 2>&1 | lognoc
 		fi
 		if type jwm > /dev/null 2>&1; then
 			ln -sf "$dfloc"/jwmrc "$HOME"/.jwmrc 2>&1 | lognoc
