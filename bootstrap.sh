@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 02 Sep 2021 21:37:39
+# Last modified: Thu 02 Sep 2021 21:48:10
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -140,6 +140,9 @@ elif type apt-get > /dev/null 2>&1; then
 	installkvm(){
 		update 2>&1 | lognoc && install ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
 	}
@@ -156,6 +159,9 @@ elif type yum > /dev/null 2>&1; then
 	installkvm(){
 		update 2>&1 | lognoc && install dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 elif type pacman yay > /dev/null 2>&1; then
@@ -175,6 +181,9 @@ elif type pacman yay > /dev/null 2>&1; then
 		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 	setupcustomrepos(){
@@ -224,6 +233,9 @@ elif type pacman > /dev/null 2>&1; then
 		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 	setupcustomrepos(){
@@ -273,6 +285,9 @@ elif type xbps-install > /dev/null 2>&1; then
 		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 fi
@@ -300,6 +315,12 @@ if [[ "$initSystem" == "openrc" ]]; then
 elif [[ "$initSystem" == "runit" ]]; then
 	installrunitpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$runitpkg" ;}
 	installrunitworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$runitworkpkg" ;}
+elif [[ "$initSystem" == "s6" ]]; then
+	installrunitpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$s6pkg" ;}
+	installrunitworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$s6workpkg" ;}
+elif [[ "$initSystem" == "suite66" ]]; then
+	installrunitpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$suite66pkg" ;}
+	installrunitworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$suite66workpkg" ;}
 fi
 installzsh() {
 	install zsh 2>&1 | lognoc
@@ -369,6 +390,9 @@ installxinitrc(){
 installgreeter(){
 	install lightdm lightdm-gtk-greeter 2>&1 | lognoc
 	if [[ "$initSystem" == "openrc" ]]; then install lightdm-openrc 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "runit" ]]; then install lightdm-runit 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "s6" ]]; then install lightdm-s6 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "suite66" ]]; then install lightdm-suite66 2>&1 | lognoc; fi
 	if [[ -f "$HOME"/.xprofile ]]; then
 		if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc ; else git -C "$dfloc" pull 2>&1 | lognoc ; fi
     	mv "$HOME"/.xprofile "$HOME"/.xprofile.orig > /dev/null 2>&1
@@ -472,6 +496,9 @@ installgnome(){
 	install gnome gnome-tweaks 2>&1 | lognoc
 	yes "" | installaur pamac-aur 2>&1 | lognoc
 	if [[ "$initSystem" == "openrc" ]]; then install gdm-openrc 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "runit" ]]; then install gdm-runit 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "s6" ]]; then install gdm-s6 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "suite66" ]]; then install gdm-suite66 2>&1 | lognoc; fi
 	enableSvc gdm -f 2>&1 | lognoc
 	while read -p "Do you want to install extra applications for GNOME (email client, Web browser, etc...)? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
@@ -492,6 +519,9 @@ installkdeplasma(){
 	install plasma sddm sddm-kcm 2>&1 | lognoc
 	yes "" | installaur pamac-aur 2>&1 | lognoc
 	if [[ "$initSystem" == "openrc" ]]; then install sddm-openrc 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "runit" ]]; then install sddm-runit 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "s6" ]]; then install sddm-s6 2>&1 | lognoc; fi
+	if [[ "$initSystem" == "suite66" ]]; then install sddm-suite66 2>&1 | lognoc; fi
 	installdmenu && installst && installsurf
 	enableSvc sddm -f 2>&1 | lognoc
 	while read -p "Do you want to install the KDE applications? (Y/n) " -n 1 -r; do
