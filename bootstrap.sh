@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 02 Sep 2021 21:48:10
+# Last modified: Thu 02 Sep 2021 22:04:47
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -97,7 +97,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		grepworks6pkg(){ s6workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed 's/^.*,//g' > "$s6workpkg" ;}
 		enableSvc() { sudo s6-rc-bundle-update -c /etc/s6/rc/compiled add default "$1" ;}
 		startSvc() { sudo s6-rc -u change "$1" ;}
-	elif type 66-enqble >> /dev/null 2>&1; then
+	elif type 66-enable >> /dev/null 2>&1; then
 		initSystem="suite66"
 		greps6pkg(){ suite66pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$suite66pkg" ;}
 		grepworks6pkg(){ suite66workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*" | sed 's/^.*,//g' > "$suite66workpkg" ;}
