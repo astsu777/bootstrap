@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 02 Sep 2021 22:04:47
+# Last modified: Mon 06 Sep 2021 00:00:34
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -537,6 +537,12 @@ installkdeplasma(){
 		fi
 		break
 	done
+}
+
+setupmdns(){
+	if ! grep 'mdns_' /etc/nsswitch.conf > /dev/null 2>&1; then
+		sudo sed -i 's/resolve /resolve mdns_minimal /' /etc/nsswitch.conf
+	fi
 }
 
 # Servers
@@ -1152,7 +1158,10 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-
 			if type nmtui > /dev/null 2>&1; then enableSvc NetworkManager 2>&1 | lognoc; fi
 			if type ntpd > /dev/null 2>&1; then enableSvc ntpd 2>&1 | lognoc; fi
 			if [[ "$initSystem" == "systemd" ]]; then enableSvc systemd-timesyncd 2>&1 | lognoc; fi
-			if type avahi-daemon > /dev/null 2>&1; then enableSvc avahi-daemon 2>&1 | lognoc; fi
+			if type avahi-daemon > /dev/null 2>&1; then
+				enableSvc avahi-daemon 2>&1 | lognoc
+				setupmdns
+			fi
 			if type cupsd > /dev/null 2>&1; then enableSvc cups 2>&1 | lognoc; fi
 			if type crond > /dev/null 2>&1; then enableSvc cronie 2>&1 | lognoc; fi
 			if type pritunl-client > /dev/null 2>&1; then enableSvc pritunl-client 2>&1 | lognoc; fi

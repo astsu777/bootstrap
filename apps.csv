@@ -54,6 +54,7 @@ ADRV,man-pages
 ADRV,mlocate
 ADRV,net-tools
 ADRV,nfs-utils
+ADRV,nss-mdns
 ADRV,ntfs-3g
 ADRV,ntp
 ADRV,playerctl
