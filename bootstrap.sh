@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 09 Sep 2021 10:21:15
+# Last modified: Thu 09 Sep 2021 18:38:40
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1985,6 +1985,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 						ln -sf "$dfloc"/config/volumeicon/volumeicon "$HOME"/.config/volumeicon/volumeicon 2>&1 | lognoc
 					fi
 					# QT
+					installaur qt5-x11extras 2>&1 | lognoc
 					sudo git clone --depth 1 "$adwaitaqtrepo" /opt/adwaita-qt 2>&1 | lognoc
 					cd /opt/adwaita-qt && sudo cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr 2>&1 | lognoc
 					sudo make 2>&1 | lognoc && sudo make install 2>&1 | lognoc
