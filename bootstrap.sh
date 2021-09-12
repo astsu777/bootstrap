@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 09 Sep 2021 18:38:40
+# Last modified: Sun 12 Sep 2021 21:33:18
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -35,6 +35,7 @@ aurhelper="https://aur.archlinux.org/yay.git"
 applist="https://raw.githubusercontent.com/GSquad934/bootstrap/master/apps.csv"
 
 # Font lists
+symbols_nerd="https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols-2048-em%20Nerd%20Font%20Complete.ttf?raw=true"
 mononoki_regular="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf"
 mononoki_bold="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Bold/complete/mononoki%20Bold%20Nerd%20Font%20Complete.ttf"
 mononoki_italic="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Italic/complete/mononoki%20Italic%20Nerd%20Font%20Complete.ttf"
@@ -881,11 +882,13 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type git > /dev/null 2>
 			else
 				mkdir -pv "$HOME"/fonts 2>&1 | lognoc
 				if type wget > /dev/null 2>&1; then
+					wget -c --content-disposition -P "$HOME"/fonts/ "$symbols_nerd" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | lognoc
 				elif type curl > /dev/null 2>&1; then
 					cd "$HOME"/fonts || exit
+					curl -fSLO "$symbols_nerd" 2>&1 | lognoc
 					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
 					curl -fSLO "$mononoki_bold" 2>&1 | lognoc
 					curl -fSLO "$mononoki_italic" 2>&1 | lognoc
