@@ -182,7 +182,6 @@ MADV,cpanminus
 MADV,streamlink
 MDRY,task-spooler
 MDRYV,urlview
-MY,gotop-bin
 O,avahi-openrc
 O,bluez-openrc
 O,docker-openrc
@@ -213,7 +212,6 @@ S,876540291 copy'em paste
 S,946798523 antisleep
 V,Signal-Desktop
 V,galculator-gtk3
-V,gotop
 V,gst-plugins-good1
 V,obs
 V,rsyslog
