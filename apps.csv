@@ -117,6 +117,7 @@ D,texlive-full
 DRYV,mpdris2
 DRYV,redshift
 DYV,farbfeld
+G,https://github.com/dylanaraps/pfetch
 G,https://github.com/raylee/tldr-sh-client
 I,etckeeper
 I,fd-find
