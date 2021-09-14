@@ -60,6 +60,7 @@ ADRV,ntp
 ADRV,playerctl
 ADRV,python
 ADRV,python-pip
+ADRV,redshift
 ADRV,rofi
 ADRV,ruby
 ADRV,screenkey
@@ -115,7 +116,6 @@ CAV,alacritty
 D,dnsutils
 D,texlive-full
 DRYV,mpdris2
-DRYV,redshift
 DYV,farbfeld
 G,https://github.com/dylanaraps/pfetch
 G,https://github.com/raylee/tldr-sh-client
@@ -272,6 +272,7 @@ WMADR,mitmproxy
 WMADRI,lynis
 WMADRIV,lnav
 WMADRIV,mtr
+WMADRIV,peco
 WMADRV,ansible
 WMADRV,ipcalc
 WMADRV,iperf3
@@ -281,6 +282,7 @@ WMADRV,minicom
 WMADRV,nmap
 WMADRV,rtmpdump
 WMADRV,speedtest-cli
+WMADRV,ssh-audit
 WMADRV,tor
 WMADRV,whois
 WMADV,httpie
@@ -288,9 +290,7 @@ WMARV,caddy
 WMD,dhcpdump
 WMDIY,tcptraceroute
 WMDR,telnet
-WMDRIYV,peco
 WMDRY,wakeonlan
-WMDRYV,ssh-audit
 WMRYV,zeek
 WMV,geoip
 WR,netcat-gnu
