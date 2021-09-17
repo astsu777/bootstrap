@@ -137,7 +137,6 @@ MADRIV,nethogs
 MADRIV,tmux
 MADRV,bash
 MADRV,bash-completion
-MADRV,bpytop
 MADRV,colordiff
 MADRV,coreutils
 MADRV,curl
