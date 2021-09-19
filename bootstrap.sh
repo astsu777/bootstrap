@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 12 Sep 2021 21:33:18
+# Last modified: Sun 19 Sep 2021 11:24:56
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -370,13 +370,6 @@ setupkeyring(){
 	if ! grep '^session[ \t]*optional[ \t]*pam_gnome_keyring.so auto_start$' /etc/pam.d/login > /dev/null 2>&1; then
 		sudo awk -i inplace 'FNR==NR{ if (/session/) p=NR; next} 1; FNR==p{ print "session    optional     pam_gnome_keyring.so auto_start" }' /etc/pam.d/login /etc/pam.d/login 2>&1 | lognoc
 	fi
-}
-setupcompositor(){
-	sudo sed -i '/^  tooltip/c \ \ tooltip = { fade = false; shadow = false; opacity = 1; focus = true; full-shadow = false; };' /etc/xdg/picom.conf 2>&1 | lognoc
-	sudo sed -i '/^  popup_menu/c \ \ popup_menu = { opacity = 1; };' /etc/xdg/picom.conf 2>&1 | lognoc
-	sudo sed -i '/^  dropdown_menu/c \ \ dropdown_menu = { opacity = 1; };' /etc/xdg/picom.conf 2>&1 | lognoc
-	sudo sed -i 's/^shadow = true/shadow = false/' /etc/xdg/picom.conf 2>&1 | lognoc
-	sudo sed -i 's/^fading = true/fading = false/' /etc/xdg/picom.conf 2>&1 | lognoc
 }
 installxinitrc(){
 	if [[ -f "$HOME"/.xinitrc ]]; then
@@ -1220,7 +1213,6 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-relea
 			if [[ -d /usr/share/xbps.d ]]; then grepvoidxpkg && installvoidxpkg && installjetbrainsmono; fi
 			grepxpkg && installxpkg
  	 	 	setupkeyring
- 	 	 	setupcompositor
 			installvideodriver
 			echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
 			echo -e 2>&1 | logc
@@ -1615,6 +1607,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/ncmpcpp/bindings "$HOME"/.old-dotfiles/ncmpcpp/bindings > /dev/null 2>&1
 				mv "$HOME"/.config/zathura/zathurarc "$HOME"/.old-dotfiles/zathurarc > /dev/null 2>&1
 				mv "$HOME"/.config/sxiv/exec/key-handler "$HOME"/.old-dotfiles/sxiv-key-handler > /dev/null 2>&1
+				mv "$HOME"/.config/picom/picom.conf "$HOME"/.old-dotfiles/picom.conf > /dev/null 2>&1
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -Rf "$HOME"/.bash_profile
@@ -1671,6 +1664,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/ncmpcpp/bindings
 				rm -Rf "$HOME"/.config/zathura/zathurarc
 				rm -Rf "$HOME"/.config/sxiv/exec/key-handler
+				rm -Rf "$HOME"/.config/picom/picom.conf
 				break
 			fi
 		done
@@ -1904,6 +1898,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/sxiv/exec 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/sxiv/exec/key-handler "$HOME"/.config/sxiv/exec/ 2>&1 | lognoc
+		fi
+		if type picom > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/picom ]]; then
+				mkdir -pv "$HOME"/.config/picom 2>&1 | lognoc
+			fi
+			ln -sf "$dfloc"/config/picom/picom.conf "$HOME"/.config/picom/picom.conf 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
