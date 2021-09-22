@@ -217,6 +217,7 @@ V,rsyslog
 V,spotify-qt
 V,transmission
 V,trayer-srg
+V,ts
 V,wol
 V1,automake
 V1,base-devel
