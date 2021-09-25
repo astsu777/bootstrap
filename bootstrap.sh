@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 25 Sep 2021 09:27:07
+# Last modified: Sat 25 Sep 2021 10:24:54
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1772,10 +1772,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && lln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
-				ln -sf "$dfloc"/config/alacritty/{custom,gruvbox,dracula,onedark,nord}_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
+				ln -sf "$dfloc"/config/alacritty/*_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
-				ln -sf "$dfloc"/config/alacritty/{custom,gruvbox,dracula,onedark,nord}_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
+				ln -sf "$dfloc"/config/alacritty/*_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
 			fi
 		fi
 		if type kitty > /dev/null 2>&1 || [[ -d /Applications/Kitty.app ]]; then
@@ -1784,10 +1784,10 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			fi
 			if [[ "$OSTYPE" == "darwin"* ]]; then
 				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
-				ln -sf "$dfloc"/config/kitty/{custom,gruvbox,dracula,onedark,nord}_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
+				ln -sf "$dfloc"/config/kitty/*_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
-				ln -sf "$dfloc"/config/kitty/{custom,gruvbox,dracula,onedark,nord}_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
+				ln -sf "$dfloc"/config/kitty/*_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
 			fi
 		fi
 		if type links > /dev/null 2>&1; then
