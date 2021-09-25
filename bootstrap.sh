@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 19 Sep 2021 11:24:56
+# Last modified: Sat 25 Sep 2021 09:27:07
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1172,6 +1172,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-
 			if [ -f /etc/pacman.conf ]; then
 				# Enable colors
 				sudo sed -i 's/^#Color/Color/' /etc/pacman.conf 2>&1 | lognoc
+				sudo sed -i 's/^#ParallelDownloads/ParallelDownloads = 5/' /etc/pacman.conf 2>&1 | lognoc
 			fi
 
 			# Change default shell to Dash
