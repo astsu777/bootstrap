@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 25 Sep 2021 10:24:54
+# Last modified: Sat 25 Sep 2021 10:50:58
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1609,6 +1609,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mv "$HOME"/.config/zathura/zathurarc "$HOME"/.old-dotfiles/zathurarc > /dev/null 2>&1
 				mv "$HOME"/.config/sxiv/exec/key-handler "$HOME"/.old-dotfiles/sxiv-key-handler > /dev/null 2>&1
 				mv "$HOME"/.config/picom/picom.conf "$HOME"/.old-dotfiles/picom.conf > /dev/null 2>&1
+				mv "$HOME"/.config/htop/htoprc "$HOME"/.old-dotfiles/htoprc > /dev/null 2>&1
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				rm -Rf "$HOME"/.bash_profile
@@ -1666,6 +1667,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				rm -Rf "$HOME"/.config/zathura/zathurarc
 				rm -Rf "$HOME"/.config/sxiv/exec/key-handler
 				rm -Rf "$HOME"/.config/picom/picom.conf
+				rm -Rf "$HOME"/.config/htop/htoprc
 				break
 			fi
 		done
@@ -1905,6 +1907,12 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/picom 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/picom/picom.conf "$HOME"/.config/picom/picom.conf 2>&1 | lognoc
+		fi
+		if type htop > /dev/null 2>&1; then
+			if [[ ! -d "$HOME"/.config/htop ]]; then
+				mkdir -pv "$HOME"/.config/htop 2>&1 | lognoc
+			fi
+			ln -sf "$dfloc"/config/htop/htoprc "$HOME"/.config/htop/htoprc 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
