@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 25 Sep 2021 10:50:58
+# Last modified: Sun 26 Sep 2021 17:02:25
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1164,6 +1164,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-
 			if type syslog-ng > /dev/null 2>&1; then enableSvc syslog-ng@default 2>&1 | lognoc; fi
 			if [ -f /usr/bin/ufw ]; then sudo /usr/bin/ufw enable 2>&1 | lognoc; fi
 			enableSvc bluetooth 2>&1 | lognoc
+			if type nordvpn > /dev/null 2>&1; then enableSvc nordvpnd 2>&1 | lognoc && sudo usermod -a -G nordvpn "$(whoami)" 2>&1 ; fi
 
 			# Add current to 'wireshark' group if need be
 			if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
@@ -1912,7 +1913,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.config/htop ]]; then
 				mkdir -pv "$HOME"/.config/htop 2>&1 | lognoc
 			fi
-			ln -sf "$dfloc"/config/htop/htoprc "$HOME"/.config/htop/htoprc 2>&1 | lognoc
+			cp "$dfloc"/config/htop/htoprc "$HOME"/.config/htop/htoprc 2>&1 | lognoc
 		fi
 
 		# If this is a SSH connection, install the server config of TMUX
