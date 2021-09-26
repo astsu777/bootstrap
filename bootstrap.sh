@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 26 Sep 2021 17:02:25
+# Last modified: Sun 26 Sep 2021 20:05:02
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1864,7 +1864,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			if [[ ! -d "$HOME"/.config/rofi ]]; then
 				mkdir -pv "$HOME"/.config/rofi 2>&1 | lognoc
 			fi
-			ln -sf "$dfloc"/config/rofi/config.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/rofi/*.rasi "$HOME"/.config/rofi/ 2>&1 | lognoc
 			# Replace DMenu by Rofi
 			rofi=$(which rofi)
 			ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
