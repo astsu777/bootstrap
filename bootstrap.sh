@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 26 Sep 2021 20:05:02
+# Last modified: Mon 27 Sep 2021 16:49:30
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1852,6 +1852,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				mkdir -pv "$HOME"/.config/dunst 2>&1 | lognoc
 			fi
 			ln -sf "$dfloc"/config/dunst/dunstrc "$HOME"/.config/dunst/ 2>&1 | lognoc
+			ln -sf "$dfloc"/config/dunst/*.wav "$HOME"/.config/dunst/ 2>&1 | lognoc
 		fi
 		if type tuir > /dev/null 2>&1; then
 			if [[ ! -d "$HOME"/.config/tuir ]]; then

@@ -16,6 +16,7 @@
 7,syslog-ng-suite66
 A,ca-certificates-mozilla
 A,etcher
+A,perl-image-exiftool
 A,pritunl-client-electron
 A,reflector
 A,signal-desktop
@@ -31,6 +32,7 @@ ADR,obs-studio
 ADRCV,gimp
 ADRCV,inkscape
 ADRCV,keepassxc
+ADRCV,mediainfo
 ADRCV,qutebrowser
 ADRCV,vlc
 ADRIV,nmon
@@ -114,6 +116,7 @@ C,pritunl
 C,signal
 CAV,alacritty
 D,dnsutils
+D,libimage-exiftool-perl
 D,texlive-full
 DRYV,mpdris2
 DYV,farbfeld
@@ -181,6 +184,7 @@ MADV,cpanminus
 MADV,streamlink
 MDRY,task-spooler
 MDRYV,urlview
+MV,exiftool
 O,avahi-openrc
 O,bluez-openrc
 O,docker-openrc
@@ -198,6 +202,7 @@ R,bind-utils
 R,brave
 R,jetbrains-mono-fonts
 R,perl-App-cpanminus
+R,perl-Image-ExifTool
 R,texlive-scheme-full
 RYV,plex-media-player
 S,1116599239 nordvpn ike
