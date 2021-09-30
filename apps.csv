@@ -21,6 +21,8 @@ A,pritunl-client-electron
 A,reflector
 A,signal-desktop
 A,syslog-ng
+A,vivaldi-ffmpeg-codecs
+AC,vivaldi
 ADCV,telegram-desktop
 ADR,galculator
 ADR,networkmanager
@@ -105,7 +107,6 @@ AX,ttf-jetbrains-mono
 AXV,pulsemixer
 AXV,xdg-user-dirs
 C,amethyst
-C,brave-browser
 C,cyberduck
 C,gpg-suite-no-mail
 C,keycastr
@@ -199,7 +200,6 @@ Q,ntp-runit
 Q,syslog-ng-runit
 R,Atomicparsley
 R,bind-utils
-R,brave
 R,jetbrains-mono-fonts
 R,perl-App-cpanminus
 R,perl-Image-ExifTool
@@ -356,9 +356,7 @@ X,xss-lock
 X,xterm
 X,zenity
 Y,android-messages-desktop-bin
-Y,brave-bin
 Y,hypnotix
-Y,mailspring
 Y,nordvpn-bin
 Y,spotify
 Y,ytfzf
