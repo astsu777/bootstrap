@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 27 Sep 2021 16:49:30
+# Last modified: Thu 14 Oct 2021 00:14:10
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -39,6 +39,9 @@ symbols_nerd="https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Sym
 mononoki_regular="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Regular/complete/mononoki-Regular%20Nerd%20Font%20Complete.ttf"
 mononoki_bold="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Bold/complete/mononoki%20Bold%20Nerd%20Font%20Complete.ttf"
 mononoki_italic="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Mononoki/Italic/complete/mononoki%20Italic%20Nerd%20Font%20Complete.ttf"
+fontawesome_brands="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/otfs/Font%20Awesome%205%20Brands-Regular-400.otf"
+fontawesome_regular="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/otfs/Font%20Awesome%205%20Free-Regular-400.otf"
+fontawesome_solid="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/otfs/Font%20Awesome%205%20Free-Solid-900.otf"
 powerline_fonts="https://github.com/powerline/fonts"
 
 # TMUX Plugins
@@ -879,22 +882,31 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type git > /dev/null 2>
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
 					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_brands" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_regular" 2>&1 | lognoc
+					wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_solid" 2>&1 | lognoc
 				elif type curl > /dev/null 2>&1; then
 					cd "$HOME"/fonts || exit
 					curl -fSLO "$symbols_nerd" 2>&1 | lognoc
 					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
 					curl -fSLO "$mononoki_bold" 2>&1 | lognoc
 					curl -fSLO "$mononoki_italic" 2>&1 | lognoc
+					curl -fSLO "$fontawesome_brand" 2>&1 | lognoc
+					curl -fSLO "$fontawesome_regular" 2>&1 | lognoc
+					curl -fSLO "$fontawesome_solid" 2>&1 | lognoc
 					for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
 				fi
 				if [[ "$OSTYPE" == "darwin"* ]]; then
 					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | lognoc
+					mv "$HOME"/fonts/*.otf "$HOME"/Library/Fonts/ 2>&1 | lognoc
 				elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 					if [[ ! -d /usr/share/fonts/TTF ]]; then
 						sudo mkdir -pv /usr/share/fonts/TTF 2>&1 | lognoc
 					fi
 					if type fc-cache > /dev/null 2>&1; then
-						sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ && fc-cache -f -v 2>&1 | lognoc
+						sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ | lognoc
+						sudo mv -n "$HOME"/fonts/*.otf /usr/share/fonts/TTF/ | lognoc
+						fc-cache -f -v 2>&1 | lognoc
 					else
 						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | logc
 						exit 1
