@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 14 Oct 2021 15:47:00
+# Last modified: Thu 14 Oct 2021 16:22:05
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -817,7 +817,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				grepgitrepo && installgitrepo
 				grepdirectdl && installdirectdl
 				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
-					echo 1
 					grepaurpkg && installaurpkg
 				fi
 			fi
