@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 14 Oct 2021 15:11:42
+# Last modified: Thu 14 Oct 2021 15:14:38
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -811,11 +811,17 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				greppkg && installpkg && installsent
 				grepgitrepo && installgitrepo
+				grepdirectdl && installdirectdl
 				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
+			# Replace youtube-dl by yt-dlp
+			if type yt-dlp > /dev/null 2>&1; then
+				yt-dlp=$(which yt-dlp)
+				ln -sf "$yt-dlp" "$scriptsloc"/youtube-dl 2>&1 | lognoc
+			fi
 			echo -e "Common software installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
@@ -865,6 +871,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
 					grepworkaurpkg && installworkaurpkg
 					grepworkgitrepo && installworkgitrepo
+					grepworkdirectdl && installworkdirectdl
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
