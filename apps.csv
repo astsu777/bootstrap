@@ -124,8 +124,8 @@ DRYV,mpdris2
 DYV,farbfeld
 G,https://github.com/dylanaraps/pfetch
 G,https://github.com/raylee/tldr-sh-client
-H,https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
-H,https://raw.githubusercontent.com/pystardust/ytfzf/master/ytfzf
+H,https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp yt-dlp
+H,https://raw.githubusercontent.com/pystardust/ytfzf/master/ytfzf ytfzf
 I,etckeeper
 I,fd-find
 M,ansifilter
