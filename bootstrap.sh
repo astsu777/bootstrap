@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 14 Oct 2021 15:14:38
+# Last modified: Thu 14 Oct 2021 15:47:00
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -122,14 +122,8 @@ grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^
 grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
 grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
-grepdirectdl(){
-	ddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$ddl"
-	ddlname=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $2}' > "$ddlname"
-}
-grepworkdirectdl(){
-	workddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workddl"
-	workddlname=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed 's/^.*,//g' | awk '{print $2}' > "$workddlname"
-}
+grepdirectdl(){ ddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$ddl" ;}
+grepworkdirectdl(){	workddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workddl" ;}
 grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
 grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
 grepvoidxpkg(){ voidxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "V1[^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$voidxpkg" ;}
@@ -324,8 +318,18 @@ installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra
 installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)" ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
-installdirectdl(){ if type curl > /dev/null 2>&1; then < "$ddl" xargs -n1 -I xxx sudo curl -skL xxx -o "$ddloc"/"$ddlname" 2>&1 | lognoc; fi ;}
-installworkdirectdl(){ if type curl > /dev/null 2>&1; then < "$workddl" xargs -n1 -I xxx sudo curl -skL xxx -o "$ddloc"/"$workddlname" 2>&1 | lognoc; fi ;}
+installdirectdl(){
+	cd "$ddloc" || exit
+	< "$ddl" xargs -I xxx sudo curl -skLO xxx 2>&1 | lognoc
+	sudo chmod +x ./* 2>&1 | lognoc
+	cd "$HOME" || exit
+}
+installworkdirectdl(){
+	cd "$ddloc" || exit
+	< "$workddl" xargs -I xxx sudo curl -skLO xxx 2>&1 | lognoc
+	sudo chmod +x ./* 2>&1 | lognoc
+	cd "$HOME" || exit
+}
 if [[ "$initSystem" == "openrc" ]]; then
 	installopenrcpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
 	installopenrcworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
@@ -813,14 +817,15 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				grepgitrepo && installgitrepo
 				grepdirectdl && installdirectdl
 				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
+					echo 1
 					grepaurpkg && installaurpkg
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
 			# Replace youtube-dl by yt-dlp
 			if type yt-dlp > /dev/null 2>&1; then
-				yt-dlp=$(which yt-dlp)
-				ln -sf "$yt-dlp" "$scriptsloc"/youtube-dl 2>&1 | lognoc
+				ytdlp=$(command -v yt-dlp)
+				ln -sf "$ytdlp" "$scriptsloc"/youtube-dl 2>&1 | lognoc
 			fi
 			echo -e "Common software installed" 2>&1 | logc
 			echo -e 2>&1 | logc
