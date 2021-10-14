@@ -82,6 +82,7 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 | C | The application can be installed with Homebrew on macOS and is a GUI program |
 | S | The application can be installed from the macOS App Store |
 | G | The application can be cloned from a Git repository |
+| H | The application is binary directly downloaded from the Internet |
 | O | Application matching an OpenRC service script |
 | Q | Application matching a Runit service script |
 | 6 | Application matching a S6 service script |
@@ -114,6 +115,7 @@ The file *bootstrap&#46;sh* has a lot of variables defined at the very beginning
 * **scriptsloc**: this variable defines where custom scripts will be stored. Personally, I use this to auto-create this folder so my dotfiles will deploy scripts there and add this folder to my *&#36;PATH*. Default value is *$HOME/.local/bin*
 * **resourcesloc**: this variable defines where resources to be used by custom scripts are located (Ex.: a list of all unicode characters)
 * **gitrepoloc**: this variable defines where cloned Git repositories will be stored. Default value is *$HOME/.sources/repos*
+* **ddloc**: this variable defines where downloaded binaries will be stored. Default value is */usr/local/bin*
 * **sourcesloc**: this variable defines where software sources will be stored. Default value is *$HOME/.sources*
 * **wallpapers**: this variable indicates what repository of wallpapers can be downloaded
 * **wallpapersloc**: this variable defines where downloaded wallpapers will be stored. Default value is *$HOME/.local/share/wallpapers*

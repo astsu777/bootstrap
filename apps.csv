@@ -1,6 +1,6 @@
 # TAG, PROGRAM
 # Tags: W=Work, M=macOS brew, A=Pacman, D=Debian APT, R=Red Hat YUM, C=macOS Casks, S=macOS Store, I=Server Tools
-# Y=Yay, O=OpenRC, Q=Runit, 6=S6, 7=Suite66, V=Void XBPS, G=Git Repo, X=Arch Xorg, V1=Void Xorg
+# Y=Yay, H=Web download, O=OpenRC, Q=Runit, 6=S6, 7=Suite66, V=Void XBPS, G=Git Repo, X=Arch Xorg, V1=Void Xorg
 #Y,ttf-ms-win10-auto
 6,avahi-s6
 6,bluez-s6
@@ -124,6 +124,8 @@ DRYV,mpdris2
 DYV,farbfeld
 G,https://github.com/dylanaraps/pfetch
 G,https://github.com/raylee/tldr-sh-client
+H,https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+H,https://raw.githubusercontent.com/pystardust/ytfzf/master/ytfzf
 I,etckeeper
 I,fd-find
 M,ansifilter
@@ -177,7 +179,6 @@ MADRV,tree
 MADRV,weechat
 MADRV,wget
 MADRV,xz
-MADRV,youtube-dl
 MADRV,zbar
 MADRV,zip
 MADRVX,git

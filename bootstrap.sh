@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 14 Oct 2021 00:14:10
+# Last modified: Thu 14 Oct 2021 14:54:18
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -21,6 +21,9 @@ resourcesloc="$HOME/.local/share"
 
 # Git repositories location
 gitrepoloc="$HOME/.sources/repos"
+
+# Direct download location
+ddloc="/usr/local/bin"
 
 # Software sources location
 # sourcesloc="$HOME/.sources"
@@ -119,6 +122,8 @@ grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^
 grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
 grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
+grepdirectdl(){ ddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$ddl" ;}
+grepworkdirectdl(){ workddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workddl" ;}
 grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
 grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
 grepvoidxpkg(){ voidxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "V1[^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$voidxpkg" ;}
@@ -313,6 +318,8 @@ installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra
 installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)" ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
+installdirectdl(){ if type curl > /dev/null 2>&1; then < "$ddl" xargs -n1 -I url sudo curl -skL url -o "$ddloc" 2>&1 | lognoc; fi ;}
+installworkdirectdl(){ if type curl > /dev/null 2>&1; then < "$workddl" xargs -n1 -I url sudo curl -skL url -o "$ddloc" 2>&1 | lognoc; fi ;}
 if [[ "$initSystem" == "openrc" ]]; then
 	installopenrcpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcpkg" ;}
 	installopenrcworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$openrcworkpkg" ;}
@@ -781,6 +788,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					greppkg && installpkg
 					grepguipkg && installguipkg
 					grepgitrepo && installgitrepo
+					grepdirectdl && installdirectdl
 				fi
 				while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
@@ -830,6 +838,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					grepworkpkg && installworkpkg
 					grepworkguipkg && installworkguipkg
 					grepworkgitrepo && installworkgitrepo
+					grepworkdirectdl && installworkdirectdl
 					if type mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
 						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
 							echo -e 2>&1 | logc
@@ -891,7 +900,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type git > /dev/null 2>
 					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
 					curl -fSLO "$mononoki_bold" 2>&1 | lognoc
 					curl -fSLO "$mononoki_italic" 2>&1 | lognoc
-					curl -fSLO "$fontawesome_brand" 2>&1 | lognoc
+					curl -fSLO "$fontawesome_brands" 2>&1 | lognoc
 					curl -fSLO "$fontawesome_regular" 2>&1 | lognoc
 					curl -fSLO "$fontawesome_solid" 2>&1 | lognoc
 					for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
