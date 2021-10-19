@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 19 Oct 2021 19:55:20
+# Last modified: Tue 19 Oct 2021 20:25:21
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -488,6 +488,8 @@ installopenbox(){
 }
 installspectrwm(){
 	install spectrwm fontconfig 2>&1 | lognoc
+	mkdir -pv "$HOME"/fonts 2>&1 | lognoc
+	cd "$HOME"/fonts || exit
 	curl -fSLO "$fontawesome_brands" 2>&1 | lognoc
 	curl -fSLO "$fontawesome_regular" 2>&1 | lognoc
 	curl -fSLO "$fontawesome_solid" 2>&1 | lognoc
@@ -499,6 +501,8 @@ installspectrwm(){
 		sudo mv -n "$HOME"/fonts/*.otf /usr/share/fonts/TTF/ | lognoc
 		fc-cache -f -v 2>&1 | lognoc
 	fi
+	cd "$HOME" || exit
+	rm -Rf "$HOME"/fonts* > /dev/null 2>&1
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
 	if [[ ! -d "$HOME"/.config/spectrwm ]]; then mkdir -pv "$HOME"/.config/spectrwm > /dev/null 2>&1 ; fi
 	ln -sf "$dfloc"/config/spectrwm/* "$HOME"/.config/spectrwm/ > /dev/null 2>&1
