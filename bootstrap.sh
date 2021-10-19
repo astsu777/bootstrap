@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 19 Oct 2021 20:25:21
+# Last modified: Tue 19 Oct 2021 20:42:51
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -497,8 +497,8 @@ installspectrwm(){
 		sudo mkdir -pv /usr/share/fonts/TTF 2>&1 | lognoc
 	fi
 	if type fc-cache > /dev/null 2>&1; then
-		sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ | lognoc
-		sudo mv -n "$HOME"/fonts/*.otf /usr/share/fonts/TTF/ | lognoc
+		sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ 2>&1 | lognoc
+		sudo mv -n "$HOME"/fonts/*.otf /usr/share/fonts/TTF/ 2>&1 | lognoc
 		fc-cache -f -v 2>&1 | lognoc
 	fi
 	cd "$HOME" || exit
