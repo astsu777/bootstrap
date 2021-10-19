@@ -82,8 +82,8 @@ ADRV,zathura-ps
 ADRX,vi
 ADRXV,wmctrl
 ADRXV,xclip
-ADV,ttf-ubuntu-font-family
 ADV,ufw
+ADVX,ttf-ubuntu-font-family
 ADX,ttf-dejavu
 ADX,ttf-liberation
 ADXV,xdo
