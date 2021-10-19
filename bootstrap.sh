@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 14 Oct 2021 16:22:05
+# Last modified: Tue 19 Oct 2021 19:55:20
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -485,6 +485,23 @@ installopenbox(){
 	if [[ ! -d "$HOME"/.config/tint2 ]]; then mkdir -pv "$HOME"/.config/tint2 > /dev/null 2>&1 ; fi
 	ln -sf "$dfloc"/config/tint2/tint2rc "$HOME"/.config/tint2/ > /dev/null 2>&1
 	ln -sf "$dfloc"/config/openbox "$HOME"/.config/ > /dev/null 2>&1
+}
+installspectrwm(){
+	install spectrwm fontconfig 2>&1 | lognoc
+	curl -fSLO "$fontawesome_brands" 2>&1 | lognoc
+	curl -fSLO "$fontawesome_regular" 2>&1 | lognoc
+	curl -fSLO "$fontawesome_solid" 2>&1 | lognoc
+	if [[ ! -d /usr/share/fonts/TTF ]]; then
+		sudo mkdir -pv /usr/share/fonts/TTF 2>&1 | lognoc
+	fi
+	if type fc-cache > /dev/null 2>&1; then
+		sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ | lognoc
+		sudo mv -n "$HOME"/fonts/*.otf /usr/share/fonts/TTF/ | lognoc
+		fc-cache -f -v 2>&1 | lognoc
+	fi
+	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
+	if [[ ! -d "$HOME"/.config/spectrwm ]]; then mkdir -pv "$HOME"/.config/spectrwm > /dev/null 2>&1 ; fi
+	ln -sf "$dfloc"/config/spectrwm/* "$HOME"/.config/spectrwm/ > /dev/null 2>&1
 }
 installxfce(){
 	install xfce4 2>&1 | lognoc
@@ -1282,10 +1299,11 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 		echo -e "[2] DWM"
 		echo -e "[3] i3 (with gaps)"
 		echo -e "[4] Openbox"
-		echo -e "[5] XFCE"
+		echo -e "[5] SpectrWM"
+		echo -e "[6] XFCE"
 		echo -e "You can also choose these environments, but they will be vanilla (no customisation):"
-		echo -e "[6] GNOME"
-		echo -e "[7] KDE/Plasma"
+		echo -e "[7] GNOME"
+		echo -e "[8] KDE/Plasma"
 		echo -e "[9] Cancel"
 		echo -e "WARNING: if you are running Void Linux, DWM will only display a text-only statusbar"
 		echo -e "See https://gitlab.freedesktop.org/xorg/lib/libxft/-/merge_requests/1 for more details"
@@ -1296,7 +1314,6 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				echo -e "Installing BSPWM..." 2>&1 | logc
 				installxinitrc
 				installbspwm && installdmenu && installst && installslock && installsurf
-				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="bspwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "BSPWM installed" 2>&1 | logc
 				echo -e "If you have multiple monitors, please read the documentation at https://github.com/GSquad934/dotfiles/tree/master/config/bspwm" 2>&1 | logc
@@ -1313,7 +1330,6 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				echo -e "Installing i3..." 2>&1 | logc
 				installxinitrc
 				installi3 && installdmenu && installst && installslock && installsurf
-				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="i3"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "i3 installed" 2>&1 | logc
 				echo -e 2>&1 | logc
@@ -1321,23 +1337,29 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				echo -e "Installing Openbox..." 2>&1 | logc
 				installxinitrc
 				installopenbox && installdmenu && installst && installslock && installsurf
-				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "Openbox installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 5 ]]; then
+				echo -e "Installing SpectrWM..." 2>&1 | logc
+				installxinitrc
+				installspectrwm && installdmenu && installst && installslock && installsurf
+				sed -i '/export SESSION="*"/c export SESSION="spectrwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+				echo -e "SpectrWM installed" 2>&1 | logc
+				echo -e 2>&1 | logc
+			elif [[ "$REPLY" == 6 ]]; then
 				echo -e "Installing XFCE..." 2>&1 | logc
 				installxinitrc
 				installxfce && installdmenu && installst && installslock && installsurf
 				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "XFCE installed" 2>&1 | logc
 				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 6 ]]; then
+			elif [[ "$REPLY" == 7 ]]; then
 				echo -e "Installing GNOME..." 2>&1 | logc
 				installgnome && installdmenu && installst && installsurf
 				echo -e "GNOME installed" 2>&1 | logc
 				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 7 ]]; then
+			elif [[ "$REPLY" == 8 ]]; then
 				echo -e "Installing KDE/Plasma..." 2>&1 | logc
 				installkdeplasma && installdmenu && installst && installsurf
 				echo -e "KDE/Plasma installed" 2>&1 | logc
