@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 26 Oct 2021 21:26:53
+# Last modified: Tue 26 Oct 2021 21:30:36
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -617,8 +617,7 @@ installfonts(){
 			exit 1
 		fi
 	fi
-	echo -e 2>&1 | logc
-	git clone --depth 1 "$powerline_fonts" "$HOME"/fonts_powerline 2>&1 | lognoc && "$HOME"/fonts_powerline/install.sh
+	git clone --depth 1 "$powerline_fonts" "$HOME"/fonts_powerline 2>&1 | lognoc && "$HOME"/fonts_powerline/install.sh 2>&1 | lognoc
 	cd "$HOME" || exit
 	rm -Rf "$HOME"/fonts* > /dev/null 2>&1
 }
