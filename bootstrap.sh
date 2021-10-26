@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 26 Oct 2021 21:16:49
+# Last modified: Tue 26 Oct 2021 21:26:53
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -580,6 +580,49 @@ setupmdns(){
 	fi
 }
 
+installfonts(){
+	mkdir -pv "$HOME"/fonts 2>&1 | lognoc
+	if type wget > /dev/null 2>&1; then
+		wget -c --content-disposition -P "$HOME"/fonts/ "$symbols_nerd" 2>&1 | lognoc
+		wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
+		wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
+		wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | lognoc
+		wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_brands" 2>&1 | lognoc
+		wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_regular" 2>&1 | lognoc
+		wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_solid" 2>&1 | lognoc
+	elif type curl > /dev/null 2>&1; then
+		cd "$HOME"/fonts || exit
+		curl -fSLO "$symbols_nerd" 2>&1 | lognoc
+		curl -fSLO "$mononoki_regular" 2>&1 | lognoc
+		curl -fSLO "$mononoki_bold" 2>&1 | lognoc
+		curl -fSLO "$mononoki_italic" 2>&1 | lognoc
+		curl -fSLO "$fontawesome_brands" 2>&1 | lognoc
+		curl -fSLO "$fontawesome_regular" 2>&1 | lognoc
+		curl -fSLO "$fontawesome_solid" 2>&1 | lognoc
+		for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
+	fi
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | lognoc
+		mv "$HOME"/fonts/*.otf "$HOME"/Library/Fonts/ 2>&1 | lognoc
+	elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+		if [[ ! -d /usr/share/fonts/TTF ]]; then
+			sudo mkdir -pv /usr/share/fonts/TTF 2>&1 | lognoc
+		fi
+		if type fc-cache > /dev/null 2>&1; then
+			sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ | lognoc
+			sudo mv -n "$HOME"/fonts/*.otf /usr/share/fonts/TTF/ | lognoc
+			fc-cache -f -v 2>&1 | lognoc
+		else
+			echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | logc
+			exit 1
+		fi
+	fi
+	echo -e 2>&1 | logc
+	git clone --depth 1 "$powerline_fonts" "$HOME"/fonts_powerline 2>&1 | lognoc && "$HOME"/fonts_powerline/install.sh
+	cd "$HOME" || exit
+	rm -Rf "$HOME"/fonts* > /dev/null 2>&1
+}
+
 # Servers
 if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
 	if [[ "$EUID" = 0 ]]; then
@@ -923,46 +966,7 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type git > /dev/null 2>
 				echo -e "Please run this script as a normal user" 2>&1 | logc
 				exit 1
 			else
-				mkdir -pv "$HOME"/fonts 2>&1 | lognoc
-				if type wget > /dev/null 2>&1; then
-					wget -c --content-disposition -P "$HOME"/fonts/ "$symbols_nerd" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_regular" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_bold" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$mononoki_italic" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_brands" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_regular" 2>&1 | lognoc
-					wget -c --content-disposition -P "$HOME"/fonts/ "$fontawesome_solid" 2>&1 | lognoc
-				elif type curl > /dev/null 2>&1; then
-					cd "$HOME"/fonts || exit
-					curl -fSLO "$symbols_nerd" 2>&1 | lognoc
-					curl -fSLO "$mononoki_regular" 2>&1 | lognoc
-					curl -fSLO "$mononoki_bold" 2>&1 | lognoc
-					curl -fSLO "$mononoki_italic" 2>&1 | lognoc
-					curl -fSLO "$fontawesome_brands" 2>&1 | lognoc
-					curl -fSLO "$fontawesome_regular" 2>&1 | lognoc
-					curl -fSLO "$fontawesome_solid" 2>&1 | lognoc
-					for i in *; do mv "$i" "$(echo "$i" | sed 's/%20/ /g')"; done
-				fi
-				if [[ "$OSTYPE" == "darwin"* ]]; then
-					mv "$HOME"/fonts/*.ttf "$HOME"/Library/Fonts/ 2>&1 | lognoc
-					mv "$HOME"/fonts/*.otf "$HOME"/Library/Fonts/ 2>&1 | lognoc
-				elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-					if [[ ! -d /usr/share/fonts/TTF ]]; then
-						sudo mkdir -pv /usr/share/fonts/TTF 2>&1 | lognoc
-					fi
-					if type fc-cache > /dev/null 2>&1; then
-						sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ | lognoc
-						sudo mv -n "$HOME"/fonts/*.otf /usr/share/fonts/TTF/ | lognoc
-						fc-cache -f -v 2>&1 | lognoc
-					else
-						echo -e "Please install a font configuration handler such as 'fontconfig'!" 2>&1 | logc
-						exit 1
-					fi
-				fi
-				echo -e 2>&1 | logc
-				git clone --depth 1 "$powerline_fonts" "$HOME"/fonts_powerline 2>&1 | lognoc && "$HOME"/fonts_powerline/install.sh
-				cd "$HOME" || exit
-				rm -Rf "$HOME"/fonts* > /dev/null 2>&1
+				installfonts
 			fi
 			echo -e "Custom fonts installed" 2>&1 | logc
 			echo -e 2>&1 | logc
@@ -1317,6 +1321,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			if [[ "$REPLY" == 1 ]]; then
 				echo -e "Installing BSPWM..." 2>&1 | logc
 				installxinitrc
+				installfonts
 				installbspwm && installdmenu && installst && installslock && installsurf
 				sed -i '/export SESSION="*"/c export SESSION="bspwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "BSPWM installed" 2>&1 | logc
@@ -1325,6 +1330,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			elif [[ "$REPLY" == 2 ]]; then
 				echo -e "Installing DWM..." 2>&1 | logc
 				installxinitrc
+				installfonts
 				installdwm && installdmenu && installst && installslock && installsurf
 				installlibxftbgra
 				sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
@@ -1333,6 +1339,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			elif [[ "$REPLY" == 3 ]]; then
 				echo -e "Installing i3..." 2>&1 | logc
 				installxinitrc
+				installfonts
 				installi3 && installdmenu && installst && installslock && installsurf
 				sed -i '/export SESSION="*"/c export SESSION="i3"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "i3 installed" 2>&1 | logc
@@ -1340,6 +1347,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			elif [[ "$REPLY" == 4 ]]; then
 				echo -e "Installing Openbox..." 2>&1 | logc
 				installxinitrc
+				installfonts
 				installopenbox && installdmenu && installst && installslock && installsurf
 				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "Openbox installed" 2>&1 | logc
@@ -1347,6 +1355,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			elif [[ "$REPLY" == 5 ]]; then
 				echo -e "Installing SpectrWM..." 2>&1 | logc
 				installxinitrc
+				installfonts
 				installspectrwm && installdmenu && installst && installslock && installsurf
 				sed -i '/export SESSION="*"/c export SESSION="spectrwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "SpectrWM installed" 2>&1 | logc
@@ -1354,17 +1363,20 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 			elif [[ "$REPLY" == 6 ]]; then
 				echo -e "Installing XFCE..." 2>&1 | logc
 				installxinitrc
+				installfonts
 				installxfce && installdmenu && installst && installslock && installsurf
 				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 				echo -e "XFCE installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 7 ]]; then
 				echo -e "Installing GNOME..." 2>&1 | logc
+				installfonts
 				installgnome && installdmenu && installst && installsurf
 				echo -e "GNOME installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 8 ]]; then
 				echo -e "Installing KDE/Plasma..." 2>&1 | logc
+				installfonts
 				installkdeplasma && installdmenu && installst && installsurf
 				echo -e "KDE/Plasma installed" 2>&1 | logc
 				echo -e 2>&1 | logc
