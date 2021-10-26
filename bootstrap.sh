@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 26 Oct 2021 21:30:36
+# Last modified: Tue 26 Oct 2021 21:47:35
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -522,28 +522,6 @@ installxfce(){
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			echo -e 2>&1 | logc
-			break
-		fi
-		break
-	done
-}
-installgnome(){
-	install gnome gnome-tweaks 2>&1 | lognoc
-	yes "" | installaur pamac-aur 2>&1 | lognoc
-	if [[ "$initSystem" == "openrc" ]]; then install gdm-openrc 2>&1 | lognoc; fi
-	if [[ "$initSystem" == "runit" ]]; then install gdm-runit 2>&1 | lognoc; fi
-	if [[ "$initSystem" == "s6" ]]; then install gdm-s6 2>&1 | lognoc; fi
-	if [[ "$initSystem" == "suite66" ]]; then install gdm-suite66 2>&1 | lognoc; fi
-	enableSvc gdm -f 2>&1 | lognoc
-	while read -p "Do you want to install extra applications for GNOME (email client, Web browser, etc...)? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing GNOME extra applications..." 2>&1 | logc
-			if [[ -d /usr/share/xbps.d ]]; then install gnome-apps 2>&1 | lognoc ; fi
-			install gnome-extra 2>&1 | lognoc
-			echo -e "GNOME extra applications installed" 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 			break
 		fi
 		break
@@ -1309,8 +1287,7 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 		echo -e "[5] SpectrWM"
 		echo -e "[6] XFCE"
 		echo -e "You can also choose these environments, but they will be vanilla (no customisation):"
-		echo -e "[7] GNOME"
-		echo -e "[8] KDE/Plasma"
+		echo -e "[7] KDE/Plasma"
 		echo -e "[9] Cancel"
 		echo -e "WARNING: if you are running Void Linux, DWM will only display a text-only statusbar"
 		echo -e "See https://gitlab.freedesktop.org/xorg/lib/libxft/-/merge_requests/1 for more details"
@@ -1368,12 +1345,6 @@ while read -p "Do you want to install a custom graphical environment now? (Y/n) 
 				echo -e "XFCE installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 			elif [[ "$REPLY" == 7 ]]; then
-				echo -e "Installing GNOME..." 2>&1 | logc
-				installfonts
-				installgnome && installdmenu && installst && installsurf
-				echo -e "GNOME installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 8 ]]; then
 				echo -e "Installing KDE/Plasma..." 2>&1 | logc
 				installfonts
 				installkdeplasma && installdmenu && installst && installsurf
