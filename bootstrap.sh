@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 26 Oct 2021 21:47:35
+# Last modified: Tue 26 Oct 2021 21:58:47
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -461,6 +461,7 @@ installsurf(){
 	sudo make -C "$surfloc" clean install > /dev/null 2>&1
 }
 installbspwm(){
+	update 2>&1 | lognoc
 	if [[ -d /usr/share/xbps.d ]]; then install bspwm sxhkd polybar 2>&1 | lognoc ; fi
 	install bspwm sxhkd 2>&1 | lognoc
 	if ! pacman -Q polybar >/dev/null 2>&1; then yes "" | installaur polybar 2>&1 | lognoc ; fi
@@ -471,6 +472,7 @@ installbspwm(){
 	ln -sf "$dfloc"/config/sxhkd/* "$HOME"/.config/sxhkd/ > /dev/null 2>&1
 }
 installi3(){
+	update 2>&1 | lognoc
 	if [[ -d /usr/share/xbps.d ]]; then install i3-gaps polybar 2>&1 | lognoc ; fi
 	install i3-gaps 2>&1 | lognoc
 	if ! pacman -Q polybar >/dev/null 2>&1; then yes "" | installaur polybar 2>&1 | lognoc ; fi
@@ -479,6 +481,7 @@ installi3(){
 	ln -sf "$dfloc"/config/i3/* "$HOME"/.config/i3/ > /dev/null 2>&1
 }
 installopenbox(){
+	update 2>&1 | lognoc
 	install openbox menumaker tint2 2>&1 | lognoc
 	yes "" | installaur arc-dark-osx-openbox-theme-git 2>&1 | lognoc
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
@@ -487,27 +490,14 @@ installopenbox(){
 	ln -sf "$dfloc"/config/openbox "$HOME"/.config/ > /dev/null 2>&1
 }
 installspectrwm(){
-	install spectrwm fontconfig 2>&1 | lognoc
-	mkdir -pv "$HOME"/fonts 2>&1 | lognoc
-	cd "$HOME"/fonts || exit
-	curl -fSLO "$fontawesome_brands" 2>&1 | lognoc
-	curl -fSLO "$fontawesome_regular" 2>&1 | lognoc
-	curl -fSLO "$fontawesome_solid" 2>&1 | lognoc
-	if [[ ! -d /usr/share/fonts/TTF ]]; then
-		sudo mkdir -pv /usr/share/fonts/TTF 2>&1 | lognoc
-	fi
-	if type fc-cache > /dev/null 2>&1; then
-		sudo mv -n "$HOME"/fonts/*.ttf /usr/share/fonts/TTF/ 2>&1 | lognoc
-		sudo mv -n "$HOME"/fonts/*.otf /usr/share/fonts/TTF/ 2>&1 | lognoc
-		fc-cache -f -v 2>&1 | lognoc
-	fi
-	cd "$HOME" || exit
-	rm -Rf "$HOME"/fonts* > /dev/null 2>&1
+	update 2>&1 | lognoc
+	install spectrwm 2>&1 | lognoc
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
 	if [[ ! -d "$HOME"/.config/spectrwm ]]; then mkdir -pv "$HOME"/.config/spectrwm > /dev/null 2>&1 ; fi
 	ln -sf "$dfloc"/config/spectrwm/* "$HOME"/.config/spectrwm/ > /dev/null 2>&1
 }
 installxfce(){
+	update 2>&1 | lognoc
 	install xfce4 2>&1 | lognoc
 	yes "" | installaur pamac-aur 2>&1 | lognoc
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
@@ -528,6 +518,7 @@ installxfce(){
 	done
 }
 installkdeplasma(){
+	update 2>&1 | lognoc
 	if [[ -d /usr/share/xbps.d ]]; then install kde5 2>&1 | lognoc ; fi
 	install plasma sddm sddm-kcm 2>&1 | lognoc
 	yes "" | installaur pamac-aur 2>&1 | lognoc
@@ -559,6 +550,7 @@ setupmdns(){
 }
 
 installfonts(){
+	install fontconfig 2>&1 | lognoc
 	mkdir -pv "$HOME"/fonts 2>&1 | lognoc
 	if type wget > /dev/null 2>&1; then
 		wget -c --content-disposition -P "$HOME"/fonts/ "$symbols_nerd" 2>&1 | lognoc
