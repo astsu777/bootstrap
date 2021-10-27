@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 26 Oct 2021 21:58:47
+# Last modified: Thu 28 Oct 2021 00:05:24
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -627,19 +627,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
 		exit 1
 	else
-		if type apt-get > /dev/null 2>&1; then
-			apt-get update 2>&1 | lognoc
-			apt-get install -y sudo 2>&1 | lognoc
-		elif type yum > /dev/null 2>&1; then
-			yum update -y 2>&1 | lognoc
-			yum install -y sudo 2>&1 | lognoc
-		elif type pacman > /dev/null 2>&1; then
-			pacman -Sy 2>&1 | lognoc
-			pacman -S sudo --needed --noconfirm 2>&1 | lognoc
-		elif type xbps-install > /dev/null 2>&1; then
-			xbps-install -Syu 2>&1 | lognoc
-			xbps-install -y sudo 2>&1 | lognoc
-		fi
+		update 2>&1 | lognoc
+		install sudo 2>&1 | lognoc
 		if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers; then
 			if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
 				if [[ ! -d /etc/sudoers.d ]]; then mkdir -pv /etc/sudoers.d 2>&1 | lognoc; fi
@@ -653,6 +642,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
 		echo -e 2>&1 | logc
 	fi
 fi
+
 if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
 	echo -e "You are currently logged in as 'root'" 2>&1 | logc
 	while read -p "Do you want to create a user account (it will be given SUDO privilege)? (Y/n) " -n 1 -r; do
@@ -774,7 +764,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && { [[ -f /etc
 					sudo pacman -Sy 2>&1 | lognoc
 					sudo pacman -S git base-devel --needed --noconfirm 2>&1 | lognoc
 					git clone --depth 1 "$aurhelper" "$HOME"/yay 2>&1 | lognoc
-					cd "$HOME"/yay && makepkg -si 2>&1 | logc
+					cd "$HOME"/yay && yes makepkg -si 2>&1 | lognoc
 					cd "$HOME" || exit
 					rm -Rf "$HOME"/yay
 					echo -e "AUR Helper successfully installed" 2>&1 | logc
@@ -797,7 +787,7 @@ fi
 #=======================
 # Workstation - Configure Custom Repositories
 #=======================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
 	while read -p "Do you want to configure 3rd party/custom repositories? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
