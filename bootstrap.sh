@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 10:50:05
+# Last modified: Thu 28 Oct 2021 11:17:52
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1380,117 +1380,114 @@ echo -e "=======================================================================
 echo -e 2>&1 | logc
 echo -e 2>&1 | logc
 
-#======================
-# Linux - Install 'sudo' (Requirement)
-#======================
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! type sudo > /dev/null 2>&1; then
-	echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
-	echo -e "Installing 'sudo'..." 2>&1 | logc
-	if [[ "$EUID" != 0 ]]; then
-		echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
-		exit 1
-	else
-		installsudo
-		echo -e "Package 'sudo' is now installed" 2>&1 | logc
-		echo -e "The 'sudo' configuration can be modified with the command \"visudo\"" 2>&1 | logc
-		echo -e 2>&1 | logc
-	fi
-fi
-
-#======================
-# Linux - Create User
-#======================
-if [[ "$OSTYPE" == "linux-gnu" ]] && [[ "$EUID" == 0 ]]; then
-	echo -e "You are currently logged in as 'root'" 2>&1 | logc
-	while read -p "Do you want to create a user account (it will be given SUDO privilege)? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			while read -p "What will be your username? " -r user; do
-				if [[ "$user" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
-					createuser
-					echo -e 2>&1 | logc
-					break
-				else
-					echo -e "Invalid username! The name should only contain alphanumeric characters" 2>&1 | logc
-					echo -e 2>&1 | logc
-					continue
-				fi
-			done
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+#=======================
+# REQUIREMENTS
+#=======================
+# Linux
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	# Install 'sudo'
+	if ! type sudo > /dev/null 2>&1; then
+		echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
+		echo -e "Installing 'sudo'..." 2>&1 | logc
+		if [[ "$EUID" != 0 ]]; then
+			echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
+			exit 1
+		else
+			installsudo
+			echo -e "Package 'sudo' is now installed" 2>&1 | logc
+			echo -e "The 'sudo' configuration can be modified with the command \"visudo\"" 2>&1 | logc
 			echo -e 2>&1 | logc
-			break
 		fi
-		break
-	done
-	echo -e "Please logout and login with your regular user. Then run this script again" 2>&1 | logc
-	exit 0
-fi
-
-#======================
-# macOS - Install XCode Command Line Tools (Requirement)
-#======================
-if [[ "$OSTYPE" == "darwin"* ]] && [[ ! -d /Library/Developer/CommandLineTools ]]; then
-	installxcodecli
-fi
-
-#======================
-# macOS - Install Homebrew (Requirement)
-#======================
-if [[ "$OSTYPE" == "darwin"* ]] && ! type brew > /dev/null 2>&1; then
-	if [[ "$EUID" = 0 ]]; then
-		echo -e "Homebrew cannot be installed as root!" 2>&1 | logc
-		exit 1
-	else
-		echo -e "Installing Homebrew..." 2>&1 | logc
-		echo -e 2>&1 | logc
-		installhomebrew
-		echo -e "Homebrew is now installed" 2>&1 | logc
-		echo -e "Please run this script again to bootstrap your system" 2>&1 | logc
-		exit 0
 	fi
-fi
-
-#======================
-# Arch Linux - Install AUR Helper (Requirement)
-#======================
-if [[ "$OSTYPE" == "linux-gnu" ]] && ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
-	while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			if [[ "$EUID" = 0 ]]; then
-				echo -e "This AUR helper cannot be installed as root!" 2>&1 | logc
-				exit 1
-			else
-				if sudo -v > /dev/null 2>&1; then
-					echo -e "Installing 'yay', an AUR helper..." 2>&1 | logc
-					installaurhelper
-					echo -e "AUR Helper successfully installed" 2>&1 | logc
-					echo -e "Please run this script again to take AUR packages into account" 2>&1 | logc
-					exit 0
-				else
-					echo -e "Your user is not a member of the sudoers group!" 2>&1 | logc
-					echo -e "Please run this script with a user with sudo rights" 2>&1 | logc
-					exit 1
-				fi
+	# Create user
+	if [[ "$EUID" == 0 ]]; then
+		echo -e "You are currently logged in as 'root'" 2>&1 | logc
+		while read -p "Do you want to create a user account (it will be given SUDO privilege)? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				while read -p "What will be your username? " -r user; do
+					if [[ "$user" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
+						createuser
+						echo -e 2>&1 | logc
+						break
+					else
+						echo -e "Invalid username! The name should only contain alphanumeric characters" 2>&1 | logc
+						echo -e 2>&1 | logc
+						continue
+					fi
+				done
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e 2>&1 | logc
+				break
 			fi
 			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
+		done
+		echo -e "Please logout and login with your regular user. Then run this script again" 2>&1 | logc
+		exit 0
+	fi
+	# Arch Linux - Install AUR Helper (Requirement)
+	if ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
+		while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				if [[ "$EUID" = 0 ]]; then
+					echo -e "This AUR helper cannot be installed as root!" 2>&1 | logc
+					exit 1
+				else
+					if sudo -v > /dev/null 2>&1; then
+						echo -e "Installing 'yay', an AUR helper..." 2>&1 | logc
+						installaurhelper
+						echo -e "AUR Helper successfully installed" 2>&1 | logc
+						echo -e "Please run this script again to take AUR packages into account" 2>&1 | logc
+						exit 0
+					else
+						echo -e "Your user is not a member of the sudoers group!" 2>&1 | logc
+						echo -e "Please run this script with a user with sudo rights" 2>&1 | logc
+						exit 1
+					fi
+				fi
+				break
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e
+				break
+			fi
+		done
+	fi
+fi
+# macOS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	# Install XCode Command Line Tools
+	if [[ ! -d /Library/Developer/CommandLineTools ]]; then
+		installxcodecli
+	fi
+	# Install Homebrew
+	if ! type brew > /dev/null 2>&1; then
+		if [[ "$EUID" = 0 ]]; then
+			echo -e "Homebrew cannot be installed as root!" 2>&1 | logc
+			exit 1
+		else
+			echo -e "Installing Homebrew..." 2>&1 | logc
+			echo -e 2>&1 | logc
+			installhomebrew
+			echo -e "Homebrew is now installed" 2>&1 | logc
+			echo -e "Please run this script again to bootstrap your system" 2>&1 | logc
+			exit 0
 		fi
-	done
+	fi
 fi
 
 #=======================
-# Workstation - Configure Custom Repositories
+# SERVERS SPECIFIC
 #=======================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
-	while read -p "Do you want to configure 3rd party/custom repositories? (Y/n) " -n 1 -r; do
+# Install software
+if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
+	while read -p "[SERVER SESSION DETECTED] Do you want to install useful tools? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Configuring custom repositories..." 2>&1 | logc
-			setupcustomrepos
-			echo -e "Custom repositories configured" 2>&1 | logc
+			echo -e "Installing useful server tools..." 2>&1 | logc
+			grepsrvpkg && installsrvpkg
+			rm ./apps.csv 2>&1 | lognoc
+			echo -e "Useful server tools installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -1500,10 +1497,27 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-relea
 	done
 fi
 
-#======================
-# Workstation - Install Common Packages
-#======================
+#=======================
+# WORKSTATIONS SPECIFIC
+#=======================
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+	# Arch/Artix Linux - Configure custom repositories
+	if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
+		while read -p "Do you want to configure 3rd party/custom repositories? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Configuring custom repositories..." 2>&1 | logc
+				setupcustomrepos
+				echo -e "Custom repositories configured" 2>&1 | logc
+				echo -e 2>&1 | logc
+				break
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e
+				break
+			fi
+		done
+	fi
+	# Install common packages
 	while read -p "Do you want to install common applications? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1550,16 +1564,11 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			echo -e 2>&1 | logc
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e
-				break
+			echo -e
+			break
 		fi
 	done
-fi
-
-#======================
-# Workstation - Install Work Packages
-#======================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+	# Install work packages
 	while read -p "Do you want to install work applications? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1607,60 +1616,20 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			break
 		fi
 	done
-fi
-
-#=====================
-# Workstation - Install Fonts
-#=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type git > /dev/null 2>&1; then
-	while read -p "Do you want to install custom fonts? (Y/n) " -n 1 -r; do
-	echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing custom fonts..." 2>&1 | logc
-			if [[ "$EUID" = 0 ]]; then
-				echo -e "Custom fonts cannot be installed as root!" 2>&1 | logc
-				echo -e "Please run this script as a normal user" 2>&1 | logc
-				exit 1
-			else
-				installfonts
-			fi
-			echo -e "Custom fonts installed" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
-
-#=====================
-# Install TMUX Plugin Manager
-#=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type tmux > /dev/null 2>&1; then
-	if [[ -d "$HOME"/.config/tmux/plugins/tpm ]]; then
-		while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
+	# Install fonts
+	if type git > /dev/null 2>&1; then
+		while read -p "Do you want to install custom fonts? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | logc
-				rm -Rf "$HOME"/.config/tmux/plugins/tpm && git clone --depth 1 "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
-				echo -e "TMUX Plugin Manager installed" 2>&1 | logc
-				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
-				echo -e 2>&1 | logc
-				break
-			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e
-				break
-			fi
-		done
-	else
-		while read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Installing TMUX Plugin Manager..." 2>&1 | logc
-				git clone --depth 1 "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
-				echo -e "TMUX Plugin Manager installed" 2>&1 | logc
-				echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
+				echo -e "Installing custom fonts..." 2>&1 | logc
+				if [[ "$EUID" = 0 ]]; then
+					echo -e "Custom fonts cannot be installed as root!" 2>&1 | logc
+					echo -e "Please run this script as a normal user" 2>&1 | logc
+					exit 1
+				else
+					installfonts
+				fi
+				echo -e "Custom fonts installed" 2>&1 | logc
 				echo -e 2>&1 | logc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -1669,32 +1638,41 @@ if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && type tmux > /dev/null 2
 			fi
 		done
 	fi
-fi
-
-#======================
-# Install server packages
-#======================
-if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
-	while read -p "[SERVER SESSION DETECTED] Do you want to install useful tools? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing useful server tools..." 2>&1 | logc
-			grepsrvpkg && installsrvpkg
-			rm ./apps.csv 2>&1 | lognoc
-			echo -e "Useful server tools installed" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
+	# Install TMUX Plugin Manager
+	if type tmux > /dev/null 2>&1; then
+		if [[ -d "$HOME"/.config/tmux/plugins/tpm ]]; then
+			while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | logc
+					rm -Rf "$HOME"/.config/tmux/plugins/tpm && git clone --depth 1 "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
+					echo -e "TMUX Plugin Manager installed" 2>&1 | logc
+					echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
+					echo -e 2>&1 | logc
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
+		else
+			while read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Installing TMUX Plugin Manager..." 2>&1 | logc
+					git clone --depth 1 "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
+					echo -e "TMUX Plugin Manager installed" 2>&1 | logc
+					echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
+					echo -e 2>&1 | logc
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
 		fi
-	done
-fi
-
-#=====================
-# Wallpapers
-#=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+	fi
+	# Wallpapers
 	while read -p "Do you want to install a set of nice wallpapers? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1709,12 +1687,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			break
 		fi
 	done
-fi
-
-#=====================
-# Workstation - Configuration
-#=====================
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+	# System configuration
 	while read -p "Do you want to configure your system? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -1764,306 +1737,282 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			done
 		fi
 	fi
-fi
-
-#=====================
-# Arch Linux - GUI Requirements
-#=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && [[ "$TERM" == "linux" ]]; then
-	while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
-			echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
-			if [[ -d /usr/share/xbps.d ]]; then grepvoidxpkg && installvoidxpkg && installjetbrainsmono; fi
-			grepxpkg && installxpkg
- 	 	 	setupkeyring
-			installvideodriver
-			echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
-			echo -e 2>&1 | logc
-			rm "$HOME"/apps.csv 2>&1 | lognoc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
-
-#=====================
-# Arch/Artix/Void Linux - DE/WM Installation
-#=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && type Xorg > /dev/null 2>&1; then
-while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
-	echo -e 2>&1 | logc
-	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-		if [[ -n $(pgrep Xorg) ]]; then
-			echo -e "A new GUI cannot be installed while Xorg is running!"
-			echo -e "Please run this script from a TTY (Press CTRL+F1-9 keys) without Xorg running"
-			exit 1
-		fi
-		echo -e "Choose a custom environment from the following options:"
-		echo -e "[1] BSPWM"
-		echo -e "[2] DWM"
-		echo -e "[3] i3 (with gaps)"
-		echo -e "[4] Openbox"
-		echo -e "[5] SpectrWM"
-		echo -e "[6] XFCE"
-		echo -e "You can also choose these environments, but they will be vanilla (no customisation):"
-		echo -e "[7] KDE/Plasma"
-		echo -e "[9] Cancel"
-		echo -e "WARNING: if you are running Void Linux, DWM will only display a text-only statusbar"
-		echo -e "See https://gitlab.freedesktop.org/xorg/lib/libxft/-/merge_requests/1 for more details"
-		echo -e
-		while read -p "Choose (ex.: type 2 for DWM): " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" == 1 ]]; then
-				echo -e "Installing BSPWM..." 2>&1 | logc
-				installxinitrc
-				installfonts
-				installbspwm && installdmenu && installst && installslock && installsurf
-				sed -i '/export SESSION="*"/c export SESSION="bspwm"' "$HOME"/.xinitrc 2>&1 | lognoc
-				echo -e "BSPWM installed" 2>&1 | logc
-				echo -e "If you have multiple monitors, please read the documentation at https://github.com/GSquad934/dotfiles/tree/master/config/bspwm" 2>&1 | logc
+	#=======================
+	# Arch/Artix/Void Linux
+	#=======================
+	if { [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;}; then
+		if [[ "$TERM" == "linux" ]]; then
+			# X requirements
+			while read -p "Do you want to install the necessary software for a GUI environment? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 2 ]]; then
-				echo -e "Installing DWM..." 2>&1 | logc
-				installxinitrc
-				installfonts
-				installdwm && installdmenu && installst && installslock && installsurf
-				installlibxftbgra
-				sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
-				echo -e "DWM installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 3 ]]; then
-				echo -e "Installing i3..." 2>&1 | logc
-				installxinitrc
-				installfonts
-				installi3 && installdmenu && installst && installslock && installsurf
-				sed -i '/export SESSION="*"/c export SESSION="i3"' "$HOME"/.xinitrc 2>&1 | lognoc
-				echo -e "i3 installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 4 ]]; then
-				echo -e "Installing Openbox..." 2>&1 | logc
-				installxinitrc
-				installfonts
-				installopenbox && installdmenu && installst && installslock && installsurf
-				sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
-				echo -e "Openbox installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 5 ]]; then
-				echo -e "Installing SpectrWM..." 2>&1 | logc
-				installxinitrc
-				installfonts
-				installspectrwm && installdmenu && installst && installslock && installsurf
-				sed -i '/export SESSION="*"/c export SESSION="spectrwm"' "$HOME"/.xinitrc 2>&1 | lognoc
-				echo -e "SpectrWM installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 6 ]]; then
-				echo -e "Installing XFCE..." 2>&1 | logc
-				installxinitrc
-				installfonts
-				installxfce && installdmenu && installst && installslock && installsurf
-				sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
-				echo -e "XFCE installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 7 ]]; then
-				echo -e "Installing KDE/Plasma..." 2>&1 | logc
-				installfonts
-				installkdeplasma && installdmenu && installst && installsurf
-				echo -e "KDE/Plasma installed" 2>&1 | logc
-				echo -e 2>&1 | logc
-			elif [[ "$REPLY" == 9 ]]; then
-				echo -e 2>&1 | logc
-				break
-			fi
-			if [[ ! -f /usr/bin/gdm ]] > /dev/null 2>&1 && [[ ! -f /usr/bin/sddm ]] > /dev/null 2>&1; then
-				echo -e "The default login method is made via Xinit (preferred method)"
-				echo -e "However, it is possible to use a graphical login manager such as LightDM"
-				while read -p "Do you want to use a graphical login manager? (Y/n): " -n 1 -r; do
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
+					echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
+					if [[ -d /usr/share/xbps.d ]]; then grepvoidxpkg && installvoidxpkg && installjetbrainsmono; fi
+					grepxpkg && installxpkg
+ 	 	 			setupkeyring
+					installvideodriver
+					echo -e "Necessary software for a GUI environment installed" 2>&1 | logc
 					echo -e 2>&1 | logc
-					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-						echo -e "Installing LightDM..." 2>&1 | logc
-						installgreeter
-						echo -e "LightDM installed" 2>&1 | logc
-						echo -e 2>&1 | logc
-						break
-					elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-						echo -e 2>&1 | logc
-						break
-					fi
-				done
-			fi
-		break
-		done
-
-		# Replace DMenu by Rofi
-		if type rofi > /dev/null 2>&1; then
-			rofi=$(which rofi)
-			ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
+					rm "$HOME"/apps.csv 2>&1 | lognoc
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
 		fi
-
-		# Install Clipmenu (clipboard manager)
-		if ! type clipmenu > /dev/null 2>&1; then
-			install xsel clipnotify 2>&1 | lognoc
-			sudo git clone --depth 1 "$clipmenurepo" /opt/clipmenu 2>&1 | lognoc
-			cd /opt/clipmenu && sudo make install 2>&1 | lognoc
-			cd "$HOME" || exit
-		fi
-
-	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-		echo -e 2>&1 | logc
-		break
-	fi
-	break
-done
-fi
-
-#=======================
-# Arch/Artix/Void Linux - Laptop
-#=======================
-# Chassis type can be determined by reading file '/sys/class/dmi/id/chassis_type'
-# An integer represents a type of chassis. Here is the full list:
-# 1 Other
-# 2 Unknown
-# 3 Desktop
-# 4 Low Profile Desktop
-# 5 Pizza Box
-# 6 Mini Tower
-# 7 Tower
-# 8 Portable
-# 9 Laptop
-# 10 Notebook
-# 11 Hand Held
-# 12 Docking Station
-# 13 All in One
-# 14 Sub Notebook
-# 15 Space-Saving
-# 16 Lunch Box
-# 17 Main System Chassis
-# 18 Expansion Chassis
-# 19 SubChassis
-# 20 Bus Expansion Chassis
-# 21 Peripheral Chassis
-# 22 Storage Chassis
-# 23 Rack Mount Chassis
-# 24 Sealed-Case PC
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]] && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] || [[ -d /usr/share/xbps.d ]] ;} && [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
-	if type tlp > /dev/null 2>&1; then
-		while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Installing power management software..." 2>&1 | logc
-				install tlp xfce4-power-manager powertop 2>&1 | lognoc
-				enableSvc tlp 2>&1 | lognoc
-				enableSvc upower 2>&1 | lognoc
-				echo -e "Power management software installed" 2>&1 | logc
+		# DE/WM Installation
+		if type Xorg > /dev/null 2>&1; then
+			while read -p "Do you want to install a custom graphical environment now? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
-				if [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]] && [[ $(cat /sys/class/dmi/id/chassis_version) =~ ^Mac ]]; then
-					echo -e "[MACBOOK DETECTED] Configuring hardware..." 2>&1 | logc
-					# Program to use the ambient light sensor
-					yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S macbook-lighter 2>&1 | lognoc
-					enableSvc macbook-lighter 2>&1 | lognoc
-				 	# Install proper Broadcom WiFi drivers for BCM43
-				 	if lspci | grep BCM43 > /dev/null ; then
-				 		install linux-headers 2>&1 | lognoc
-				 		install broadcom-wl-dkms 2>&1 | lognoc
-				 	fi
-					# Make function keys work properly (F1-12 by default)
-				 	echo "options hid_apple fnmode=2" | sudo tee /etc/modprobe.d/hid_apple.conf >/dev/null
-					echo -e "If WiFi is causing issues, please refer to online documentation" 2>&1 | logc
-					echo -e "Macbook's hardware configured" 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					if [[ -n $(pgrep Xorg) ]]; then
+						echo -e "A new GUI cannot be installed while Xorg is running!"
+						echo -e "Please run this script from a TTY (Press CTRL+F1-9 keys) without Xorg running"
+						exit 1
+					fi
+					echo -e "Choose a custom environment from the following options:"
+					echo -e "[1] BSPWM"
+					echo -e "[2] DWM"
+					echo -e "[3] i3 (with gaps)"
+					echo -e "[4] Openbox"
+					echo -e "[5] SpectrWM"
+					echo -e "[6] XFCE"
+					echo -e "You can also choose these environments, but they will be vanilla (no customisation):"
+					echo -e "[7] KDE/Plasma"
+					echo -e "[9] Cancel"
+					echo -e "WARNING: if you are running Void Linux, DWM will only display a text-only statusbar"
+					echo -e "See https://gitlab.freedesktop.org/xorg/lib/libxft/-/merge_requests/1 for more details"
+					echo -e
+					while read -p "Choose (ex.: type 2 for DWM): " -n 1 -r; do
+						echo -e 2>&1 | logc
+						if [[ "$REPLY" == 1 ]]; then
+							echo -e "Installing BSPWM..." 2>&1 | logc
+							installxinitrc
+							installfonts
+							installbspwm && installdmenu && installst && installslock && installsurf
+							sed -i '/export SESSION="*"/c export SESSION="bspwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+							echo -e "BSPWM installed" 2>&1 | logc
+							echo -e "If you have multiple monitors, please read the documentation at https://github.com/GSquad934/dotfiles/tree/master/config/bspwm" 2>&1 | logc
+							echo -e 2>&1 | logc
+						elif [[ "$REPLY" == 2 ]]; then
+							echo -e "Installing DWM..." 2>&1 | logc
+							installxinitrc
+							installfonts
+							installdwm && installdmenu && installst && installslock && installsurf
+							installlibxftbgra
+							sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+							echo -e "DWM installed" 2>&1 | logc
+							echo -e 2>&1 | logc
+						elif [[ "$REPLY" == 3 ]]; then
+							echo -e "Installing i3..." 2>&1 | logc
+							installxinitrc
+							installfonts
+							installi3 && installdmenu && installst && installslock && installsurf
+							sed -i '/export SESSION="*"/c export SESSION="i3"' "$HOME"/.xinitrc 2>&1 | lognoc
+							echo -e "i3 installed" 2>&1 | logc
+							echo -e 2>&1 | logc
+						elif [[ "$REPLY" == 4 ]]; then
+							echo -e "Installing Openbox..." 2>&1 | logc
+							installxinitrc
+							installfonts
+							installopenbox && installdmenu && installst && installslock && installsurf
+							sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
+							echo -e "Openbox installed" 2>&1 | logc
+							echo -e 2>&1 | logc
+						elif [[ "$REPLY" == 5 ]]; then
+							echo -e "Installing SpectrWM..." 2>&1 | logc
+							installxinitrc
+							installfonts
+							installspectrwm && installdmenu && installst && installslock && installsurf
+							sed -i '/export SESSION="*"/c export SESSION="spectrwm"' "$HOME"/.xinitrc 2>&1 | lognoc
+							echo -e "SpectrWM installed" 2>&1 | logc
+							echo -e 2>&1 | logc
+						elif [[ "$REPLY" == 6 ]]; then
+							echo -e "Installing XFCE..." 2>&1 | logc
+							installxinitrc
+							installfonts
+							installxfce && installdmenu && installst && installslock && installsurf
+							sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
+							echo -e "XFCE installed" 2>&1 | logc
+							echo -e 2>&1 | logc
+						elif [[ "$REPLY" == 7 ]]; then
+							echo -e "Installing KDE/Plasma..." 2>&1 | logc
+							installfonts
+							installkdeplasma && installdmenu && installst && installsurf
+							echo -e "KDE/Plasma installed" 2>&1 | logc
+							echo -e 2>&1 | logc
+						elif [[ "$REPLY" == 9 ]]; then
+							echo -e 2>&1 | logc
+							break
+						fi
+						if [[ ! -f /usr/bin/gdm ]] > /dev/null 2>&1 && [[ ! -f /usr/bin/sddm ]] > /dev/null 2>&1; then
+							echo -e "The default login method is made via Xinit (preferred method)"
+							echo -e "However, it is possible to use a graphical login manager such as LightDM"
+							while read -p "Do you want to use a graphical login manager? (Y/n): " -n 1 -r; do
+								echo -e 2>&1 | logc
+								if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+									echo -e "Installing LightDM..." 2>&1 | logc
+									installgreeter
+									echo -e "LightDM installed" 2>&1 | logc
+									echo -e 2>&1 | logc
+									break
+								elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+									echo -e 2>&1 | logc
+									break
+								fi
+							done
+						fi
+						break
+					done
+					# Replace DMenu by Rofi
+					if type rofi > /dev/null 2>&1; then
+						rofi=$(which rofi)
+						ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
+					fi
+					# Install Clipmenu (clipboard manager)
+					if ! type clipmenu > /dev/null 2>&1; then
+						install xsel clipnotify 2>&1 | lognoc
+						sudo git clone --depth 1 "$clipmenurepo" /opt/clipmenu 2>&1 | lognoc
+						cd /opt/clipmenu && sudo make install 2>&1 | lognoc
+						cd "$HOME" || exit
+					fi
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 					echo -e 2>&1 | logc
 					break
 				fi
+				break
+			done
+		fi
+		# Laptop
+		## Chassis type can be determined by reading file '/sys/class/dmi/id/chassis_type'
+		## An integer represents a type of chassis. Here is the full list:
+		## 1 Other
+		## 2 Unknown
+		## 3 Desktop
+		## 4 Low Profile Desktop
+		## 5 Pizza Box
+		## 6 Mini Tower
+		## 7 Tower
+		## 8 Portable
+		## 9 Laptop
+		## 10 Notebook
+		## 11 Hand Held
+		## 12 Docking Station
+		## 13 All in One
+		## 14 Sub Notebook
+		## 15 Space-Saving
+		## 16 Lunch Box
+		## 17 Main System Chassis
+		## 18 Expansion Chassis
+		## 19 SubChassis
+		## 20 Bus Expansion Chassis
+		## 21 Peripheral Chassis
+		## 22 Storage Chassis
+		## 23 Rack Mount Chassis
+		## 24 Sealed-Case PC
+		if [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
+			if type tlp > /dev/null 2>&1; then
+				while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
+					echo -e 2>&1 | logc
+					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+						echo -e "Installing power management software..." 2>&1 | logc
+						install tlp xfce4-power-manager powertop 2>&1 | lognoc
+						enableSvc tlp 2>&1 | lognoc
+						enableSvc upower 2>&1 | lognoc
+						echo -e "Power management software installed" 2>&1 | logc
+						echo -e 2>&1 | logc
+						if [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]] && [[ $(cat /sys/class/dmi/id/chassis_version) =~ ^Mac ]]; then
+							echo -e "[MACBOOK DETECTED] Configuring hardware..." 2>&1 | logc
+							# Program to use the ambient light sensor
+							yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S macbook-lighter 2>&1 | lognoc
+							enableSvc macbook-lighter 2>&1 | lognoc
+				 			# Install proper Broadcom WiFi drivers for BCM43
+				 			if lspci | grep BCM43 > /dev/null ; then
+				 				install linux-headers 2>&1 | lognoc
+				 				install broadcom-wl-dkms 2>&1 | lognoc
+				 			fi
+							# Make function keys work properly (F1-12 by default)
+				 			echo "options hid_apple fnmode=2" | sudo tee /etc/modprobe.d/hid_apple.conf >/dev/null
+							echo -e "If WiFi is causing issues, please refer to online documentation" 2>&1 | logc
+							echo -e "Macbook's hardware configured" 2>&1 | logc
+							echo -e 2>&1 | logc
+							break
+						fi
+						break
+					elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+						echo -e
+						break
+					fi
+					break
+				done
+			fi
+		fi
+	fi
+	# Git Repositories
+	if [[ -d "$gitrepoloc" ]]; then
+		echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
+		if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir -pv "$gitrepoloc/bin" 2>&1 | lognoc ; fi
+		find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -sf '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
+		rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
+		echo -e "Git repos' binaries symlinked" 2>&1 | logc
+		echo -e 2>&1 | logc
+		# Dependencies
+		if type perl > /dev/null 2>&1; then
+			echo -e "Installing Perl dependencies..." 2>&1 | logc
+			installperldeps
+			echo -e "Perl dependencies installed" 2>&1 | logc
+			echo -e 2>&1 | logc
+		elif type pyton > /dev/null 2>&1; then
+			echo -e "Installing Python dependencies..." 2>&1 | logc
+			installpythondeps
+			echo -e "Python dependencies installed" 2>&1 | logc
+			echo -e 2>&1 | logc
+		fi
+	fi
+	# Virtual Machines
+	if grep -E --color '(vmx|svm)' /proc/cpuinfo > /dev/null 2>&1; then
+		echo -e "Your computer supports the creation of virtual machines"
+		while read -p "Do you want to install the necessary software to create VMs? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				echo -e "Installing virtualization software..." 2>&1 | logc
+				installvirtualbox
+				installkvm
+				echo -e "Virtualization software installed" 2>&1 | logc
+				echo -e 2>&1 | logc
 				break
 			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 				echo -e
 				break
 			fi
-			break
 		done
 	fi
-fi
-
-#=======================
-# Git Repositories
-#=======================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ -d "$gitrepoloc" ]]; then
-	echo -e "Symlinking binaries from Git repositories..." 2>&1 | logc
-	if [[ ! -d "$gitrepoloc/bin" ]]; then mkdir -pv "$gitrepoloc/bin" 2>&1 | lognoc ; fi
-	find "$gitrepoloc" -maxdepth 3 -perm -111 -type f -exec ln -sf '{}' "$gitrepoloc/bin" ';' 2>&1 | lognoc
-	rm -Rf "$gitrepoloc/bin/test" 2>&1 | lognoc
-	echo -e "Git repos' binaries symlinked" 2>&1 | logc
-	echo -e 2>&1 | logc
-fi
-
-#=====================
-# Virtual Machines
-#=====================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && grep -E --color '(vmx|svm)' /proc/cpuinfo > /dev/null 2>&1; then
-	echo -e "Your computer supports the creation of virtual machines"
-	while read -p "Do you want to install the necessary software to create VMs? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Installing virtualization software..." 2>&1 | logc
-			installvirtualbox
-			installkvm
-			echo -e "Virtualization software installed" 2>&1 | logc
+	# Define ZSH as default shell
+	if [[ "$SHELL" != *"zsh" ]]; then
+		echo -e "Your current shell is \"$SHELL\""
+		while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
-
-#=======================
-# Workstation - Dependencies
-#=======================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ -d "$gitrepoloc" ]]; then
-	if type perl > /dev/null 2>&1; then
-		echo -e "Installing Perl dependencies..." 2>&1 | logc
-		installperldeps
-		echo -e "Perl dependencies installed" 2>&1 | logc
-		echo -e 2>&1 | logc
-	elif type pyton > /dev/null 2>&1; then
-		echo -e "Installing Python dependencies..." 2>&1 | logc
-		installpythondeps
-		echo -e "Python dependencies installed" 2>&1 | logc
-		echo -e 2>&1 | logc
-	fi
-fi
-
-#=====================
-# Workstation - Shell & Prompt
-#=====================
-# Define ZSH as default shell
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$SHELL" != *"zsh" ]]; then
-	echo -e "Your current shell is \"$SHELL\""
-	while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			installzsh
-			if [[ "$EUID" = 0 ]]; then
-				echo -e "The shell of the root user should not be changed! (NOT RECOMMENDED)"
-				echo -e "Please run the script as root in order to install the requirements"
-				exit 1
-			else
-				chsh -s /bin/zsh 2>&1 | logc
+			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+				installzsh
+				if [[ "$EUID" = 0 ]]; then
+					echo -e "The shell of the root user should not be changed! (NOT RECOMMENDED)"
+					echo -e "Please run the script as root in order to install the requirements"
+					exit 1
+				else
+					chsh -s /bin/zsh 2>&1 | logc
+				fi
+				echo -e "ZSH successfully installed" 2>&1 | logc
+				echo -e 2>&1 | logc
+				break
+			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+				echo -e
+				break
 			fi
-			echo -e "ZSH successfully installed" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
-# Install Starship prompt
-if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+		done
+	fi
+	# Install Starship prompt
 	while read -p "Do you want to install the Starship prompt (nice features)? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -2083,7 +2032,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 fi
 
 #=======================
-# Dotfiles
+# DOTFILES
 #=======================
 # Clone the GitHub repository with all wanted dotfiles
 while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
@@ -2145,30 +2094,27 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 			done
 		fi
 		break
+		# macOS - Amethyst Configuration
+		if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
+			while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					echo -e "Setting up Amethyst..." 2>&1 | logc
+					setupamethyst
+					echo -e "Amethyst configured" 2>&1 | logc
+					echo -e 2>&1 | logc
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
+		fi
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e
 		break
 	fi
 done
-
-#=======================
-# macOS Workstation - Amethyst Configuration
-#=======================
-if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
-	while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
-		echo -e 2>&1 | logc
-		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-			echo -e "Setting up Amethyst..." 2>&1 | logc
-			setupamethyst
-			echo -e "Amethyst configured" 2>&1 | logc
-			echo -e 2>&1 | logc
-			break
-		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-			echo -e
-			break
-		fi
-	done
-fi
 
 #=======================
 # DONE
