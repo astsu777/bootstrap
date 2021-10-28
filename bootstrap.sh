@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 10:36:24
+# Last modified: Thu 28 Oct 2021 10:50:05
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -124,7 +124,10 @@ grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' 
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
 grepdirectdl(){ ddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$ddl" ;}
 grepworkdirectdl(){	workddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workddl" ;}
-grepsrvpkg(){ srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg" ;}
+grepsrvpkg(){
+	curl -fsSLO "$applist" 2>&1 | lognoc
+	srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg"
+}
 grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$archxpkg" ;}
 grepvoidxpkg(){ voidxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "V1[^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$voidxpkg" ;}
 
@@ -139,8 +142,20 @@ if type brew > /dev/null 2>&1; then
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	update(){ sudo apt-get update 2>&1 | lognoc ;}
-	install(){ sudo apt-get install -y "$@" 2>&1 | lognoc ;}
+	update(){
+		if [[ "$EUID" == 0 ]]; then
+			apt-get update 2>&1 | lognoc
+		else
+			sudo apt-get update 2>&1 | lognoc
+		fi
+	}
+	install(){
+		if [[ "$EUID" == 0 ]]; then
+			apt install -y "$@" 2>&1 | lognoc
+		else
+			sudo apt-get install -y "$@" 2>&1 | lognoc
+		fi
+	}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -158,8 +173,20 @@ elif type apt-get > /dev/null 2>&1; then
 elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	update(){ sudo yum update -y 2>&1 | lognoc ;}
-	install(){ sudo yum install -y "$@" 2>&1 | lognoc ;}
+	update(){
+		if [[ "$EUID" == 0 ]]; then
+			yum update -y 2>&1 | lognoc
+		else
+			sudo yum update -y 2>&1 | lognoc
+		fi
+	}
+	install(){
+		if [[ "$EUID" == 0 ]]; then
+			yum install -y "$@" 2>&1 | lognoc
+		else
+			sudo yum install -y "$@" 2>&1 | lognoc
+		fi
+	}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -176,8 +203,20 @@ elif type yum > /dev/null 2>&1; then
 elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	update(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
-	install(){ sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
+	update(){
+		if [[ "$EUID" == 0 ]]; then
+			pacman -Syu --noconfirm 2>&1 | lognoc
+		else
+			sudo pacman -Syu --noconfirm 2>&1 | lognoc
+		fi
+	}
+	install(){
+		if [[ "$EUID" == 0 ]]; then
+			pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc
+		else
+			sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc
+		fi
+	}
 	installaur(){ yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$@" 2>&1 | lognoc ;}
 	installaurconfirm(){ yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
@@ -229,8 +268,20 @@ elif type pacman yay > /dev/null 2>&1; then
 elif type pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	update(){ sudo pacman -Syu --noconfirm 2>&1 | lognoc ;}
-	install(){ sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc ;}
+	update(){
+		if [[ "$EUID" == 0 ]]; then
+			pacman -Syu --noconfirm 2>&1 | lognoc
+		else
+			sudo pacman -Syu --noconfirm 2>&1 | lognoc
+		fi
+	}
+	install(){
+		if [[ "$EUID" == 0 ]]; then
+			pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc
+		else
+			sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc
+		fi
+	}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -281,8 +332,20 @@ elif type pacman > /dev/null 2>&1; then
 elif type xbps-install > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
-	update(){ sudo xbps-install -Syu 2>&1 | lognoc ;}
-	install(){ sudo xbps-install -Sy "$@" 2>&1 | lognoc ;}
+	update(){
+		if [[ "$EUID" == 0 ]]; then
+			xbps-install -Syu 2>&1 | lognoc
+		else
+			sudo xbps-install -Syu 2>&1 | lognoc
+		fi
+	}
+	install(){
+		if [[ "$EUID" == 0 ]]; then
+			xbps-install -Sy "$@" 2>&1 | lognoc
+		else
+			sudo xbps-install -Sy "$@" 2>&1 | lognoc
+		fi
+	}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox-ose linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -1616,7 +1679,6 @@ if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing useful server tools..." 2>&1 | logc
-			curl -fsSLO "$applist" 2>&1 | lognoc
 			grepsrvpkg && installsrvpkg
 			rm ./apps.csv 2>&1 | lognoc
 			echo -e "Useful server tools installed" 2>&1 | logc
