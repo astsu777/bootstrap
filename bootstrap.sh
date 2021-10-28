@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 10:32:12
+# Last modified: Thu 28 Oct 2021 10:36:24
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1303,18 +1303,6 @@ setupamethyst(){
 			# Delete the plist cache
 			defaults read com.amethyst.Amethyst.plist > /dev/null 2>&1
 }
-
-# Servers
-if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
-	if [[ "$EUID" = 0 ]]; then
-		installsrvpkg
-	elif ! type sudo > /dev/null 2>&1; then
-		echo -e "Make sure to run this script as sudo to install useful tools!" 2>&1 | logc
-		exit 1
-	else
-		installsrvpkg
-	fi
-fi
 
 #=======================
 # BEGINNING
