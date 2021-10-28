@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 13:33:35
+# Last modified: Thu 28 Oct 2021 13:56:21
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -89,25 +89,25 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	elif type rc-update >> /dev/null 2>&1; then
 		initSystem="openrc"
 		grepopenrcpkg(){ openrcpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$openrcpkg" ;}
-		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
+		grepworkopenrcpkg(){ openrcworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[O][^,]*" | grep "^W" | sed 's/^.*,//g' > "$openrcworkpkg" ;}
 		enableSvc(){ sudo rc-update add "$1" ;}
 		startSvc(){ sudo rc-service "$1" start ;}
 	elif type sv >> /dev/null 2>&1; then
 		initSystem="runit"
 		greprunitpkg(){ runitpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Q][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$runitpkg" ;}
-		grepworkrunitpkg(){ runitworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Q][^,]*" | sed 's/^.*,//g' > "$runitworkpkg" ;}
+		grepworkrunitpkg(){ runitworkpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Q][^,]*" | grep "^W" | sed 's/^.*,//g' > "$runitworkpkg" ;}
 		enableSvc(){ sudo ln -s /etc/sv/"$1" /var/service/ ;}
 		startSvc(){ sudo sv start "$1" ;}
 	elif type s6-rc-bundle-update >> /dev/null 2>&1; then
 		initSystem="s6"
 		greps6pkg(){ s6pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$s6pkg" ;}
-		grepworks6pkg(){ s6workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed 's/^.*,//g' > "$s6workpkg" ;}
+		grepworks6pkg(){ s6workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$s6workpkg" ;}
 		enableSvc(){ sudo s6-rc-bundle-update -c /etc/s6/rc/compiled add default "$1" ;}
 		startSvc(){ sudo s6-rc -u change "$1" ;}
 	elif type 66-enable >> /dev/null 2>&1; then
 		initSystem="suite66"
 		greps6pkg(){ suite66pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$suite66pkg" ;}
-		grepworks6pkg(){ suite66workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*" | sed 's/^.*,//g' > "$suite66workpkg" ;}
+		grepworks6pkg(){ suite66workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*" | grep "^W" | sed 's/^.*,//g' > "$suite66workpkg" ;}
 		enableSvc(){ sudo 66-enable -t default "$1" ;}
 		startSvc(){ sudo 66-start -t default "$1" ;}
 	fi
@@ -116,14 +116,14 @@ fi
 # List packages to install
 grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
 grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
-grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | sed 's/^.*,//g' > "$workaurpkg" ;}
-grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | sed 's/^.*,//g' > "$workguipkg" ;}
+grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workaurpkg" ;}
+grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[C][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workguipkg" ;}
 grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
-grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
+grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[S][^,]*" | grep "^W" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
 grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
-grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
+grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[G][^,]*" | grep "^W" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
 grepdirectdl(){ ddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$ddl" ;}
-grepworkdirectdl(){	workddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | sed 's/^.*,//g' | awk '{print $1}' > "$workddl" ;}
+grepworkdirectdl(){	workddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[H][^,]*" | grep "^W" | sed 's/^.*,//g' | awk '{print $1}' > "$workddl" ;}
 grepsrvpkg(){
 	curl -fsSLO "$applist" 2>&1 | lognoc
 	srvpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[I][^,]*" | sed 's/^.*,//g' > "$srvpkg"
@@ -134,14 +134,14 @@ grepvoidxpkg(){ voidxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "V1[^,
 # Package managers
 if type brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[M][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){ brew update 2>&1 | lognoc ;}
 	install(){ brew install "$@" 2>&1 | lognoc ;}
 	installgui(){ brew install --cask "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){ brew update 2>&1 | lognoc && brew install --cask virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[D][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
 		if [[ "$EUID" == 0 ]]; then
 			apt-get update 2>&1 | lognoc
@@ -172,7 +172,7 @@ elif type apt-get > /dev/null 2>&1; then
 	}
 elif type yum > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[R][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
 		if [[ "$EUID" == 0 ]]; then
 			yum update -y 2>&1 | lognoc
@@ -202,7 +202,7 @@ elif type yum > /dev/null 2>&1; then
 	}
 elif type pacman yay > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
 		if [[ "$EUID" == 0 ]]; then
 			pacman -Syu --noconfirm 2>&1 | lognoc
@@ -267,7 +267,7 @@ elif type pacman yay > /dev/null 2>&1; then
 	}
 elif type pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
 		if [[ "$EUID" == 0 ]]; then
 			pacman -Syu --noconfirm 2>&1 | lognoc
@@ -331,7 +331,7 @@ elif type pacman > /dev/null 2>&1; then
 	}
 elif type xbps-install > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[V][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
 		if [[ "$EUID" == 0 ]]; then
 			xbps-install -Syu 2>&1 | lognoc
