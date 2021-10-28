@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 11:32:22
+# Last modified: Thu 28 Oct 2021 11:58:31
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -415,7 +415,7 @@ installaurhelper(){
 	sudo pacman -Sy 2>&1 | lognoc
 	sudo pacman -S git base-devel --needed --noconfirm 2>&1 | lognoc
 	git clone --depth 1 "$aurhelper" "$HOME"/yay 2>&1 | lognoc
-	cd "$HOME"/yay && yes makepkg -si 2>&1 | lognoc
+	cd "$HOME"/yay && makepkg -si --noconfirm --needed 2>&1 | lognoc
 	cd "$HOME" || exit
 	rm -Rf "$HOME"/yay
 }
@@ -1447,7 +1447,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			echo -e "Please logout and login with your regular user. Then run this script again" 2>&1 | logc
 			exit 0
 		fi
-		# Arch Linux - Install AUR Helper (Requirement)
+		# Arch Linux - Install AUR helper
 		if ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
 			while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
