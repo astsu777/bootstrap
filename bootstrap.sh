@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 11:26:38
+# Last modified: Thu 28 Oct 2021 11:32:22
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -2034,6 +2034,10 @@ fi
 while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 	echo -e 2>&1 | logc
 	if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+		if [[ "$EUID" == 0 ]]; then
+			echo -e "The dotfiles of the root user should not be modified. Please run this script as a regular user to use the dotfiles!"
+			exit 1
+		fi
 		if ! type git > /dev/null 2>&1; then
 			echo -e "Git is required to install the dotfiles. Please install it before executing this script!"
 			exit 1
