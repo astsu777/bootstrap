@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 11:58:31
+# Last modified: Thu 28 Oct 2021 13:33:35
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -840,7 +840,7 @@ setupworkstation(){
 		if [ -f /etc/pacman.conf ]; then
 			# Enable colors
 			sudo sed -i 's/^#Color/Color/' /etc/pacman.conf 2>&1 | lognoc
-			sudo sed -i 's/^#ParallelDownloads/ParallelDownloads = 5/' /etc/pacman.conf 2>&1 | lognoc
+			sudo sed -i '/^#ParallelDownloads.*/c ParallelDownloads = 5' /etc/pacman.conf 2>&1 | lognoc
 		fi
 	fi
 }
@@ -1690,6 +1690,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			gethostname
 			echo -e "Your current computer's name is \"$computername\"" 2>&1 | logc
 			while read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r; do
+			echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					while read -p "What name your computer should use? " -r name; do
 						if [[ "$name" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
@@ -1725,6 +1726,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					setdashdefaultsystemshell
 					echo -e "Default shell changed to Dash" 2>&1 | logc
 					echo -e "The modification will take effect after a reboot" 2>&1 | logc
+					echo -e 2>&1 | logc
 					break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 					echo -e
