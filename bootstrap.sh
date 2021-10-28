@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 11:17:52
+# Last modified: Thu 28 Oct 2021 11:26:38
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1381,102 +1381,6 @@ echo -e 2>&1 | logc
 echo -e 2>&1 | logc
 
 #=======================
-# REQUIREMENTS
-#=======================
-# Linux
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	# Install 'sudo'
-	if ! type sudo > /dev/null 2>&1; then
-		echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
-		echo -e "Installing 'sudo'..." 2>&1 | logc
-		if [[ "$EUID" != 0 ]]; then
-			echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
-			exit 1
-		else
-			installsudo
-			echo -e "Package 'sudo' is now installed" 2>&1 | logc
-			echo -e "The 'sudo' configuration can be modified with the command \"visudo\"" 2>&1 | logc
-			echo -e 2>&1 | logc
-		fi
-	fi
-	# Create user
-	if [[ "$EUID" == 0 ]]; then
-		echo -e "You are currently logged in as 'root'" 2>&1 | logc
-		while read -p "Do you want to create a user account (it will be given SUDO privilege)? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				while read -p "What will be your username? " -r user; do
-					if [[ "$user" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
-						createuser
-						echo -e 2>&1 | logc
-						break
-					else
-						echo -e "Invalid username! The name should only contain alphanumeric characters" 2>&1 | logc
-						echo -e 2>&1 | logc
-						continue
-					fi
-				done
-			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e 2>&1 | logc
-				break
-			fi
-			break
-		done
-		echo -e "Please logout and login with your regular user. Then run this script again" 2>&1 | logc
-		exit 0
-	fi
-	# Arch Linux - Install AUR Helper (Requirement)
-	if ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
-		while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
-			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				if [[ "$EUID" = 0 ]]; then
-					echo -e "This AUR helper cannot be installed as root!" 2>&1 | logc
-					exit 1
-				else
-					if sudo -v > /dev/null 2>&1; then
-						echo -e "Installing 'yay', an AUR helper..." 2>&1 | logc
-						installaurhelper
-						echo -e "AUR Helper successfully installed" 2>&1 | logc
-						echo -e "Please run this script again to take AUR packages into account" 2>&1 | logc
-						exit 0
-					else
-						echo -e "Your user is not a member of the sudoers group!" 2>&1 | logc
-						echo -e "Please run this script with a user with sudo rights" 2>&1 | logc
-						exit 1
-					fi
-				fi
-				break
-			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e
-				break
-			fi
-		done
-	fi
-fi
-# macOS
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	# Install XCode Command Line Tools
-	if [[ ! -d /Library/Developer/CommandLineTools ]]; then
-		installxcodecli
-	fi
-	# Install Homebrew
-	if ! type brew > /dev/null 2>&1; then
-		if [[ "$EUID" = 0 ]]; then
-			echo -e "Homebrew cannot be installed as root!" 2>&1 | logc
-			exit 1
-		else
-			echo -e "Installing Homebrew..." 2>&1 | logc
-			echo -e 2>&1 | logc
-			installhomebrew
-			echo -e "Homebrew is now installed" 2>&1 | logc
-			echo -e "Please run this script again to bootstrap your system" 2>&1 | logc
-			exit 0
-		fi
-	fi
-fi
-
-#=======================
 # SERVERS SPECIFIC
 #=======================
 # Install software
@@ -1501,6 +1405,98 @@ fi
 # WORKSTATIONS SPECIFIC
 #=======================
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
+	# LINUX REQUIREMENTS
+	if [[ "$OSTYPE" == "linux-gnu" ]]; then
+		# Install 'sudo'
+		if ! type sudo > /dev/null 2>&1; then
+			echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
+			echo -e "Installing 'sudo'..." 2>&1 | logc
+			if [[ "$EUID" != 0 ]]; then
+				echo -e "Please run the script as root in order to install the requirements" 2>&1 | logc
+				exit 1
+			else
+				installsudo
+				echo -e "Package 'sudo' is now installed" 2>&1 | logc
+				echo -e "The 'sudo' configuration can be modified with the command \"visudo\"" 2>&1 | logc
+				echo -e 2>&1 | logc
+			fi
+		fi
+		# Create user
+		if [[ "$EUID" == 0 ]]; then
+			echo -e "You are currently logged in as 'root'" 2>&1 | logc
+			while read -p "Do you want to create a user account (it will be given SUDO privilege)? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					while read -p "What will be your username? " -r user; do
+						if [[ "$user" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
+							createuser
+							echo -e 2>&1 | logc
+							break
+						else
+							echo -e "Invalid username! The name should only contain alphanumeric characters" 2>&1 | logc
+							echo -e 2>&1 | logc
+							continue
+						fi
+					done
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e 2>&1 | logc
+					break
+				fi
+				break
+			done
+			echo -e "Please logout and login with your regular user. Then run this script again" 2>&1 | logc
+			exit 0
+		fi
+		# Arch Linux - Install AUR Helper (Requirement)
+		if ! type yay > /dev/null 2>&1 && { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;}; then
+			while read -p "Do you want to install an AUR helper? (Y/n) " -n 1 -r; do
+				echo -e 2>&1 | logc
+				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					if [[ "$EUID" = 0 ]]; then
+						echo -e "This AUR helper cannot be installed as root!" 2>&1 | logc
+						exit 1
+					else
+						if sudo -v > /dev/null 2>&1; then
+							echo -e "Installing 'yay', an AUR helper..." 2>&1 | logc
+							installaurhelper
+							echo -e "AUR Helper successfully installed" 2>&1 | logc
+							echo -e "Please run this script again to take AUR packages into account" 2>&1 | logc
+							exit 0
+						else
+							echo -e "Your user is not a member of the sudoers group!" 2>&1 | logc
+							echo -e "Please run this script with a user with sudo rights" 2>&1 | logc
+							exit 1
+						fi
+					fi
+					break
+				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+					echo -e
+					break
+				fi
+			done
+		fi
+	fi
+	# MACOS REQUIREMENTS
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		# Install XCode Command Line Tools
+		if [[ ! -d /Library/Developer/CommandLineTools ]]; then
+			installxcodecli
+		fi
+		# Install Homebrew
+		if ! type brew > /dev/null 2>&1; then
+			if [[ "$EUID" = 0 ]]; then
+				echo -e "Homebrew cannot be installed as root!" 2>&1 | logc
+				exit 1
+			else
+				echo -e "Installing Homebrew..." 2>&1 | logc
+				echo -e 2>&1 | logc
+				installhomebrew
+				echo -e "Homebrew is now installed" 2>&1 | logc
+				echo -e "Please run this script again to bootstrap your system" 2>&1 | logc
+				exit 0
+			fi
+		fi
+	fi
 	# Arch/Artix Linux - Configure custom repositories
 	if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
 		while read -p "Do you want to configure 3rd party/custom repositories? (Y/n) " -n 1 -r; do
