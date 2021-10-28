@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 13:56:21
+# Last modified: Thu 28 Oct 2021 14:46:49
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
@@ -46,9 +46,6 @@ fontawesome_brands="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/m
 fontawesome_regular="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/otfs/Font%20Awesome%205%20Free-Regular-400.otf"
 fontawesome_solid="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/otfs/Font%20Awesome%205%20Free-Solid-900.otf"
 powerline_fonts="https://github.com/powerline/fonts"
-
-# TMUX Plugins
-tpm="https://github.com/tmux-plugins/tpm"
 
 # Clipmenu location
 clipmenurepo="https://github.com/cdown/clipmenu"
@@ -1633,40 +1630,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				break
 			fi
 		done
-	fi
-	# Install TMUX Plugin Manager
-	if type tmux > /dev/null 2>&1; then
-		if [[ -d "$HOME"/.config/tmux/plugins/tpm ]]; then
-			while read -p "TMUX Plugin Manager (TPM) is already installed. Do you want to reinstall it? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | logc
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Reinstalling TMUX Plugin Manager..." 2>&1 | logc
-					rm -Rf "$HOME"/.config/tmux/plugins/tpm && git clone --depth 1 "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
-					echo -e "TMUX Plugin Manager installed" 2>&1 | logc
-					echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
-					echo -e 2>&1 | logc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
-					break
-				fi
-			done
-		else
-			while read -p "Do you want to handle TMUX plugins? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | logc
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Installing TMUX Plugin Manager..." 2>&1 | logc
-					git clone --depth 1 "$tpm" "$HOME"/.config/tmux/plugins/tpm 2>&1 | lognoc
-					echo -e "TMUX Plugin Manager installed" 2>&1 | logc
-					echo -e "In TMUX, press <PREFIX> + I to install plugins" 2>&1 | logc
-					echo -e 2>&1 | logc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
-					break
-				fi
-			done
-		fi
 	fi
 	# Wallpapers
 	while read -p "Do you want to install a set of nice wallpapers? (Y/n) " -n 1 -r; do
