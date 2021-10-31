@@ -54,13 +54,14 @@ Depending on the packages availability in the repositories, some software may be
 
 The script supports the following package managers for now:
 
-* APT (commands: **apt** and **apt-get**)
-* YUM aka *Yellowdog Update Modified* & DNF (commands: **yum** and **dnf**)
-* Pacman (command: **pacman**)
-* YAY aka *Yet Another Yogurt* as the AUR helper (command: **yay**)
+* APT (commands: **apt-get** and **apt**)
+* DNF aka *Dandified YUM* & DNF (commands: **dnf**)
 * Homebrew for macOS (command: **brew**)
 * Mac App Store for macOS (command: **mas**)
+* Pacman (command: **pacman**)
 * XBPS aka *X Binary Package System* (commands: xbps-install/query/etc...)
+* YAY aka *Yet Another Yogurt* as the AUR helper (command: **yay**)
+* YUM aka *Yellowdog Update Modified* & DNF (commands: **yum**)
 
 # Usage
 The configuration has two parts: the list of applications needed to be installed and some variables to define (latter is optional).
@@ -91,7 +92,7 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 
 The file is structured in this way because some applications have different names depending on the OS. Also, some applications are not available on some systems. Personally, I also use different applications on different systems depending on my workflow.
 
-<u>**Note**</u>: the "G" tag will trigger the script to detect binaries in the cloned repositories and symlinked them in a location defined by the *$gitrepoloc* in their defined location (see chapter **Variables** below for details).
+<u>**Note**</u>: the "0" tag will trigger the script to detect binaries in the cloned repositories and symlinked them in a location defined by the *$gitrepoloc* in their defined location (see chapter **Variables** below for details).
 
 #### Mac App Store
 The application coming from the Mac App Store needs to be set via their ID: the name in the *apps.csv* file is there just for clarity sake. In order to retrieve the ID of an app from the store, search for an application with the *mas* tool like this:
