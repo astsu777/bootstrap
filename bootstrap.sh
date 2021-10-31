@@ -2,14 +2,14 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 28 Oct 2021 14:46:49
+# Last modified: Sun 31 Oct 2021 09:27:06
 # Version: 1.0
 #
 # Description: this script automates the setup of my personal computers
 #=========================================================================
 
 #=======================
-# Variables
+# VARIABLES
 #=======================
 # Dotfiles location
 dfloc="$HOME/.dotfiles"
@@ -70,7 +70,7 @@ date="$(date +%Y-%m-%d-%H%M%S)"
 logfile="$HOME/bootstrap_log_$date.txt"
 
 #=======================
-# Functions
+# FUNCTIONS
 #=======================
 
 # Log to/out of the console
@@ -648,11 +648,6 @@ installkdeplasma(){
 		break
 	done
 }
-setupmdns(){
-	if ! grep 'mdns_' /etc/nsswitch.conf > /dev/null 2>&1; then
-		sudo sed -i 's/resolve /resolve mdns_minimal /' /etc/nsswitch.conf
-	fi
-}
 installfonts(){
 	install fontconfig 2>&1 | lognoc
 	mkdir -pv "$HOME"/fonts 2>&1 | lognoc
@@ -695,6 +690,28 @@ installfonts(){
 	cd "$HOME" || exit
 	rm -Rf "$HOME"/fonts* > /dev/null 2>&1
 }
+
+# System configuration
+getwallpapers(){
+	if [[ ! -d "$HOME/.local/share" ]]; then mkdir -pv "$HOME"/.local/share 2>&1 | lognoc; fi
+	git clone --depth 1 "$wallpapers" "$wallpapersloc" 2>&1 | lognoc
+}
+gethostname(){
+	if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]]; then
+		computername=$(scutil --get ComputerName)
+	elif { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-gnu" ]]; then
+		computername=$(cat /etc/hostname)
+	fi
+}
+getdotfiles(){
+	git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
+	git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
+}
+setupmdns(){
+	if ! grep 'mdns_' /etc/nsswitch.conf > /dev/null 2>&1; then
+		sudo sed -i 's/resolve /resolve mdns_minimal /' /etc/nsswitch.conf
+	fi
+}
 createuser(){
 	if ! grep '^\%wheel ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1 && ! grep '^\%sudo ALL=(ALL) ALL' /etc/sudoers > /dev/null 2>&1; then
 		if grep '^\@includedir /etc/sudoers.d' /etc/sudoers > /dev/null 2>&1; then
@@ -709,17 +726,6 @@ createuser(){
 	usermod -a -G sudo "$user" 2>&1 | lognoc
 	echo -e "Enter the password for your new user: " 2>&1 | logc
 	passwd "$user"
-}
-getwallpapers(){
-	if [[ ! -d "$HOME/.local/share" ]]; then mkdir -pv "$HOME"/.local/share 2>&1 | lognoc; fi
-	git clone --depth 1 "$wallpapers" "$wallpapersloc" 2>&1 | lognoc
-}
-gethostname(){
-	if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]]; then
-		computername=$(scutil --get ComputerName)
-	elif { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-gnu" ]]; then
-		computername=$(cat /etc/hostname)
-	fi
 }
 sethostname(){
 	if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]]; then
@@ -871,10 +877,6 @@ installstarshipprompt(){
 		eval "$(starship init zsh)"
 		EOF
 	fi
-}
-getdotfiles(){
-	git clone --depth 1 "$dfrepo" "$dfloc" 2>&1 | lognoc
-	git -C "$dfloc" submodule foreach --recursive git checkout master 2>&1 | lognoc
 }
 updatedotfiles(){ git -C "$dfloc" pull 2>&1 | lognoc ;}
 backupdotfiles(){
@@ -1248,7 +1250,7 @@ installdotfiles(){
 		fi
 	fi
 }
-installgtktheme(){
+setupgtktheme(){
 	# GTK 2/3/4
 	if [[ ! -d "$HOME"/.config/gtk-2.0 ]]; then
 		mkdir -pv "$HOME"/.config/gtk-2.0 2>&1 | lognoc
@@ -1297,7 +1299,7 @@ installgtktheme(){
 		ln -sf "$dfloc"/config/volumeicon/volumeicon "$HOME"/.config/volumeicon/volumeicon 2>&1 | lognoc
 	fi
 }
-installqttheme(){
+setupqttheme(){
 	installaur qt5-x11extras 2>&1 | lognoc
 	sudo git clone --depth 1 "$adwaitaqtrepo" /opt/adwaita-qt 2>&1 | lognoc
 	cd /opt/adwaita-qt && sudo cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr 2>&1 | lognoc
@@ -2048,8 +2050,8 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					echo -e "Installing GTK/QT theme..." 2>&1 | logc
-					installgtktheme
-					installqttheme
+					setupgtktheme
+					setupqttheme
 					echo -e "GTK/QT theme installed" 2>&1 | logc
 					echo -e 2>&1 | logc
 					break
