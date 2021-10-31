@@ -70,24 +70,24 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 
 | Tag | Comment |
 |:-:|:-:|
+| S | Mark the application as a *server* application. If this is the only defined tag, the program will only be installed on remote servers |
 | W | Mark the application as a *work* application (all other programs are considered as common) |
-| I | Mark the application as a *server* application. If this is the only defined tag, the program will only be installed on remote servers (package manager is auto-detected) |
-| X | Mark the application as a necessary package to install a GUI environment (Arch only for now) |
-| V1 | Mark the application as a necessary package to install a GUI environment (Void Linux only) |
-| A | The application can be installed with Pacman on Arch Linux & derivatives |
-| Y | The application can be installed with YAY (AUR) on Arch Linux & derivatives |
-| D | The application can be installed with APT on Debian & derivatives |
-| R | The application can be installed with YUM/DNF on Red Hat & derivatives |
-| M | The application can be installed with Homebrew on macOS and is a TUI program |
-| C | The application can be installed with Homebrew on macOS and is a GUI program |
-| S | The application can be installed from the macOS App Store |
-| G | The application can be cloned from a Git repository |
-| H | The application is binary directly downloaded from the Internet |
+| X | Mark the application as a necessary package to install a GUI environment (Arch/Artix only) |
+| Y | Mark the application as a necessary package to install a GUI environment (Void Linux only) |
+| M | Application matching a S6 service script |
+| N | Application matching a Suite66 service script |
 | O | Application matching an OpenRC service script |
-| Q | Application matching a Runit service script |
-| 6 | Application matching a S6 service script |
-| 7 | Application matching a Suite66 service script |
-| V | The application can be installed with XBPS on Void Linux |
+| P | Application matching a Runit service script |
+| 0 | The application can be cloned from a Git repository |
+| 1 | The application is binary directly downloaded from the Internet |
+| 2 | The application can be installed with Homebrew on macOS and is a TUI program |
+| 3 | The application can be installed with Homebrew on macOS and is a GUI program |
+| 4 | The application can be installed from the macOS App Store |
+| 5 | The application can be installed with Pacman on Arch Linux & derivatives |
+| 6 | The application can be installed with APT on Debian & derivatives |
+| 7 | The application can be installed with YUM/DNF on Red Hat & derivatives |
+| 8 | The application can be installed with YAY (AUR) on Arch Linux & derivatives |
+| 9 | The application can be installed with XBPS on Void Linux |
 
 The file is structured in this way because some applications have different names depending on the OS. Also, some applications are not available on some systems. Personally, I also use different applications on different systems depending on my workflow.
 
