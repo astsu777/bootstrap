@@ -276,6 +276,7 @@ WM,testssl
 WMA,xh
 WMADR,hping
 WMADR,mitmproxy
+WMADR,slowhttptest
 WMADRI,lynis
 WMADRIV,lnav
 WMADRIV,mtr
