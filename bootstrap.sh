@@ -2,8 +2,8 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 31 Oct 2021 15:44:04
-# Version: 1.0
+# Last modified: Sun 31 Oct 2021 15:51:29
+# Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
 #=========================================================================
