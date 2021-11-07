@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 31 Oct 2021 15:51:29
+# Last modified: Sun 07 Nov 2021 10:46:38
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -134,6 +134,7 @@ if type brew > /dev/null 2>&1; then
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[2][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){ brew update 2>&1 | lognoc ;}
 	install(){ brew install "$@" 2>&1 | lognoc ;}
+	uninstall(){ brew uninstall "$@" 2>&1 | lognoc ;}
 	installgui(){ brew install --cask "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){ brew update 2>&1 | lognoc && brew install --cask virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 elif type apt-get > /dev/null 2>&1; then
@@ -151,6 +152,13 @@ elif type apt-get > /dev/null 2>&1; then
 			apt-get install -y "$@" 2>&1 | lognoc
 		else
 			sudo apt-get install -y "$@" 2>&1 | lognoc
+		fi
+	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			apt-get remove -y --purge "$@" 2>&1 | lognoc
+		else
+			sudo apt-get remove -y --purge "$@" 2>&1 | lognoc
 		fi
 	}
 	installvirtualbox(){
@@ -184,6 +192,13 @@ elif type apt > /dev/null 2>&1; then
 			sudo apt install -y "$@" 2>&1 | lognoc
 		fi
 	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			apt remove -y --purge "$@" 2>&1 | lognoc
+		else
+			sudo apt remove -y --purge "$@" 2>&1 | lognoc
+		fi
+	}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -213,6 +228,13 @@ elif type yum > /dev/null 2>&1; then
 			yum install -y "$@" 2>&1 | lognoc
 		else
 			sudo yum install -y "$@" 2>&1 | lognoc
+		fi
+	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			yum remove -y "$@" 2>&1 | lognoc
+		else
+			sudo yum remove -y "$@" 2>&1 | lognoc
 		fi
 	}
 	installvirtualbox(){
@@ -245,6 +267,13 @@ elif type dnf > /dev/null 2>&1; then
 			sudo dnf install -y "$@" 2>&1 | lognoc
 		fi
 	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			dnf remove -y "$@" 2>&1 | lognoc
+		else
+			sudo dnf remove -y "$@" 2>&1 | lognoc
+		fi
+	}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
 		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
@@ -275,8 +304,16 @@ elif type pacman yay > /dev/null 2>&1; then
 			sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc
 		fi
 	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			pacman -Rcs "$@" --noconfirm 2>&1 | lognoc
+		else
+			sudo pacman -Rcs "$@" --noconfirm 2>&1 | lognoc
+		fi
+	}
 	installaur(){ yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$@" 2>&1 | lognoc ;}
 	installaurconfirm(){ yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S "$@" 2>&1 | lognoc ;}
+	uninstallaur(){ yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -Rcs "$@" 2>&1 | lognoc ;}
 	installvirtualbox(){
 		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
 		installaur virtualbox-ext-oracle 2>&1 | lognoc
@@ -338,6 +375,13 @@ elif type pacman > /dev/null 2>&1; then
 			pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc
 		else
 			sudo pacman -S "$@" --needed --noconfirm --ask 4 2>&1 | lognoc
+		fi
+	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			pacman -Rcs "$@" --noconfirm 2>&1 | lognoc
+		else
+			sudo pacman -Rcs "$@" --noconfirm 2>&1 | lognoc
 		fi
 	}
 	installvirtualbox(){
@@ -402,6 +446,13 @@ elif type xbps-install > /dev/null 2>&1; then
 			xbps-install -Sy "$@" 2>&1 | lognoc
 		else
 			sudo xbps-install -Sy "$@" 2>&1 | lognoc
+		fi
+	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			xbps-remove -Roy "$@" 2>&1 | lognoc
+		else
+			sudo xbps-remove -Roy "$@" 2>&1 | lognoc
 		fi
 	}
 	installvirtualbox(){
@@ -667,6 +718,7 @@ installxfce(){
 	update 2>&1 | lognoc
 	install xfce4 2>&1 | lognoc
 	yes "" | installaur pamac-aur 2>&1 | lognoc
+	uninstall dunst 2>&1 | lognoc
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
 	ln -sf "$dfloc"/config/xfce4 "$HOME"/.config/ 2>&1 | lognoc
 	while read -p "Do you want to install the XFCE goodies/applications? (Y/n) " -n 1 -r; do
@@ -689,6 +741,7 @@ installkdeplasma(){
 	if [[ -d /usr/share/xbps.d ]]; then install kde5 2>&1 | lognoc ; fi
 	install plasma sddm sddm-kcm 2>&1 | lognoc
 	yes "" | installaur pamac-aur 2>&1 | lognoc
+	uninstall dunst 2>&1 | lognoc
 	if [[ "$initSystem" == "openrc" ]]; then install sddm-openrc 2>&1 | lognoc; fi
 	if [[ "$initSystem" == "runit" ]]; then install sddm-runit 2>&1 | lognoc; fi
 	if [[ "$initSystem" == "s6" ]]; then install sddm-s6 2>&1 | lognoc; fi
