@@ -1,6 +1,6 @@
 # Category Tags: S=Server Tools, W=Work, X=Arch|Artix Xorg, Y=Void Xorg
 # InitSys Tags: M=S6, N=Suite66, O=OpenRC, P=Runit,
-# System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 4=macOS Store, 5=Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS
+# System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 4=macOS Store, 5=Arch Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS
 #8,ttf-ms-win10-auto
 0,https://github.com/dylanaraps/pfetch
 0,https://github.com/raylee/tldr-sh-client
@@ -133,6 +133,7 @@
 5679,sxhkd
 5679,sxiv
 5679,texinfo
+5679,thunderbird
 5679,unrar
 5679,unzip
 5679,wpa_supplicant
