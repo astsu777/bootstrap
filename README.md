@@ -41,7 +41,7 @@ This script has been fully validated with the following systems:
 
 | OS | Compatibility | Comment |
 |:-:|:-:|:-|
-| macOS 10/11 (Big Sur) | ✅| Fully compatible |
+| macOS 10/11/12 (Monterey) | ✅| Fully compatible |
 | Arch Linux & SystemD derivatives | ✅ | Fully compatible |
 | Artix Linux & OpenRC/Runit/S6/66 derivatives | ✅ | Fully compatible |
 | Debian (+ distros based on it) | ✅ | Fully compatible |
