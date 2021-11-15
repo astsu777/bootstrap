@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 07 Nov 2021 10:46:38
+# Last modified: Mon 15 Nov 2021 16:36:58
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -136,7 +136,6 @@ if type brew > /dev/null 2>&1; then
 	install(){ brew install "$@" 2>&1 | lognoc ;}
 	uninstall(){ brew uninstall "$@" 2>&1 | lognoc ;}
 	installgui(){ brew install --cask "$@" 2>&1 | lognoc ;}
-	installvirtualbox(){ brew update 2>&1 | lognoc && brew install --cask virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 elif type apt-get > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
@@ -2049,7 +2048,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		fi
 	fi
 	# Virtual Machines
-	if grep -E --color '(vmx|svm)' /proc/cpuinfo > /dev/null 2>&1; then
+	if grep -E --color '(vmx|svm)' /proc/cpuinfo > /dev/null 2>&1 && [[ "$OSTYPE" == "linux-gnu" ]]; then
 		echo -e "Your computer supports the creation of virtual machines"
 		while read -p "Do you want to install the necessary software to create VMs? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
