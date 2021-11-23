@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 15 Nov 2021 16:36:58
+# Last modified: Tue 23 Nov 2021 18:16:43
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1482,6 +1482,7 @@ setupamethyst(){
 #=======================
 # BEGINNING
 #=======================
+clear
 echo -e
 echo -e "============================= BOOTSTRAP PROCESS BEGINNING =============================" 2>&1 | logc
 echo -e "" 2>&1 | logc
