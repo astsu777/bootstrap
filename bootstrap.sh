@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 23 Nov 2021 18:16:43
+# Last modified: Thu 25 Nov 2021 20:48:54
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -2041,7 +2041,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			installperldeps
 			echo -e "Perl dependencies installed" 2>&1 | logc
 			echo -e 2>&1 | logc
-		elif type pyton > /dev/null 2>&1; then
+		elif type python > /dev/null 2>&1; then
 			echo -e "Installing Python dependencies..." 2>&1 | logc
 			installpythondeps
 			echo -e "Python dependencies installed" 2>&1 | logc
