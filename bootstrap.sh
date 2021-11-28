@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 25 Nov 2021 20:48:54
+# Last modified: Sun 28 Nov 2021 21:17:51
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -166,7 +166,7 @@ elif type apt-get > /dev/null 2>&1; then
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		update 2>&1 | lognoc && install ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
+		update 2>&1 | lognoc && install ovmf ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
 		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
 		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
@@ -204,7 +204,7 @@ elif type apt > /dev/null 2>&1; then
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		update 2>&1 | lognoc && install ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
+		update 2>&1 | lognoc && install ovmf ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
 		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
 		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
@@ -242,7 +242,7 @@ elif type yum > /dev/null 2>&1; then
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		update 2>&1 | lognoc && install dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables 2>&1 | lognoc
+		update 2>&1 | lognoc && install edk2-ovmf dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
 		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
 		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
@@ -279,7 +279,7 @@ elif type dnf > /dev/null 2>&1; then
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		update 2>&1 | lognoc && install dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables 2>&1 | lognoc
+		update 2>&1 | lognoc && install edk2-ovmf dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
 		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
 		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
@@ -318,7 +318,7 @@ elif type pacman yay > /dev/null 2>&1; then
 		installaur virtualbox-ext-oracle 2>&1 | lognoc
 	}
 	installkvm(){
-		update 2>&1 | lognoc && install qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
+		update 2>&1 | lognoc && install edk2-ovmf qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
@@ -389,7 +389,7 @@ elif type pacman > /dev/null 2>&1; then
 		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
 	}
 	installkvm(){
-		update 2>&1 | lognoc && install qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
+		update 2>&1 | lognoc && install edk2-ovmf qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_rw_perms = "0770"/unix_sock_rw_perms = "0770"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc
