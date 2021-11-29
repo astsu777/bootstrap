@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 28 Nov 2021 21:17:51
+# Last modified: Mon 29 Nov 2021 21:23:15
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1990,7 +1990,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		## 23 Rack Mount Chassis
 		## 24 Sealed-Case PC
 		if [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
-			if type tlp > /dev/null 2>&1; then
+			if ! type tlp > /dev/null 2>&1; then
 				while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
 					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
