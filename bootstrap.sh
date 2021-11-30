@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 23:58:10
+# Last modified: Wed 01 Dec 2021 00:41:44
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1810,6 +1810,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			# Replace youtube-dl by yt-dlp
 			if type yt-dlp > /dev/null 2>&1; then
 				ytdlp=$(command -v yt-dlp)
+				if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
 				ln -sf "$ytdlp" "$scriptsloc"/youtube-dl 2>&1 | lognoc
 			fi
 			echo -e "Common software installed" 2>&1 | logc
@@ -1965,6 +1966,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	if { [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/debian_version ]] ;}; then
 		if type fdfind > /dev/null 2>&1; then
 			fdfind=$(which fdfind)
+			if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
 			ln -sf "$fdfind" "$scriptsloc"/fd 2>&1 | lognoc
 		fi
 	fi
@@ -2100,6 +2102,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					# Replace DMenu by Rofi
 					if type rofi > /dev/null 2>&1; then
 						rofi=$(which rofi)
+						if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
 						ln -sf "$rofi" "$scriptsloc"/dmenu 2>&1 | lognoc
 					fi
 					# Install Clipmenu (clipboard manager)
