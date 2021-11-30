@@ -166,6 +166,5 @@ You can always reach out to me:
 # BUGS
 
 * Probably need to improve support for printing and other services
-* Implement a 'do not disturb' mode for notifications (probably not to be done here as I reckon killing the notify daemon
   should suffice)
 * Needs to be validated against Ubuntu and Fedora, as it seems to not work properly
