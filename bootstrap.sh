@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 23:10:52
+# Last modified: Tue 30 Nov 2021 23:24:02
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1836,6 +1836,15 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					break
 				fi
 			done
+		fi
+	fi
+	#=======================
+	# Debian/Ubuntu
+	#=======================
+	if { [[ "$OSTYPE" == 'linux-gnu' ]] && [[ -f /etc/debian_version ]] ;}; then
+		if type fdfind > /dev/null 2>&1; then
+			fdfind=$(which fdfind)
+			ln -sf "$fdfind" "$scriptsloc"/fd 2>&1 | lognoc
 		fi
 	fi
 	#=======================
