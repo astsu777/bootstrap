@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 23:51:54
+# Last modified: Tue 30 Nov 2021 23:58:10
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1469,22 +1469,22 @@ installdotfiles(){
 	if type tmux > /dev/null 2>&1; then
 		if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 			# TMUX introduced XDG Base Directory compliance in v3.1
-			if [[ $(tmux -V) =~ 2\.[0-9] ]]; then
-				ln -sf "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
-			elif [[ $(tmux -V) =~ 3\.[1-9] ]]; then
+			if [[ $(tmux -V) =~ 3\.[1-9] ]]; then
 				if [[ ! -d "$HOME"/.config/tmux ]]; then
 					mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
 				fi
 				ln -sf "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+			else
+				ln -sf "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 			fi
 		else
-			if [[ $(tmux -V) =~ 2\.[0-9] ]]; then
-				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | lognoc
-			elif [[ $(tmux -V) =~ 3\.[1-9] ]]; then
+			if [[ $(tmux -V) =~ 3\.[1-9] ]]; then
 				if [[ ! -d "$HOME"/.config/tmux ]]; then
 					mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
 				fi
 				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+			else
+				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 			fi
 		fi
 	fi
