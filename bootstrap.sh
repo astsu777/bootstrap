@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 23:48:22
+# Last modified: Tue 30 Nov 2021 23:51:54
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -112,9 +112,10 @@ fi
 
 # List packages to install
 grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
-grepsnappkg(){ snappkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$snappkg" ;}
+grepsnappkg(){ snappkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[U][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$snappkg" ;}
 grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[3][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
 grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workaurpkg" ;}
+grepworksnappkg(){ snappkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[U][^,]*" | sed 's/^.*,//g' > "$worksnappkg" ;}
 grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[3][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workguipkg" ;}
 grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[4][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
 grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[4][^,]*" | grep "^W" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
@@ -653,6 +654,7 @@ installaurhelper(){
 installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
 installsnappkg(){ while IFS= read -r line; do installsnap "$line" 2>&1 | lognoc; done < "$snappkg" ;}
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
+installworksnappkg(){ while IFS= read -r line; do installsnap "$line" 2>&1 | lognoc; done < "$worksnappkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$voidxpkg" ;}
 installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
@@ -1855,6 +1857,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					grepworkaurpkg && installworkaurpkg
 					grepworkgitrepo && installworkgitrepo
 					grepworkdirectdl && installworkdirectdl
+				elif [[ -f /etc/debian_version ]] && type snap > /dev/null 2>&1; then
+					grepworksnappkg && installworksnappkg
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc
