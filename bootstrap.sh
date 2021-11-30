@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 19:02:11
+# Last modified: Tue 30 Nov 2021 22:02:18
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1520,6 +1520,18 @@ fi
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	# LINUX REQUIREMENTS
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then
+		# Install 'curl'
+		if ! type curl > /dev/null 2>&1; then
+			echo -e "The package 'curl' is not installed on the system" 2>&1 | logc
+			echo -e "Installing 'curl'..." 2>&1 | logc
+			install curl 2>&1 | logc
+		fi
+		# Install 'git'
+		if ! type git > /dev/null 2>&1; then
+			echo -e "The package 'git' is not installed on the system" 2>&1 | logc
+			echo -e "Installing 'git'..." 2>&1 | logc
+			install git 2>&1 | logc
+		fi
 		# Install 'sudo'
 		if ! type sudo > /dev/null 2>&1; then
 			echo -e "The package 'sudo' is not installed on the system" 2>&1 | logc
