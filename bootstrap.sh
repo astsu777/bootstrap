@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 22:15:27
+# Last modified: Tue 30 Nov 2021 23:10:52
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -139,7 +139,11 @@ if type brew > /dev/null 2>&1; then
 elif type apt-get > /dev/null 2>&1; then
 	export DEBIAN_FRONTEND=noninteractive
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkpkg(){
+		workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg"
+		echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
+		export DEBIAN_FRONTEND=noninteractive
+	}
 	update(){
 		if [[ "$EUID" == 0 ]]; then
 			apt-get update 2>&1 | lognoc
@@ -176,9 +180,12 @@ elif type apt-get > /dev/null 2>&1; then
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
 	}
 elif type apt > /dev/null 2>&1; then
-	export DEBIAN_FRONTEND=noninteractive
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
-	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
+	grepworkpkg(){
+		workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg"
+		echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
+		export DEBIAN_FRONTEND=noninteractive
+	}
 	update(){
 		if [[ "$EUID" == 0 ]]; then
 			apt update 2>&1 | lognoc
