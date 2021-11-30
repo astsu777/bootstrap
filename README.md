@@ -130,6 +130,12 @@ Once everything is customized to your needs, execute the following command:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh)"
 ```
 
+If *curl* is not installed, execute the following command that uses *wget*:
+
+```
+/bin/bash -c "$(wget -O - https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh)"
+```
+
 You can also clone this repository and execute the script locally (it will still download the *apps.csv* file using the *$applist* variable):
 
 ```
