@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 29 Nov 2021 21:23:15
+# Last modified: Tue 30 Nov 2021 19:02:11
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1989,7 +1989,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		## 22 Storage Chassis
 		## 23 Rack Mount Chassis
 		## 24 Sealed-Case PC
-		if [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]]; then
+		if grep -qE '^(8|9|10|14)$' /sys/class/dmi/id/chassis_type; then
 			if ! type tlp > /dev/null 2>&1; then
 				while read -p "[LAPTOP DETECTED] Do you want to install a power management software? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
@@ -2000,7 +2000,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 						enableSvc upower 2>&1 | lognoc
 						echo -e "Power management software installed" 2>&1 | logc
 						echo -e 2>&1 | logc
-						if [[ $(cat /sys/class/dmi/id/chassis_type) =~ ^(8|9|10|14)$ ]] && [[ $(cat /sys/class/dmi/id/chassis_version) =~ ^Mac ]]; then
+						if [[ $(cat /sys/class/dmi/id/product_name) =~ ^Mac ]]; then
 							echo -e "[MACBOOK DETECTED] Configuring hardware..." 2>&1 | logc
 							# Program to use the ambient light sensor
 							yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S macbook-lighter 2>&1 | lognoc

@@ -165,7 +165,6 @@ You can always reach out to me:
 
 # BUGS
 
-* Fix how laptops are detected as the chassis_type method does not seem to be working reliably
 * Probably need to improve support for printing and other services
 * Implement a 'do not disturb' mode for notifications (probably not to be done here as I reckon killing the notify daemon
   should suffice)
