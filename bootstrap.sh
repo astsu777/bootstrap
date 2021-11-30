@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 22:02:18
+# Last modified: Tue 30 Nov 2021 22:10:45
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -137,6 +137,7 @@ if type brew > /dev/null 2>&1; then
 	uninstall(){ brew uninstall "$@" 2>&1 | lognoc ;}
 	installgui(){ brew install --cask "$@" 2>&1 | lognoc ;}
 elif type apt-get > /dev/null 2>&1; then
+	export DEBIAN_FRONTEND=noninteractive
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
@@ -175,6 +176,7 @@ elif type apt-get > /dev/null 2>&1; then
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
 	}
 elif type apt > /dev/null 2>&1; then
+	export DEBIAN_FRONTEND=noninteractive
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
@@ -2210,8 +2212,9 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 done
 
 #=======================
-# DONE
+# DONE - CLEANUP
 #=======================
+unset DEBIAN_FRONTEND
 echo -e 2>&1 | logc
 echo -e 2>&1 | logc
 echo -e "======= ALL DONE =======" 2>&1 | logc
