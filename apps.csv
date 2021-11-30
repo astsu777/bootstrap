@@ -1,7 +1,6 @@
 # Category Tags: S=Server Tools, W=Work, X=Arch|Artix Xorg, Y=Void Xorg
 # InitSys Tags: M=S6, N=Suite66, O=OpenRC, P=Runit,
 # System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 4=macOS Store, 5=Arch Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS
-#8,ttf-ms-win10-auto
 0,https://github.com/dylanaraps/pfetch
 0,https://github.com/raylee/tldr-sh-client
 1,https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp yt-dlp
@@ -110,6 +109,7 @@
 5679,cifs-utils
 5679,flameshot
 5679,gparted
+5679,guvcview
 5679,libreoffice
 5679,logrotate
 5679,lsof
@@ -171,6 +171,7 @@
 8,hypnotix
 8,nordvpn-bin
 8,spotify
+8,ttf-ms-win10-auto
 89,cointop
 89,tuir
 9,Signal-Desktop
@@ -271,6 +272,7 @@ W8,bria
 W8,gns3-converter
 W8,plow-bin
 W8,rambox-bin
+W8,teams
 W8,telnet-bsd
 W89,gns3-gui
 W89,gns3-server
