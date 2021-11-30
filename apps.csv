@@ -156,6 +156,7 @@
 59,xorg-server-xephyr
 59,xsel
 6,avahi-daemon
+6,build-essential
 6,dnsutils
 6,fd-find
 6,libimage-exiftool-perl
