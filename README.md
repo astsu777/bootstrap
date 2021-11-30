@@ -59,6 +59,7 @@ The script supports the following package managers for now:
 * Homebrew for macOS (command: **brew**)
 * Mac App Store for macOS (command: **mas**)
 * Pacman (command: **pacman**)
+* Snap (command: **snap**)
 * XBPS aka *X Binary Package System* (commands: xbps-install/query/etc...)
 * YAY aka *Yet Another Yogurt* as the AUR helper (command: **yay**)
 * YUM aka *Yellowdog Update Modified* & DNF (commands: **yum**)

@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 23:24:02
+# Last modified: Tue 30 Nov 2021 23:48:22
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -112,6 +112,7 @@ fi
 
 # List packages to install
 grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$aurpkg" ;}
+grepsnappkg(){ snappkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$snappkg" ;}
 grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[3][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
 grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workaurpkg" ;}
 grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[3][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workguipkg" ;}
@@ -136,6 +137,119 @@ if type brew > /dev/null 2>&1; then
 	install(){ brew install "$@" 2>&1 | lognoc ;}
 	uninstall(){ brew uninstall "$@" 2>&1 | lognoc ;}
 	installgui(){ brew install --cask "$@" 2>&1 | lognoc ;}
+elif type apt-get snap > /dev/null 2>&1; then
+	export DEBIAN_FRONTEND=noninteractive
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){
+		workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg"
+		echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
+		export DEBIAN_FRONTEND=noninteractive
+	}
+	update(){
+		if [[ "$EUID" == 0 ]]; then
+			apt-get update 2>&1 | lognoc
+		else
+			sudo apt-get update 2>&1 | lognoc
+		fi
+	}
+	install(){
+		if [[ "$EUID" == 0 ]]; then
+			apt-get install -y "$@" 2>&1 | lognoc
+		else
+			sudo apt-get install -y "$@" 2>&1 | lognoc
+		fi
+	}
+	installsnap(){
+		if [[ "$EUID" == 0 ]]; then
+			snap install "$@" 2>&1 | lognoc
+		else
+			sudo snap install "$@" 2>&1 | lognoc
+		fi
+	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			apt-get remove -y --purge "$@" 2>&1 | lognoc
+		else
+			sudo apt-get remove -y --purge "$@" 2>&1 | lognoc
+		fi
+	}
+	uninstallsnap(){
+		if [[ "$EUID" == 0 ]]; then
+			snap remove --purge "$@" 2>&1 | lognoc
+		else
+			sudo snap remove --purge "$@" 2>&1 | lognoc
+		fi
+	}
+	installvirtualbox(){
+		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	}
+	installkvm(){
+		update 2>&1 | lognoc && install ovmf ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
+		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
+		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
+	}
+elif type apt snap > /dev/null 2>&1; then
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){
+		workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workpkg"
+		echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
+		export DEBIAN_FRONTEND=noninteractive
+	}
+	update(){
+		if [[ "$EUID" == 0 ]]; then
+			apt update 2>&1 | lognoc
+		else
+			sudo apt update 2>&1 | lognoc
+		fi
+	}
+	install(){
+		if [[ "$EUID" == 0 ]]; then
+			apt install -y "$@" 2>&1 | lognoc
+		else
+			sudo apt install -y "$@" 2>&1 | lognoc
+		fi
+	}
+	installsnap(){
+		if [[ "$EUID" == 0 ]]; then
+			snap install "$@" 2>&1 | lognoc
+		else
+			sudo snap install "$@" 2>&1 | lognoc
+		fi
+	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			apt remove -y --purge "$@" 2>&1 | lognoc
+		else
+			sudo apt remove -y --purge "$@" 2>&1 | lognoc
+		fi
+	}
+	uninstallsnap(){
+		if [[ "$EUID" == 0 ]]; then
+			snap remove --purge "$@" 2>&1 | lognoc
+		else
+			sudo snap remove --purge "$@" 2>&1 | lognoc
+		fi
+	}
+	installvirtualbox(){
+		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	}
+	installkvm(){
+		update 2>&1 | lognoc && install ovmf ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
+		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "runit" ]]; then install libvirt-runit 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "s6" ]]; then install libvirt-s6 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
+		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
+		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
+	}
 elif type apt-get > /dev/null 2>&1; then
 	export DEBIAN_FRONTEND=noninteractive
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -537,6 +651,7 @@ installaurhelper(){
 	rm -Rf "$HOME"/yay
 }
 installaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$aurpkg" ;}
+installsnappkg(){ while IFS= read -r line; do installsnap "$line" 2>&1 | lognoc; done < "$snappkg" ;}
 installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | lognoc; done < "$workaurpkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$voidxpkg" ;}
@@ -1685,6 +1800,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				grepdirectdl && installdirectdl
 				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
 					grepaurpkg && installaurpkg
+				elif [[ -f /etc/debian_version ]] && type snap > /dev/null 2>&1; then
+					grepsnappkg && installsnappkg
 				fi
 			fi
 			rm "$HOME"/apps.csv 2>&1 | lognoc

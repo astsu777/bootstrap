@@ -1,6 +1,6 @@
 # Category Tags: S=Server Tools, W=Work, X=Arch|Artix Xorg, Y=Void Xorg
 # InitSys Tags: M=S6, N=Suite66, O=OpenRC, P=Runit,
-# System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 4=macOS Store, 5=Arch Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS
+# System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 4=macOS Store, 5=Arch Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS, U=Snap
 0,https://github.com/dylanaraps/pfetch
 0,https://github.com/raylee/tldr-sh-client
 1,https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp yt-dlp
@@ -262,12 +262,12 @@ W267,telnet
 W2678,wakeonlan
 W2789,zeek
 W29,geoip
-W3,rambox
 W3,tunnelblick
 W3679,wireshark
 W378,unetbootin
 W38,teamviewer
 W38,tor-browser
+W3U,rambox
 W4,1295203466 microsoft remote desktop
 W4,1422475219 zentermlite
 W5,gnu-netcat
@@ -287,10 +287,10 @@ W8,bria
 W8,gns3-converter
 W8,plow-bin
 W8,rambox-bin
-W8,teams
 W8,telnet-bsd
 W89,gns3-gui
 W89,gns3-server
+W8U,teams
 WS2567,lynis
 WS25679,lnav
 WS25679,mtr
