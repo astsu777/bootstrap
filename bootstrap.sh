@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 30 Nov 2021 22:10:45
+# Last modified: Tue 30 Nov 2021 22:15:27
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1522,6 +1522,7 @@ fi
 if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	# LINUX REQUIREMENTS
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then
+		echo -e "Checking requirements..." 2>&1 | logc
 		# Install 'curl'
 		if ! type curl > /dev/null 2>&1; then
 			echo -e "The package 'curl' is not installed on the system" 2>&1 | logc
@@ -1548,6 +1549,8 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				echo -e 2>&1 | logc
 			fi
 		fi
+		echo -e "Requirements satisfied" 2>&1 | logc
+		echo -e 2>&1 | logc
 		# Create user
 		if [[ "$EUID" == 0 ]]; then
 			echo -e "You are currently logged in as 'root'" 2>&1 | logc
