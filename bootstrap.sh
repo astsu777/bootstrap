@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 01 Dec 2021 00:41:44
+# Last modified: Wed 01 Dec 2021 00:44:01
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -115,7 +115,7 @@ grepaurpkg(){ aurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*"
 grepsnappkg(){ snappkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[U][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$snappkg" ;}
 grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[3][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$guipkg" ;}
 grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workaurpkg" ;}
-grepworksnappkg(){ snappkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[U][^,]*" | sed 's/^.*,//g' > "$worksnappkg" ;}
+grepworksnappkg(){ worksnappkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[U][^,]*" | sed 's/^.*,//g' > "$worksnappkg" ;}
 grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[3][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workguipkg" ;}
 grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[4][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
 grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[4][^,]*" | grep "^W" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
