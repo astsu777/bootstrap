@@ -158,7 +158,6 @@
 6,avahi-daemon
 6,build-essential
 6,dnsutils
-6,fd-find
 6,libimage-exiftool-perl
 6,libnfs-utils
 6,libnss-mdns
@@ -223,7 +222,6 @@ P,docker-runit
 P,networkmanager-runit
 P,ntp-runit
 P,syslog-ng-runit
-S,fd-find
 S25679,glances
 S25679,htop
 S25679,inxi
@@ -233,6 +231,7 @@ S25679,tmux
 S5679,nmon
 S5679,tcpdump
 S5679,vim
+S6,fd-find
 W0,https://github.com/payloadsecurity/vxapi.git
 W0,https://github.com/sullo/nikto.git
 W2,plow
