@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 01 Dec 2021 16:41:37
+# Last modified: Wed 01 Dec 2021 23:04:45
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -76,6 +76,14 @@ logfile="$HOME/bootstrap_log_$date.txt"
 # Log to/out of the console
 logc(){ tee -a "$logfile" ;}
 lognoc(){ tee -a "$logfile" > /dev/null 2>&1 ;}
+
+# Get sudo permission
+getsudo(){
+	if [[ "$EUID" != 0 ]]; then
+		sudo -v
+		while true; do sudo -n true; sleep 5; kill -0 "$$" || exit; done 2>/dev/null &
+	fi
+}
 
 # Determine init system in Linux
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -701,6 +709,7 @@ installzsh(){
 		chmod g-w "$(brew --prefix)/share/zsh" 2>&1 | lognoc
 		chmod g-w "$(brew --prefix)/share/zsh/sites-functions" 2>&1 | lognoc
 	else
+		getsudo
 		update 2>&1 | lognoc && install zsh 2>&1 | lognoc
 	fi
 	git clone --depth 1 https://github.com/zplug/zplug "$HOME"/.config/zsh/zplug 2>&1 | lognoc
@@ -1059,7 +1068,6 @@ setupworkstation(){
 		echo -e "- Certain Finder preferences cannot be set fully. You may wish to review these" 2>&1 | logc
 		echo -e 2>&1 | logc
 	elif { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-gnu" ]]; then
-		sudo -v
 		# Add current user to necessary groups
 		sudo usermod -a -G wheel,video,audio,network,sys,lp "$(whoami)" 2>&1 | lognoc
 		# Enable Master channel sound output
@@ -1636,6 +1644,7 @@ if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Installing useful server tools..." 2>&1 | logc
+			getsudo
 			grepsrvpkg && installsrvpkg
 			rm ./apps.csv 2>&1 | lognoc
 			echo -e "Useful server tools installed" 2>&1 | logc
@@ -1659,12 +1668,14 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		if ! type curl > /dev/null 2>&1; then
 			echo -e "The package 'curl' is not installed on the system" 2>&1 | logc
 			echo -e "Installing 'curl'..." 2>&1 | logc
+			getsudo
 			install curl 2>&1 | logc
 		fi
 		# Install 'git'
 		if ! type git > /dev/null 2>&1; then
 			echo -e "The package 'git' is not installed on the system" 2>&1 | logc
 			echo -e "Installing 'git'..." 2>&1 | logc
+			getsudo
 			install git 2>&1 | logc
 		fi
 		# Install 'sudo'
@@ -1720,6 +1731,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					else
 						if sudo -v > /dev/null 2>&1; then
 							echo -e "Installing 'yay', an AUR helper..." 2>&1 | logc
+							getsudo
 							installaurhelper
 							echo -e "AUR Helper successfully installed" 2>&1 | logc
 							echo -e "Please run this script again to take AUR packages into account" 2>&1 | logc
@@ -1764,6 +1776,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 			echo -e "Configuring custom repositories..." 2>&1 | logc
+			getsudo
 			setupcustomrepos
 			echo -e "Custom repositories configured" 2>&1 | logc
 			echo -e 2>&1 | logc
@@ -1803,6 +1816,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					fi
 				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+				getsudo
 				greppkg && installpkg && installsent
 				grepgitrepo && installgitrepo
 				grepdirectdl && installdirectdl
@@ -1861,10 +1875,12 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				grepworkpkg && installworkpkg
 				if { [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]] ;} && type yay > /dev/null 2>&1; then
+					getsudo
 					grepworkaurpkg && installworkaurpkg
 					grepworkgitrepo && installworkgitrepo
 					grepworkdirectdl && installworkdirectdl
 				elif [[ -f /etc/debian_version ]] && type snap > /dev/null 2>&1; then
+					getsudo
 					grepworksnappkg && installworksnappkg
 				fi
 			fi
@@ -1923,6 +1939,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			while read -p "Do you want to change the computer's name? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					getsudo
 					while read -p "What name your computer should use? " -r name; do
 						if [[ "$name" =~ ^[a-zA-Z0-9-]{1,15}$ ]]; then
 							sethostname
@@ -1942,6 +1959,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 				fi
 			done
 			echo -e "Starting configuration process..." 2>&1 | logc
+			getsudo
 			setupworkstation
 			break
 		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
@@ -1951,10 +1969,11 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	done
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		if [[ ! $(ls -l /bin/sh | awk '{print $11}') =~ ^(dash|\/bin\/dash)$ ]]; then
+			echo -e "WARNING: do this only if you know what you're doing!" 2>&1 | logc
 			while read -p "Do you want to change the default shell to Dash? (Y/n) " -n 1 -r; do
-				echo -e "WARNING: do this only if you know what you're doing!" 2>&1 | logc
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+					getsudo
 					setdashdefaultsystemshell
 					echo -e "Default shell changed to Dash" 2>&1 | logc
 					echo -e "The modification will take effect after a reboot" 2>&1 | logc
@@ -1989,6 +2008,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					cd "$HOME" && curl -fsSLO "$applist" 2>&1 | lognoc
 					echo -e "Installing necessary software for a GUI environment..." 2>&1 | logc
 					if [[ -d /usr/share/xbps.d ]]; then grepvoidxpkg && installvoidxpkg && installjetbrainsmono; fi
+					getsudo
 					grepxpkg && installxpkg
  	 	 			setupkeyring
 					installvideodriver
@@ -2031,6 +2051,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							echo -e "Installing BSPWM..." 2>&1 | logc
 							installxinitrc
 							installfonts
+							getsudo
 							installbspwm && installdmenu && installst && installslock && installsurf
 							sed -i '/export SESSION="*"/c export SESSION="bspwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 							echo -e "BSPWM installed" 2>&1 | logc
@@ -2040,6 +2061,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							echo -e "Installing DWM..." 2>&1 | logc
 							installxinitrc
 							installfonts
+							getsudo
 							installdwm && installdmenu && installst && installslock && installsurf
 							installlibxftbgra
 							sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
@@ -2049,6 +2071,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							echo -e "Installing i3..." 2>&1 | logc
 							installxinitrc
 							installfonts
+							getsudo
 							installi3 && installdmenu && installst && installslock && installsurf
 							sed -i '/export SESSION="*"/c export SESSION="i3"' "$HOME"/.xinitrc 2>&1 | lognoc
 							echo -e "i3 installed" 2>&1 | logc
@@ -2057,6 +2080,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							echo -e "Installing Openbox..." 2>&1 | logc
 							installxinitrc
 							installfonts
+							getsudo
 							installopenbox && installdmenu && installst && installslock && installsurf
 							sed -i '/export SESSION="*"/c export SESSION="openbox"' "$HOME"/.xinitrc 2>&1 | lognoc
 							echo -e "Openbox installed" 2>&1 | logc
@@ -2065,6 +2089,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							echo -e "Installing SpectrWM..." 2>&1 | logc
 							installxinitrc
 							installfonts
+							getsudo
 							installspectrwm && installdmenu && installst && installslock && installsurf
 							sed -i '/export SESSION="*"/c export SESSION="spectrwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 							echo -e "SpectrWM installed" 2>&1 | logc
@@ -2073,6 +2098,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							echo -e "Installing XFCE..." 2>&1 | logc
 							installxinitrc
 							installfonts
+							getsudo
 							installxfce && installdmenu && installst && installslock && installsurf
 							sed -i '/export SESSION="*"/c export SESSION="xfce"' "$HOME"/.xinitrc 2>&1 | lognoc
 							echo -e "XFCE installed" 2>&1 | logc
@@ -2080,6 +2106,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 						elif [[ "$REPLY" == 7 ]]; then
 							echo -e "Installing KDE/Plasma..." 2>&1 | logc
 							installfonts
+							getsudo
 							installkdeplasma && installdmenu && installst && installsurf
 							echo -e "KDE/Plasma installed" 2>&1 | logc
 							echo -e 2>&1 | logc
@@ -2159,6 +2186,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					echo -e 2>&1 | logc
 					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 						echo -e "Installing power management software..." 2>&1 | logc
+						getsudo
 						install tlp xfce4-power-manager powertop 2>&1 | lognoc
 						enableSvc tlp 2>&1 | lognoc
 						enableSvc upower 2>&1 | lognoc
@@ -2202,11 +2230,14 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		# Dependencies
 		if type perl > /dev/null 2>&1; then
 			echo -e "Installing Perl dependencies..." 2>&1 | logc
+			getsudo
 			installperldeps
 			echo -e "Perl dependencies installed" 2>&1 | logc
 			echo -e 2>&1 | logc
-		elif type python > /dev/null 2>&1; then
+		fi
+		if type python > /dev/null 2>&1; then
 			echo -e "Installing Python dependencies..." 2>&1 | logc
+			getsudo
 			installpythondeps
 			echo -e "Python dependencies installed" 2>&1 | logc
 			echo -e 2>&1 | logc
@@ -2219,6 +2250,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			echo -e 2>&1 | logc
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Installing virtualization software..." 2>&1 | logc
+				getsudo
 				installvirtualbox
 				installkvm
 				echo -e "Virtualization software installed" 2>&1 | logc
