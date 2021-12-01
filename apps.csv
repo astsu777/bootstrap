@@ -102,6 +102,7 @@
 53,vivaldi
 567,galculator
 567,obs-studio
+567,pdfarranger
 5679,arandr
 5679,aspell
 5679,audacity
@@ -110,6 +111,7 @@
 5679,cifs-utils
 5679,flameshot
 5679,gparted
+5679,gpick
 5679,guvcview
 5679,libreoffice
 5679,logrotate
@@ -211,6 +213,7 @@
 8,spotify
 8,ttf-ms-win10-auto
 89,cointop
+89,droidcam
 89,tuir
 9,Signal-Desktop
 9,galculator-gtk3
