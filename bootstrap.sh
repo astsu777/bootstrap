@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 01 Dec 2021 15:15:56
+# Last modified: Wed 01 Dec 2021 16:41:37
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1952,6 +1952,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		if [[ ! $(ls -l /bin/sh | awk '{print $11}') =~ ^(dash|\/bin\/dash)$ ]]; then
 			while read -p "Do you want to change the default shell to Dash? (Y/n) " -n 1 -r; do
+				echo -e "WARNING: do this only if you know what you're doing!" 2>&1 | logc
 				echo -e 2>&1 | logc
 				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 					setdashdefaultsystemshell
