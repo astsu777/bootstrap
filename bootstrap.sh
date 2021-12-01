@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 01 Dec 2021 00:44:01
+# Last modified: Wed 01 Dec 2021 15:15:56
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -453,7 +453,21 @@ elif type pacman yay > /dev/null 2>&1; then
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 	setupcustomrepos(){
-		if [[ -f /etc/artix-release ]]; then
+		# Arch Linux/Artix
+		if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
+			# Pritunl
+			if ! grep '^\[pritunl\]' /etc/pacman.conf > /dev/null 2>&1; then
+				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
+				[pritunl]
+				Server = https://repo.pritunl.com/stable/pacman
+				EOF
+			sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
+			sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
+			fi
+			# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
+			curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
+		# Artix
+		elif [[ -f /etc/artix-release ]]; then
 			# Arch Linux repos for Artix
 			sudo pacman -S --needed --noconfirm artix-archlinux-support 2>&1 | lognoc
 			sudo pacman-key --populate archlinux 2>&1 | lognoc
@@ -470,18 +484,12 @@ elif type pacman yay > /dev/null 2>&1; then
 				#Include = /etc/pacman.d/mirrorlist-arch
 				EOF
 			fi
+		# Fedora
+		elif [[ -f /etc/fedora-release ]]; then
+			# RPM Fusion
+			install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
+			install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
 		fi
-		# Pritunl
-		if ! grep '^\[pritunl\]' /etc/pacman.conf > /dev/null 2>&1; then
-			sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
-			[pritunl]
-			Server = https://repo.pritunl.com/stable/pacman
-			EOF
-		sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
-		sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
-		fi
-		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
-		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
 	}
 elif type pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*" | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
@@ -1752,21 +1760,19 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		fi
 	fi
 	# Arch/Artix Linux - Configure custom repositories
-	if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
-		while read -p "Do you want to configure 3rd party/custom repositories? (Y/n) " -n 1 -r; do
+	while read -p "Do you want to configure 3rd party/custom repositories? (Y/n) " -n 1 -r; do
+		echo -e 2>&1 | logc
+		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+			echo -e "Configuring custom repositories..." 2>&1 | logc
+			setupcustomrepos
+			echo -e "Custom repositories configured" 2>&1 | logc
 			echo -e 2>&1 | logc
-			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-				echo -e "Configuring custom repositories..." 2>&1 | logc
-				setupcustomrepos
-				echo -e "Custom repositories configured" 2>&1 | logc
-				echo -e 2>&1 | logc
-				break
-			elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-				echo -e
-				break
-			fi
-		done
-	fi
+			break
+		elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
+			echo -e
+			break
+		fi
+	done
 	# Install common packages
 	while read -p "Do you want to install common applications? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
