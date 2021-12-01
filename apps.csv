@@ -75,6 +75,7 @@
 35679,vlc
 3569,telegram-desktop
 359,alacritty
+38,zoom
 4,1116599239 nordvpn ike
 4,1233048948 boom 3d
 4,1452453066 hidden bar
@@ -148,8 +149,22 @@
 59,clipnotify
 59,cronie
 59,cups
+59,cups-filter
+59,cups-pdf
+59,foomatic-db
+59,foomatic-db-engine
+59,foomatic-db-gutenprint-ppds
+59,foomatic-db-nonfree
+59,foomatic-db-nonfree-ppds
+59,foomatic-db-ppds
+59,ghostscript
+59,gsfonts
+59,gutenprint
+59,hplip
 59,ldns
+59,libcups
 59,mtpfs
+59,system-config-printer
 59,texlive-lang
 59,texlive-most
 59,ueberzug
@@ -239,6 +254,7 @@ S5679,nmon
 S5679,tcpdump
 S5679,vim
 S67,fd-find
+U,zoom-client
 W0,https://github.com/payloadsecurity/vxapi.git
 W0,https://github.com/sullo/nikto.git
 W2,plow
@@ -305,6 +321,7 @@ WS268,tcptraceroute
 X,acpi
 X,acpid
 X,alsa-utils
+X,blueberry
 X,blueman
 X,bluez
 X,cmake

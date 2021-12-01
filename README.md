@@ -169,7 +169,3 @@ You can always reach out to me:
 
 * [Twitter](https://twitter.com/gaetanict)
 * [Email](mailto:gaetan@ictpourtous.com)
-
-# BUGS
-
-* Probably need to improve support for printing and other services
