@@ -173,4 +173,3 @@ You can always reach out to me:
 # BUGS
 
 * Probably need to improve support for printing and other services
-* Needs to be validated against Fedora
