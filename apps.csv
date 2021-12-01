@@ -76,6 +76,7 @@
 3569,telegram-desktop
 359,alacritty
 38,zoom
+3U,rambox
 4,1116599239 nordvpn ike
 4,1233048948 boom 3d
 4,1452453066 hidden bar
@@ -206,6 +207,7 @@
 8,authy
 8,hypnotix
 8,nordvpn-bin
+8,rambox-bin
 8,spotify
 8,ttf-ms-win10-auto
 89,cointop
@@ -290,13 +292,15 @@ W3679,wireshark
 W378,unetbootin
 W38,teamviewer
 W38,tor-browser
-W3U,rambox
 W4,1295203466 microsoft remote desktop
 W4,1422475219 zentermlite
 W5,gnu-netcat
 W5,wireshark-qt
+W5679,freerdp
+W5679,remmina
 W5679,testssl.sh
 W5679,traceroute
+W6,freerdp2-x11
 W6,inetutils-ftp
 W6,inetutils-ping
 W6,inetutils-telnet
@@ -308,7 +312,6 @@ W679,netcat
 W8,bria
 W8,gns3-converter
 W8,plow-bin
-W8,rambox-bin
 W8,telnet-bsd
 W89,gns3-gui
 W89,gns3-server
