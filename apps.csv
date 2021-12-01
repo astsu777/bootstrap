@@ -59,6 +59,7 @@
 26789,urlview
 29,exiftool
 3,amethyst
+3,brave-browser
 3,cyberduck
 3,gpg-suite-no-mail
 3,keycastr
@@ -207,6 +208,7 @@
 789,plex-media-player
 8,android-messages-desktop-bin
 8,authy
+8,brave-bin
 8,hypnotix
 8,nordvpn-bin
 8,rambox-bin
@@ -259,6 +261,7 @@ S5679,nmon
 S5679,tcpdump
 S5679,vim
 S67,fd-find
+U,brave
 U,zoom-client
 W0,https://github.com/payloadsecurity/vxapi.git
 W0,https://github.com/sullo/nikto.git
