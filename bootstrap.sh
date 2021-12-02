@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 02 Dec 2021 16:46:08
+# Last modified: Thu 02 Dec 2021 20:17:28
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -497,6 +497,8 @@ elif type pacman yay > /dev/null 2>&1; then
 			# RPM Fusion
 			install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
 			install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
+		else
+			echo
 		fi
 	}
 elif type pacman > /dev/null 2>&1; then
