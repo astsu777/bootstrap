@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 01 Dec 2021 23:04:45
+# Last modified: Thu 02 Dec 2021 16:46:08
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -881,7 +881,7 @@ installxfce(){
 installkdeplasma(){
 	update 2>&1 | lognoc
 	if [[ -d /usr/share/xbps.d ]]; then install kde5 2>&1 | lognoc ; fi
-	install plasma sddm sddm-kcm 2>&1 | lognoc
+	install plasma sddm sddm-kcm packagekit-qt5 2>&1 | lognoc
 	yes "" | installaur pamac-aur 2>&1 | lognoc
 	uninstall dunst 2>&1 | lognoc
 	if [[ "$initSystem" == "openrc" ]]; then install sddm-openrc 2>&1 | lognoc; fi
