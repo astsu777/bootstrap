@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 07 Dec 2021 02:08:47
+# Last modified: Wed 08 Dec 2021 21:13:21
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1340,7 +1340,7 @@ installdotfiles(){
 			mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc
 		fi
 		if [[ "$OSTYPE" == "darwin"* ]]; then
-			mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && lln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+			mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
 			ln -sf "$dfloc"/config/alacritty/*_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
 		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 			mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
