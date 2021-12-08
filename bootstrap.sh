@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 02 Dec 2021 20:17:28
+# Last modified: Tue 07 Dec 2021 02:08:47
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -2197,7 +2197,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 						if [[ $(cat /sys/class/dmi/id/product_name) =~ ^Mac ]]; then
 							echo -e "[MACBOOK DETECTED] Configuring hardware..." 2>&1 | logc
 							# Program to use the ambient light sensor
-							yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S macbook-lighter 2>&1 | lognoc
+							installaur macbook-lighter 2>&1 | lognoc
 							enableSvc macbook-lighter 2>&1 | lognoc
 				 			# Install proper Broadcom WiFi drivers for BCM43
 				 			if lspci | grep BCM43 > /dev/null ; then
@@ -2210,6 +2210,14 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							echo -e "Macbook's hardware configured" 2>&1 | logc
 							echo -e 2>&1 | logc
 							break
+						elif grep -E '^ThinkPad X1 Carbon Gen 9' /sys/class/dmi/id/product_family > /dev/null 2>&1; then
+							echo -e "[THINKPAD X1 CARBON DETECTED] Configuring hardware..." 2>&1 | logc
+							# Program to use the ambient light sensor
+							installaur clightd clight clight-gui-git 2>&1 | lognoc
+							enableSvc clightd.service 2>&1 | lognoc
+							# Program to use the fingerprint reader
+							install fprintd 2>&1 | lognoc
+							enableSvc fprintd.service 2>&1 | lognoc
 						fi
 						break
 					elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
