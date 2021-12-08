@@ -317,8 +317,10 @@ W67,hping3
 W679,netcat
 W8,bria
 W8,gns3-converter
+W8,microsoft-edge-beta-bin
 W8,plow-bin
 W8,telnet-bsd
+W8,webapp-manager
 W89,gns3-gui
 W89,gns3-server
 W8U,teams
