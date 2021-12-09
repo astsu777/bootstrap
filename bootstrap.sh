@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 08 Dec 2021 21:13:21
+# Last modified: Thu 09 Dec 2021 20:45:22
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1102,6 +1102,9 @@ setupworkstation(){
 			sudo sed -i 's/^#Color/Color/' /etc/pacman.conf 2>&1 | lognoc
 			sudo sed -i '/^#ParallelDownloads.*/c ParallelDownloads = 5' /etc/pacman.conf 2>&1 | lognoc
 		fi
+		# Enable automic Bluetooth profile switch (=microphone)
+		if [ -f /etc/pulse/default.pa ]; then sudo sed -i '/^load-module module-bluetooth-policy/c load-module module-bluetooth-policy auto_switch=2' /etc/pulse/default.pa 2>&1 | lognoc ; fi
+		if ! grep -Eq '^Enable=Source' /etc/bluetooth/main.conf ; then sudo sed -i '/^\[BR\]/i Enable=Source' /etc/bluetooth/main.conf 2>&1 | lognoc ; fi
 	fi
 }
 setdashdefaultsystemshell(){
