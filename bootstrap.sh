@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 09 Dec 2021 21:27:06
+# Last modified: Thu 09 Dec 2021 21:32:42
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1269,12 +1269,11 @@ leavepdf(){
 }
 installdotfiles(){
 	if [[ ! -d "$scriptsloc" ]]; then mkdir -pv "$scriptsloc" 2>&1 | lognoc ; fi
-	ln -sf "$dfloc"/local/bin/* "$scriptsloc"/ 2>&1 | lognoc
-	if [[ ! -d "$resourcesloc" ]]; then mkdir -pv "$resourcesloc"/ 2>&1 | lognoc ; fi
-	ln -sf "$dfloc"/local/share/* "$resourcesloc" 2>&1 | lognoc
 	if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config 2>&1 | lognoc ; fi
+	if [[ ! -d "$resourcesloc"/applications ]]; then mkdir -pv "$resourcesloc"/applications 2>&1 | lognoc ; fi
+	ln -sf "$dfloc"/local/bin/* "$scriptsloc"/ 2>&1 | lognoc
+	ln -sf "$dfloc"/local/share/* "$resourcesloc" 2>&1 | lognoc
 	if type bash > /dev/null 2>&1; then
-		if [[ ! -d "$HOME"/.config ]]; then mkdir -pv "$HOME"/.config > /dev/null 2>&1; fi
 		ln -sf "$dfloc"/shellconfig/bashrc "$HOME"/.bashrc 2>&1 | lognoc
 		ln -sf "$dfloc"/shellconfig/inputrc "$HOME"/.config/inputrc 2>&1 | lognoc
 		touch "$HOME"/.bash_profile && echo -e "source $HOME/.bashrc" > "$HOME"/.bash_profile
@@ -1289,7 +1288,6 @@ installdotfiles(){
 	## XDG default applications also symlinked to 'local/share' for legacy reasons
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then
 		ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.config/mimeapps.list 2>&1 | lognoc
-		if [[ -d "$HOME"/.local/share/applications ]]; then mkdir -pv "$HOME"/.local/share/applications 2>&1 | lognoc ; fi
 		ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.local/share/applications/mimeapps.list 2>&1 | lognoc
 		ln -sf "$dfloc"/local/share/applications/sxiview.desktop "$HOME"/.local/share/applications/sxiview.desktop 2>&1 | lognoc
 	fi
