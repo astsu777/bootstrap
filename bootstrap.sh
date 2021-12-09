@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 09 Dec 2021 20:45:22
+# Last modified: Thu 09 Dec 2021 21:13:09
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -2216,8 +2216,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 						elif grep -E '^ThinkPad X1 Carbon Gen 9' /sys/class/dmi/id/product_family > /dev/null 2>&1; then
 							echo -e "[THINKPAD X1 CARBON DETECTED] Configuring hardware..." 2>&1 | logc
 							# Program to use the ambient light sensor
-							installaur clightd clight clight-gui-git 2>&1 | lognoc
-							enableSvc clightd.service 2>&1 | lognoc
+							installaur clightd clight 2>&1 | lognoc
 							# Program to use the fingerprint reader
 							install fprintd 2>&1 | lognoc
 							enableSvc fprintd.service 2>&1 | lognoc
