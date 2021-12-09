@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 09 Dec 2021 21:13:09
+# Last modified: Thu 09 Dec 2021 21:17:30
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1292,7 +1292,7 @@ installdotfiles(){
 		ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.config/mimeapps.list 2>&1 | lognoc
 		if [[ -d "$HOME"/.local/share/applications ]]; then mkdir -pv "$HOME"/.local/share/applications 2>&1 | lognoc ; fi
 		ln -sf "$dfloc"/config/mimeapps.list "$HOME"/.local/share/applications/mimeapps.list 2>&1 | lognoc
-		ln -sf "$dfloc"/local/share/applications/sxiview.desktop "$HOME"/.local/share/applications/ 2>&1 | lognoc
+		ln -sf "$dfloc"/local/share/applications/sxiview.desktop "$HOME"/.local/share/applications/sxiview.desktop 2>&1 | lognoc
 	fi
 	if type git > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/git ]]; then
