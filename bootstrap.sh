@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 09 Dec 2021 21:17:30
+# Last modified: Thu 09 Dec 2021 21:27:06
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -732,7 +732,6 @@ installperldeps(){
 			if type apt-get > /dev/null 2>&1; then
 				update 2>&1 | lognoc && install libnet-ssleay-perl 2>&1 | lognoc
 			elif type cpanm > /dev/null 2>&1; then
-				# sudo cpanm --force Net::SSLeay 2>&1 | lognoc
 				sudo cpanm Net::SSLeay 2>&1 | lognoc
 			fi
 		fi
@@ -2242,14 +2241,12 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		# Dependencies
 		if type perl > /dev/null 2>&1; then
 			echo -e "Installing Perl dependencies..." 2>&1 | logc
-			getsudo
 			installperldeps
 			echo -e "Perl dependencies installed" 2>&1 | logc
 			echo -e 2>&1 | logc
 		fi
 		if type python > /dev/null 2>&1; then
 			echo -e "Installing Python dependencies..." 2>&1 | logc
-			getsudo
 			installpythondeps
 			echo -e "Python dependencies installed" 2>&1 | logc
 			echo -e 2>&1 | logc
