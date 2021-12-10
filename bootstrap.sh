@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri 10 Dec 2021 23:34:12
+# Last modified: Fri 10 Dec 2021 23:36:58
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1070,7 +1070,7 @@ setupworkstation(){
 		echo -e 2>&1 | logc
 	elif { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-gnu" ]]; then
 		# Add current user to necessary groups
-		sudo usermod -a -G wheel,video,audio,network,sys,lp,uucp,docker "$(whoami)" 2>&1 | lognoc
+		sudo usermod -a -G wheel,video,audio,network,sys,lp "$(whoami)" 2>&1 | lognoc
 		# Enable Master channel sound output
 		if type amixer > /dev/null 2>&1; then amixer sset Master unmute 2>&1 | lognoc; fi
 		# Build the 'locate' database
@@ -1093,8 +1093,12 @@ setupworkstation(){
 		if [ -f /usr/bin/ufw ]; then sudo /usr/bin/ufw enable 2>&1 | lognoc; fi
 		enableSvc bluetooth 2>&1 | lognoc
 		if type nordvpn > /dev/null 2>&1; then enableSvc nordvpnd 2>&1 | lognoc && sudo usermod -a -G nordvpn "$(whoami)" 2>&1 ; fi
-		# Add current to 'wireshark' group if need be
+		# Add current user to 'wireshark' group if need be
 		if type wireshark > /dev/null 2>&1; then sudo usermod -a -G wireshark "$(whoami)" 2>&1 | lognoc; fi
+		# Add current user to 'uucp' group if need be
+		if type minicom > /dev/null 2>&1; then sudo usermod -a -G uucp,dialout "$(whoami)" 2>&1 | lognoc; fi
+		# Add current user to 'docker' group if need be
+		if type docker > /dev/null 2>&1; then sudo usermod -a -G docker "$(whoami)" 2>&1 | lognoc; fi
 		# Tweak pacman's configuration
 		if [ -f /etc/pacman.conf ]; then
 			# Enable colors
