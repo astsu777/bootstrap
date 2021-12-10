@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 09 Dec 2021 21:32:42
+# Last modified: Fri 10 Dec 2021 23:34:12
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1070,7 +1070,7 @@ setupworkstation(){
 		echo -e 2>&1 | logc
 	elif { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "linux-gnu" ]]; then
 		# Add current user to necessary groups
-		sudo usermod -a -G wheel,video,audio,network,sys,lp "$(whoami)" 2>&1 | lognoc
+		sudo usermod -a -G wheel,video,audio,network,sys,lp,uucp,docker "$(whoami)" 2>&1 | lognoc
 		# Enable Master channel sound output
 		if type amixer > /dev/null 2>&1; then amixer sset Master unmute 2>&1 | lognoc; fi
 		# Build the 'locate' database
