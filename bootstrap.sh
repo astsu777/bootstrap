@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri 24 Dec 2021 15:24:00
+# Last modified: Fri 24 Dec 2021 15:32:59
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -2363,7 +2363,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				fi
 			done
 		fi
-		break
 		# macOS - Amethyst Configuration
 		if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
 			while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
@@ -2380,6 +2379,7 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 				fi
 			done
 		fi
+		break
 	elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
 		echo -e
 		break
