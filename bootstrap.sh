@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri 24 Dec 2021 15:32:59
+# Last modified: Fri 24 Dec 2021 15:33:58
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -2256,7 +2256,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		done
 	fi
 	# Define ZSH as default shell
-	if [[ "$SHELL" != *"zsh" ]]; then
+	if [[ "$SHELL" != *"zsh" ]] || [[ "$OSTYPE" == "darwin"* ]]; then
 		echo -e "Your current shell is \"$SHELL\""
 		while read -p "Do you want to use ZSH as your default shell? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
