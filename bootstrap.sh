@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri 24 Dec 2021 12:28:30
+# Last modified: Fri 24 Dec 2021 15:04:19
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -669,7 +669,7 @@ installsudo(){
 		fi
 	fi
 }
-installpkg(){ update && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$pkg" ;}
+installpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$pkg" ;}
 installguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do installgui "$line" 2>&1 | lognoc; done < "$guipkg" ;}
 installworkpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$workpkg" ;}
 installworkguipkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$workguipkg" ;}
