@@ -26,10 +26,7 @@
 25679,kitty
 25679,lame
 25679,links
-25679,mpc
-25679,mpd
 25679,mpv
-25679,ncmpcpp
 25679,neovim
 25679,newsboat
 25679,nnn
@@ -111,6 +108,9 @@
 5679,maim
 5679,man-db
 5679,mlocate
+5679,mpc
+5679,mpd
+5679,ncmpcpp
 5679,net-tools
 5679,ntfs-3g
 5679,playerctl
