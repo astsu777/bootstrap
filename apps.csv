@@ -65,10 +65,12 @@
 3,plex
 3,pritunl
 3,signal
+35679,audacity
 35679,calibre
 35679,gimp
 35679,inkscape
 35679,keepassxc
+35679,libreoffice
 35679,mediainfo
 35679,qutebrowser
 35679,vlc
@@ -97,7 +99,6 @@
 567,pdfarranger
 5679,arandr
 5679,aspell
-5679,audacity
 5679,biber
 5679,ca-certificates
 5679,cifs-utils
@@ -105,7 +106,6 @@
 5679,gparted
 5679,gpick
 5679,guvcview
-5679,libreoffice
 5679,logrotate
 5679,lsof
 5679,maim
