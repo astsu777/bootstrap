@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri 24 Dec 2021 12:11:56
+# Last modified: Fri 24 Dec 2021 12:28:30
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1064,10 +1064,6 @@ setupworkstation(){
 			echo -e "" > "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
 			sudo chflags schg "$HOME"/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2 > /dev/null 2>&1
 		fi
-		# Accessibility
-		# defaults write com.apple.universalaccess reduceMotion -int 1 # Reduce animations
-		defaults write com.apple.universalaccess reduceMotion -int 0 # Enable animations
-		# defaults write com.apple.universalaccess reduceTranssparency -int 1 # Disable transparency
 		# Build the 'locate' database
 		sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist 2>&1 | lognoc
 		sudo /usr/libexec/locate.updatedb 2>&1 | lognoc
