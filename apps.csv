@@ -1,6 +1,6 @@
 # Category Tags: S=Server Tools, W=Work, X=Arch|Artix Xorg, Y=Void Xorg
 # InitSys Tags: M=S6, N=Suite66, O=OpenRC, P=Runit,
-# System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 4=macOS Store, 5=Arch Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS, U=Snap
+# System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 5=Arch Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS, U=Snap
 0,https://github.com/dylanaraps/pfetch
 0,https://github.com/raylee/tldr-sh-client
 1,https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp yt-dlp
@@ -79,15 +79,6 @@
 359,alacritty
 38,zoom
 3U,rambox
-4,1116599239 nordvpn ike
-4,1233048948 boom 3d
-4,1452453066 hidden bar
-4,408981434 imovie
-4,425424353 the unarchiver
-4,425955336 skitch
-4,568494494 pocket
-4,876540291 copy'em paste
-4,946798523 antisleep
 5,ca-certificates-mozilla
 5,etcher
 5,networkmanager

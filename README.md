@@ -6,7 +6,7 @@ This repository hosts a *BASH* bootstrap script that can be used to setup workst
 
 * Modular usage: only desired operations can be performed (Ex.: only deploy dotfiles without installing any software)
 * Setup 3rd party repositories to install software not available in the system default ones
-* Automatically install TUI & GUI software (also from the macOS App Store)
+* Automatically install TUI & GUI software
 * Install professional software for a workstation
 * Deploy 3rd party fonts commonly used such as *JetBrainsMono*, etc...
 * Configure the prompt automatically (*BASH* & *ZSH* supported). The script will ask to set ZSH as the default shell too
@@ -57,7 +57,6 @@ The script supports the following package managers for now:
 * APT (commands: **apt-get** and **apt**)
 * DNF aka *Dandified YUM* & DNF (commands: **dnf**)
 * Homebrew for macOS (command: **brew**)
-* Mac App Store for macOS (command: **mas**)
 * Pacman (command: **pacman**)
 * Snap (command: **snap**)
 * XBPS aka *X Binary Package System* (commands: xbps-install/query/etc...)
@@ -84,7 +83,6 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 | 1 | The application is binary directly downloaded from the Internet |
 | 2 | The application can be installed with Homebrew on macOS and is a TUI program |
 | 3 | The application can be installed with Homebrew on macOS and is a GUI program |
-| 4 | The application can be installed from the macOS App Store |
 | 5 | The application can be installed with Pacman on Arch Linux & derivatives |
 | 6 | The application can be installed with APT on Debian & derivatives |
 | 7 | The application can be installed with YUM/DNF on Red Hat & derivatives |
@@ -94,19 +92,6 @@ The file *apps.csv* is very simple to use. It consists of a list of applications
 The file is structured in this way because some applications have different names depending on the OS. Also, some applications are not available on some systems. Personally, I also use different applications on different systems depending on my workflow.
 
 <u>**Note**</u>: the "0" tag will trigger the script to detect binaries in the cloned repositories and symlinked them in a location defined by the *$gitrepoloc* in their defined location (see chapter **Variables** below for details).
-
-#### Mac App Store
-The application coming from the Mac App Store needs to be set via their ID: the name in the *apps.csv* file is there just for clarity sake. In order to retrieve the ID of an app from the store, search for an application with the *mas* tool like this:
-
-```
-mas search Xcode
-497799835 Xcode
-688199928 Docs for Xcode
-449589707 Dash 3 - API Docs & Snippets. Integrates with Xcode, Alfred, TextWrangler and many more.
-[...]
-```
-
-For more information about *mas*, please check the [documentation](https://github.com/mas-cli/mas).
 
 ### Variables
 The file *bootstrap&#46;sh* has a lot of variables defined at the very beginning. This allows changing the configuration of the script without actually modifying the code. It is recommended to change the following variables:

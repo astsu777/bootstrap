@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 19 Dec 2021 22:49:52
+# Last modified: Fri 24 Dec 2021 12:11:56
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -125,8 +125,6 @@ grepguipkg(){ guipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[3][^,]*"
 grepworkaurpkg(){ workaurpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[8][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workaurpkg" ;}
 grepworksnappkg(){ worksnappkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[U][^,]*" | sed 's/^.*,//g' > "$worksnappkg" ;}
 grepworkguipkg(){ workguipkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[3][^,]*" | grep "^W" | sed 's/^.*,//g' > "$workguipkg" ;}
-grepstoreapp(){ if type mas > /dev/null 2>&1; then storeapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[4][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$storeapp"; fi ;}
-grepworkstoreapp(){ if type mas > /dev/null 2>&1; then workstoreapp=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[4][^,]*" | grep "^W" | sed 's/^.*,//g' | awk '{print $1}' > "$workstoreapp"; fi ;}
 grepgitrepo(){ if type git > /dev/null 2>&1; then repo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[0][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$repo"; fi ;}
 grepworkgitrepo(){ if type git > /dev/null 2>&1; then	workrepo=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[0][^,]*" | grep "^W" | sed 's/^.*,//g' | awk '{print $1}' > "$workrepo" ; fi ;}
 grepdirectdl(){ ddl=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[1][^,]*" | sed '/^W/d' | sed 's/^.*,//g' | awk '{print $1}' > "$ddl" ;}
@@ -632,8 +630,6 @@ fi
 
 # Install packages
 installsrvpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$srvpkg" ;}
-installstoreapp(){ if type mas > /dev/null 2>&1; then < "$storeapp" xargs mas install 2>&1 | lognoc; fi ;}
-installworkstoreapp(){ if type mas > /dev/null 2>&1; then < "$workstoreapp" xargs mas install 2>&1 | lognoc; fi ;}
 installxcodecli(){
 	TOUCH=$(which touch)
 	echo -e "Searching online for the Command Line Tools" 2>&1 | logc
@@ -1825,18 +1821,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					grepgitrepo && installgitrepo
 					grepdirectdl && installdirectdl
 				fi
-				while read -p "Do you want to install App Store common applications? (Y/n) " -n 1 -r; do
-					echo -e 2>&1 | logc
-					if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-						echo -e "Installing App Store common applications..." 2>&1 | logc
-						grepstoreapp && installstoreapp
-						echo -e "App Store common applications installed" 2>&1 | logc
-						break
-					elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-						echo -e
-						break
-					fi
-				done
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				getsudo
 				greppkg && installpkg && installsent
@@ -1879,20 +1863,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					grepworkguipkg && installworkguipkg
 					grepworkgitrepo && installworkgitrepo
 					grepworkdirectdl && installworkdirectdl
-					if type mas > /dev/null 2>&1 || [[ -f /usr/local/bin/mas ]]; then
-						while read -p "Do you want to install App Store work applications? (Y/n) " -n 1 -r; do
-							echo -e 2>&1 | logc
-							if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-								echo -e "Installing App Store work applications..." 2>&1 | logc
-								grepworkstoreapp && installworkstoreapp
-								echo -e "App Store work applications installed" 2>&1 | logc
-								break
-							elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-								echo -e
-								break
-							fi
-						done
-					fi
 				fi
 			elif [[ "$OSTYPE" == "linux-gnu" ]]; then
 				grepworkpkg && installworkpkg
