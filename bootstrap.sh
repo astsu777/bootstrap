@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri 24 Dec 2021 15:33:58
+# Last modified: Mon 27 Dec 2021 14:50:04
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -138,6 +138,7 @@ grepvoidxpkg(){ voidxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^
 
 # Package managers
 if type brew > /dev/null 2>&1; then
+	setupcustomrepos(){ echo > /dev/null 2>&1;}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[2][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[2][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){ brew update 2>&1 | lognoc ;}
@@ -146,6 +147,7 @@ if type brew > /dev/null 2>&1; then
 	installgui(){ brew install --cask "$@" 2>&1 | lognoc ;}
 elif type apt-get snap > /dev/null 2>&1; then
 	export DEBIAN_FRONTEND=noninteractive
+	setupcustomrepos(){ echo > /dev/null 2>&1 ;}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){
 		workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg"
@@ -210,6 +212,7 @@ elif type apt-get snap > /dev/null 2>&1; then
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
 	}
 elif type apt snap > /dev/null 2>&1; then
+	setupcustomrepos(){ echo > /dev/null 2>&1 ;}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){
 		workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg"
@@ -275,6 +278,7 @@ elif type apt snap > /dev/null 2>&1; then
 	}
 elif type apt-get > /dev/null 2>&1; then
 	export DEBIAN_FRONTEND=noninteractive
+	setupcustomrepos(){ echo > /dev/null 2>&1 ;}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){
 		workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg"
@@ -317,6 +321,7 @@ elif type apt-get > /dev/null 2>&1; then
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
 	}
 elif type apt > /dev/null 2>&1; then
+	setupcustomrepos(){ echo > /dev/null 2>&1 ;}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){
 		workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[6][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg"
@@ -359,6 +364,16 @@ elif type apt > /dev/null 2>&1; then
 		sudo usermod -a -G libvirt "$(whoami)" 2>&1 | lognoc && sudo usermod -a -G libvirt-qemu "$(whoami)" 2>&1 | lognoc
 	}
 elif type yum > /dev/null 2>&1; then
+	setupcustomrepos(){
+		# Fedora
+		if [[ -f /etc/fedora-release ]]; then
+			# RPM Fusion
+			install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
+			install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
+		else
+			echo > /dev/null 2>&1
+		fi
+	}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
@@ -396,6 +411,16 @@ elif type yum > /dev/null 2>&1; then
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 elif type dnf > /dev/null 2>&1; then
+	setupcustomrepos(){
+		# Fedora
+		if [[ -f /etc/fedora-release ]]; then
+			# RPM Fusion
+			install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
+			install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
+		else
+			echo > /dev/null 2>&1
+		fi
+	}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[7][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
@@ -433,6 +458,44 @@ elif type dnf > /dev/null 2>&1; then
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
 elif type pacman yay > /dev/null 2>&1; then
+	setupcustomrepos(){
+		# Arch Linux/Artix
+		if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
+			# Pritunl
+			if ! grep '^\[pritunl\]' /etc/pacman.conf > /dev/null 2>&1; then
+				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
+				[pritunl]
+				Server = https://repo.pritunl.com/stable/pacman
+				EOF
+			sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
+			sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
+			fi
+			# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
+			curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
+		# Artix
+		elif [[ -f /etc/artix-release ]]; then
+			# Arch Linux repos for Artix
+			sudo pacman -S --needed --noconfirm artix-archlinux-support 2>&1 | lognoc
+			sudo pacman-key --populate archlinux 2>&1 | lognoc
+			if ! grep '^Include = \/etc\/pacman\.d\/mirrorlist-arch' /etc/pacman.conf > /dev/null 2>&1; then
+				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
+				# ARCHLINUX REPOS
+				[extra]
+				Include = /etc/pacman.d/mirrorlist-arch
+
+				[community]
+				Include = /etc/pacman.d/mirrorlist-arch
+
+				#[multilib]
+				#Include = /etc/pacman.d/mirrorlist-arch
+				EOF
+			fi
+		else
+			echo > /dev/null 2>&1
+		fi
+		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
+		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
+	}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
@@ -474,6 +537,7 @@ elif type pacman yay > /dev/null 2>&1; then
 		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
+elif type pacman > /dev/null 2>&1; then
 	setupcustomrepos(){
 		# Arch Linux/Artix
 		if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
@@ -506,16 +570,12 @@ elif type pacman yay > /dev/null 2>&1; then
 				#Include = /etc/pacman.d/mirrorlist-arch
 				EOF
 			fi
-		# Fedora
-		elif [[ -f /etc/fedora-release ]]; then
-			# RPM Fusion
-			install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
-			install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
 		else
-			echo
+			echo > /dev/null 2>&1
 		fi
+		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
+		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
 	}
-elif type pacman > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
@@ -555,38 +615,8 @@ elif type pacman > /dev/null 2>&1; then
 		if [[ "$initSystem" == "suite66" ]]; then install libvirt-suite66 2>&1 | lognoc; fi
 		enableSvc libvirtd 2>&1 | lognoc && startSvc libvirtd 2>&1 | lognoc
 	}
-	setupcustomrepos(){
-		if [[ -f /etc/artix-release ]]; then
-			# Arch Linux repos for Artix
-			sudo pacman -S --needed --noconfirm artix-archlinux-support 2>&1 | lognoc
-			sudo pacman-key --populate archlinux 2>&1 | lognoc
-			if ! grep '^Include = \/etc\/pacman\.d\/mirrorlist-arch' /etc/pacman.conf > /dev/null 2>&1; then
-				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
-				# ARCHLINUX REPOS
-				[extra]
-				Include = /etc/pacman.d/mirrorlist-arch
-
-				[community]
-				Include = /etc/pacman.d/mirrorlist-arch
-
-				#[multilib]
-				#Include = /etc/pacman.d/mirrorlist-arch
-				EOF
-			fi
-		fi
-		# Pritunl
-		if ! grep '^\[pritunl\]' /etc/pacman.conf > /dev/null 2>&1; then
-			sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
-			[pritunl]
-			Server = https://repo.pritunl.com/stable/pacman
-			EOF
-		sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
-		sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
-		fi
-		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
-		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
-	}
 elif type xbps-install > /dev/null 2>&1; then
+	setupcustomrepos(){ echo > /dev/null 2>&1 ;}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[9][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[9][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){
