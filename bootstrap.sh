@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 27 Dec 2021 14:50:04
+# Last modified: Mon 07 Feb 2022 00:18:45
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1655,7 +1655,7 @@ setupamethyst(){
 			defaults write com.amethyst.Amethyst.plist restore-layouts-on-launch 1
 			# Set window margins
 			defaults write com.amethyst.Amethyst.plist window-margins 1
-			defaults write com.amethyst.Amethyst.plist window-margin-size 2
+			defaults write com.amethyst.Amethyst.plist window-margin-size 5
 			# Do not display layout names
 			defaults write com.amethyst.Amethyst.plist enables-layout-hud 0
 			defaults write com.amethyst.Amethyst.plist enables-layout-hud-on-space-change 0
