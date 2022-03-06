@@ -64,6 +64,7 @@
 3,obs
 3,plex
 3,pritunl
+3,rambox-ce
 3,signal
 35679,audacity
 35679,calibre
@@ -79,7 +80,6 @@
 38,authy
 38,spotify
 38,zoom
-3U,rambox
 5,ca-certificates-mozilla
 5,etcher
 5,networkmanager
@@ -255,6 +255,7 @@ S5679,tcpdump
 S5679,vim
 S67,fd-find
 U,brave
+U,rambox
 U,zoom-client
 W0,https://github.com/payloadsecurity/vxapi.git
 W0,https://github.com/sullo/nikto.git
