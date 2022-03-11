@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 07 Feb 2022 00:18:45
+# Last modified: Fri 11 Mar 2022 21:49:49
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1145,7 +1145,7 @@ setupworkstation(){
 		fi
 		# Enable automic Bluetooth profile switch (=microphone)
 		if [ -f /etc/pulse/default.pa ]; then sudo sed -i '/^load-module module-bluetooth-policy/c load-module module-bluetooth-policy auto_switch=2' /etc/pulse/default.pa 2>&1 | lognoc ; fi
-		if ! grep -Eq '^Enable=Source' /etc/bluetooth/main.conf ; then sudo sed -i '/^\[BR\]/i Enable=Source' /etc/bluetooth/main.conf 2>&1 | lognoc ; fi
+		if ! grep -Eqs '^Enable=Source' /etc/bluetooth/main.conf ; then sudo sed -i '/^\[BR\]/i Enable=Source' /etc/bluetooth/main.conf 2>&1 | lognoc ; fi
 	fi
 }
 setdashdefaultsystemshell(){
