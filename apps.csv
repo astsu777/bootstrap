@@ -283,7 +283,7 @@ W25679,xca
 W2569,httpie
 W259,inetutils
 W26,dhcpdump
-W267,telnet
+W67,telnet
 W2678,wakeonlan
 W2789,zeek
 W29,geoip
