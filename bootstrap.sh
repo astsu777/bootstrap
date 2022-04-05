@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 05 Apr 2022 15:31:28
+# Last modified: Tue 05 Apr 2022 16:03:53
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -805,7 +805,7 @@ installxinitrc(){
 	fi
 }
 installgreeter(){
-	install lightdm lightdm-gtk-greeter 2>&1 | lognoc
+	install lightdm lightdm-slick-greeter 2>&1 | lognoc
 	if [[ "$initSystem" == "openrc" ]]; then install lightdm-openrc 2>&1 | lognoc; fi
 	if [[ "$initSystem" == "runit" ]]; then install lightdm-runit 2>&1 | lognoc; fi
 	if [[ "$initSystem" == "s6" ]]; then install lightdm-s6 2>&1 | lognoc; fi
