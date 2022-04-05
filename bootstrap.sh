@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri 11 Mar 2022 21:49:49
+# Last modified: Tue 05 Apr 2022 12:14:44
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1214,7 +1214,6 @@ backupdotfiles(){
 	mv "$HOME"/.config/newsboat/config "$HOME"/.old-dotfiles/newsboat-config > /dev/null 2>&1
 	mv "$HOME"/.config/newsboat/urls "$HOME"/.old-dotfiles/newsboat-urls > /dev/null 2>&1
 	mv "$HOME"/.config/redshift.conf "$HOME"/.old-dotfiles/redshift.conf > /dev/null 2>&1
-	mv "$HOME"/.config/PulseEffects/output/MySettings.json "$HOME"/.old-dotfiles/PulseEffects-Output_MySettings.json > /dev/null 2>&1
 	mv "$HOME"/.config/dunst/dunstrc "$HOME"/.old-dotfiles/dunstrc > /dev/null 2>&1
 	mv "$HOME"/.config/rofi/config.rasi "$HOME"/.old-dotfiles/rofi-config.rasi > /dev/null 2>&1
 	mv "$HOME"/.config/sxhkd/sxhkdrc "$HOME"/.old-dotfiles/sxhkdrc > /dev/null 2>&1
@@ -1272,7 +1271,6 @@ deletedotfiles(){
 	rm -Rf "$HOME"/.config/weechat/fset.conf
 	rm -Rf "$HOME"/.config/weechat/iset.conf
 	rm -Rf "$HOME"/.config/redshift/redshift.conf
-	rm -Rf "$HOME"/.config/PulseEffects/output/MySettings.json
 	rm -Rf "$HOME"/.config/dunst/dunstrc
 	rm -Rf "$HOME"/.config/rofi/config.rasi
 	rm -Rf "$HOME"/.config/sxhkd/sxhkdrc
@@ -1432,12 +1430,6 @@ installdotfiles(){
 			mkdir -pv "$HOME"/.config/redshift 2>&1 | lognoc
 		fi
 		ln -sf "$dfloc"/config/redshift/redshift.conf "$HOME"/.config/redshift/redshift.conf 2>&1 | lognoc
-	fi
-	if type pulseeffects > /dev/null 2>&1; then
-		if [[ ! -d "$HOME"/.config/PulseEffects/output ]]; then
-			mkdir -pv "$HOME"/.config/PulseEffects/output 2>&1 | lognoc
-		fi
-		ln -sf "$dfloc"/config/PulseEffects/output/MySettings.json "$HOME"/.config/PulseEffects/output/MySettings.json 2>&1 | lognoc
 	fi
 	if type mpd > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/mpd ]]; then
