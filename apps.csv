@@ -127,6 +127,7 @@
 5679,sxiv
 5679,texinfo
 5679,thunderbird
+5679,unace
 5679,unrar
 5679,unzip
 5679,zathura
@@ -136,6 +137,7 @@
 569,smbclient
 569,ufw
 579,avahi
+579,easyeffects
 579,man-pages
 579,nextcloud-client
 579,nfs-utils
@@ -162,6 +164,7 @@
 59,ldns
 59,libcups
 59,mtpfs
+59,splix
 59,system-config-printer
 59,texlive-lang
 59,texlive-most
@@ -283,7 +286,6 @@ W25679,xca
 W2569,httpie
 W259,inetutils
 W26,dhcpdump
-W67,telnet
 W2678,wakeonlan
 W2789,zeek
 W29,geoip
@@ -308,6 +310,7 @@ W6,inetutils-tools
 W6,inetutils-traceroute
 W67,gns3
 W67,hping3
+W67,telnet
 W679,netcat
 W8,bria
 W8,gns3-converter
@@ -326,14 +329,13 @@ WS268,tcptraceroute
 X,acpi
 X,acpid
 X,alsa-utils
-X,blueberry
 X,blueman
 X,bluez
 X,bluez-utils
 X,cmake
 X,dunst
-X,engrampa
 X,feh
+X,file-roller
 X,gnome-keyring
 X,gnome-themes-extra
 X,gst-libav
@@ -345,6 +347,7 @@ X,gvfs-mtp
 X,gvfs-nfs
 X,gvfs-smb
 X,jwm
+X,lxappearance
 X,lxsession
 X,network-manager-applet
 X,numlockx
@@ -354,11 +357,15 @@ X,papirus-icon-theme
 X,pavucontrol
 X,pcmanfm-gtk3
 X,picom
+X,pipewire
+X,pipewire-alsa
+X,pipewire-jack
+X,pipewire-media-session
+X,pipewire-pulse
 X,polkit
-X,pulseaudio-alsa
-X,pulseaudio-bluetooth
 X,seahorse
 X,trayer
+X,tumbler
 X,unclutter
 X,volumeicon
 X,x264
@@ -403,7 +410,6 @@ Y,libtool
 Y,noto-fonts-ttf
 Y,pcmanfm
 Y,pkg-config
-Y,pulseaudio
 Y,webkit2gtk-devel
 Y,xinit
 Y,xorg-util-macros
