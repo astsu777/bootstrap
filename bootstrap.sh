@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 05 Apr 2022 12:14:44
+# Last modified: Tue 05 Apr 2022 15:31:28
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1118,8 +1118,8 @@ setupworkstation(){
 		if type containerd > /dev/null 2>&1; then enableSvc containerd 2>&1 | lognoc; fi
 		if type teamviewer > /dev/null 2>&1; then enableSvc teamviewerd 2>&1 | lognoc; fi
 		if type nmtui > /dev/null 2>&1; then enableSvc NetworkManager 2>&1 | lognoc; fi
-		if type ntpd > /dev/null 2>&1; then enableSvc ntpd 2>&1 | lognoc; fi
-		if [[ "$initSystem" == "systemd" ]]; then enableSvc systemd-timesyncd 2>&1 | lognoc; fi
+		if [[ "$initSystem" == "systemd" ]]; then enableSvc --now systemd-timesyncd 2>&1 | lognoc; fi
+		if type ntpd > /dev/null 2>&1 && ! pgrep -f systemd-timesyncd > /dev/null 2>&1; then enableSvc ntpd 2>&1 | lognoc; fi
 		if type avahi-daemon > /dev/null 2>&1; then
 			enableSvc avahi-daemon 2>&1 | lognoc
 			setupmdns
