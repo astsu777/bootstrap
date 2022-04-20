@@ -359,7 +359,6 @@ X,picom
 X,pipewire
 X,pipewire-alsa
 X,pipewire-jack
-X,pipewire-media-session
 X,pipewire-pulse
 X,polkit
 X,seahorse
@@ -367,6 +366,7 @@ X,trayer
 X,tumbler
 X,unclutter
 X,volumeicon
+X,wireplumber
 X,x264
 X,x265
 X,xautolock
