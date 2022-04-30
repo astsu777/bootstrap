@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 05 Apr 2022 16:03:53
+# Last modified: Sat 30 Apr 2022 16:18:12
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1509,6 +1509,14 @@ installdotfiles(){
 			mkdir -pv "$HOME"/.config/picom 2>&1 | lognoc
 		fi
 		ln -sf "$dfloc"/config/picom/picom.conf "$HOME"/.config/picom/picom.conf 2>&1 | lognoc
+	fi
+	if type easyeffects > /dev/null 2>&1; then
+		if [[ ! -d "$HOME"/.config/easyeffects ]]; then
+			mkdir -pv "$HOME"/.config/easyeffects/output 2>&1 | lognoc
+			mkdir -pv "$HOME"/.config/easyeffects/input 2>&1 | lognoc
+		fi
+		ln -sf "$dfloc"/config/easyeffects/output/* "$HOME"/.config/easyeffects/output/ 2>&1 | lognoc
+		ln -sf "$dfloc"/config/easyeffects/input/* "$HOME"/.config/easyeffects/input/ 2>&1 | lognoc
 	fi
 	if type htop > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/htop ]]; then
