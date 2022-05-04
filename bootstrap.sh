@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 30 Apr 2022 16:18:12
+# Last modified: Wed 04 May 2022 21:09:35
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1643,6 +1643,12 @@ setupamethyst(){
     	    	"window-titles" =         (
     	    	);
     		}
+    		},
+                {
+            id = "org.torproject.torbrowser";
+            "window-titles" =             (
+            	);
+        	}
 			)'
 			defaults write com.amethyst.Amethyst.plist floating-is-blacklist 1
 			# Follow window when moved to different workspace
