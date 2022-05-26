@@ -285,6 +285,7 @@ W25679,tor
 W25679,whois
 W25679,xca
 W2569,httpie
+W259,cdrtools
 W259,inetutils
 W26,dhcpdump
 W2678,wakeonlan
@@ -309,6 +310,7 @@ W6,inetutils-ping
 W6,inetutils-telnet
 W6,inetutils-tools
 W6,inetutils-traceroute
+W67,genisoimage
 W67,gns3
 W67,hping3
 W67,telnet
