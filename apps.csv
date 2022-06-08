@@ -66,6 +66,7 @@
 3,pritunl
 3,rambox-ce
 3,signal
+3,webcatalog
 35679,audacity
 35679,calibre
 35679,gimp
@@ -186,6 +187,7 @@
 6,ttf-mscorefonts-installer
 6,wpasupplicant
 6,xz-utils
+678,webapp-manager
 6789,mpdris2
 689,farbfeld
 7,AtomicParsley
@@ -318,7 +320,6 @@ W8,gns3-converter
 W8,microsoft-edge-beta-bin
 W8,plow-bin
 W8,telnet-bsd
-W8,webapp-manager
 W89,gns3-gui
 W89,gns3-server
 W8U,teams

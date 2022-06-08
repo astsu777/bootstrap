@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 18 May 2022 12:24:38
+# Last modified: Wed 08 Jun 2022 18:57:17
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -370,6 +370,8 @@ elif type yum > /dev/null 2>&1; then
 			# RPM Fusion
 			install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
 			install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
+			# RPM Sphere
+			install rpmsphere-release 2>&1 | lognoc
 		else
 			echo > /dev/null 2>&1
 		fi
@@ -417,6 +419,8 @@ elif type dnf > /dev/null 2>&1; then
 			# RPM Fusion
 			install "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
 			install "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" 2>&1 | lognoc
+			# RPM Sphere
+			install rpmsphere-release 2>&1 | lognoc
 		else
 			echo > /dev/null 2>&1
 		fi
