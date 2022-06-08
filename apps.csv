@@ -271,6 +271,7 @@ W2567,caddy
 W2567,mitmproxy
 W2567,slowhttptest
 W25679,ansible
+W25679,dhcping
 W25679,docker
 W25679,ipcalc
 W25679,iperf3
