@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 08 Jun 2022 18:57:17
+# Last modified: Sun 12 Jun 2022 12:00:12
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1524,10 +1524,11 @@ installdotfiles(){
 		ln -sf "$dfloc"/config/easyeffects/input/* "$HOME"/.config/easyeffects/input/ 2>&1 | lognoc
 	fi
 	if type htop > /dev/null 2>&1; then
-		if [[ ! -d "$HOME"/.config/htop ]]; then
-			mkdir -pv "$HOME"/.config/htop 2>&1 | lognoc
+		if [[ "$OSTYPE" == "darwin"* ]]; then
+			mkdir -pv "$HOME"/.config/htop 2>&1 | lognoc && cp "$dfloc"/config/htop/htoprc-macos.yml "$HOME"/.config/htop/htoprc 2>&1 | lognoc
+		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+			mkdir -pv "$HOME"/.config/htop 2>&1 | lognoc && cp "$dfloc"/config/htop/htoprc-linux.yml "$HOME"/.config/htop/htoprc 2>&1 | lognoc
 		fi
-		cp "$dfloc"/config/htop/htoprc "$HOME"/.config/htop/htoprc 2>&1 | lognoc
 	fi
 	# If this is a SSH connection, install the server config of TMUX
 	# For TMUX <=2.9, another config file can be manually installed if TMUX is throwing errors
