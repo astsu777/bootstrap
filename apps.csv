@@ -293,6 +293,7 @@ W26,dhcpdump
 W2678,wakeonlan
 W2789,zeek
 W29,geoip
+W3,raspberry-pi-imager
 W3,tunnelblick
 W3679,wireshark
 W378,unetbootin
@@ -317,10 +318,12 @@ W67,gns3
 W67,hping3
 W67,telnet
 W679,netcat
+W679,rpi-imager
 W8,bria
 W8,gns3-converter
 W8,microsoft-edge-beta-bin
 W8,plow-bin
+W8,rpi-imager-bin
 W8,telnet-bsd
 W89,gns3-gui
 W89,gns3-server
