@@ -9,6 +9,7 @@
 2,findutils
 2,mactex-no-gui
 2,msmtp
+2,saulpw/vd/visidata
 2567,transmission-cli
 2567,watch
 25679,bash
@@ -132,6 +133,7 @@
 5679,unace
 5679,unrar
 5679,unzip
+5679,visidata
 5679,zathura
 5679,zathura-djvu
 5679,zathura-ps
