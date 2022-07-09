@@ -9,7 +9,6 @@
 2,findutils
 2,mactex-no-gui
 2,msmtp
-2,saulpw/vd/visidata
 2567,transmission-cli
 2567,watch
 25679,bash
@@ -133,7 +132,6 @@
 5679,unace
 5679,unrar
 5679,unzip
-5679,visidata
 5679,zathura
 5679,zathura-djvu
 5679,zathura-ps
@@ -267,6 +265,7 @@ U,zoom-client
 W0,https://github.com/payloadsecurity/vxapi.git
 W0,https://github.com/sullo/nikto.git
 W2,plow
+W2,saulpw/vd/visidata
 W2,testssl
 W25,xh
 W256,hping
@@ -291,6 +290,7 @@ W25679,xca
 W2569,httpie
 W259,cdrtools
 W259,inetutils
+W259,xsv
 W26,dhcpdump
 W2678,wakeonlan
 W2789,zeek
@@ -309,6 +309,7 @@ W5679,freerdp
 W5679,remmina
 W5679,testssl.sh
 W5679,traceroute
+W5679,visidata
 W6,freerdp2-x11
 W6,inetutils-ftp
 W6,inetutils-ping
