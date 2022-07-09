@@ -154,3 +154,8 @@ You can always reach out to me:
 
 * [Twitter](https://twitter.com/gaetanict)
 * [Email](mailto:gaetan@ictpourtous.com)
+
+# TODO
+
+* Handle Python packages with "pip"
+* Handle sources compilation in bulk
