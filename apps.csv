@@ -276,6 +276,7 @@ W2567,slowhttptest
 W25679,ansible
 W25679,dhcping
 W25679,docker
+W25679,hashcat
 W25679,ipcalc
 W25679,iperf3
 W25679,jq
