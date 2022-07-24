@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 12 Jun 2022 12:00:12
+# Last modified: Sun 24 Jul 2022 13:59:17
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -766,7 +766,7 @@ installvideodriver(){
 	case "$(lspci -v | grep -A1 -e VGA -e 3D)" in
 		*NVIDIA*) install xf86-video-nouveau 2>&1 | lognoc ;;
 		*AMD*) install xf86-video-amdgpu 2>&1 | lognoc ;;
-		*Intel*) install xf86-video-intel 2>&1 | lognoc ;;
+		*Intel*) install xf86-video-intel intel-media-driver 2>&1 | lognoc ;;
 		*) install xf86-video-fbdev 2>&1 | lognoc ;;
 	esac
 }
