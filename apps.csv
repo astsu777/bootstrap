@@ -284,6 +284,7 @@ W25679,masscan
 W25679,minicom
 W25679,nmap
 W25679,rtmpdump
+W25679,socat
 W25679,speedtest-cli
 W25679,ssh-audit
 W25679,tor
