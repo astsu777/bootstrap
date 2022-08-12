@@ -63,7 +63,6 @@
 3,nextcloud
 3,obs
 3,openvpn-connect
-3,plex
 3,pritunl
 3,rambox-ce
 3,signal
@@ -204,10 +203,10 @@
 7,perl-Image-ExifTool
 7,samba-client
 7,texlive-scheme-full
-789,plex-media-player
 8,android-messages-desktop-bin
 8,brave-bin
 8,hypnotix
+8,jellyfin-media-player
 8,nordvpn-bin
 8,rambox-bin
 8,ttf-ms-win10-auto
