@@ -57,7 +57,6 @@
 3,amethyst
 3,android-messages
 3,brave-browser
-3,cyberduck
 3,gpg-suite-no-mail
 3,keycastr
 3,nextcloud
@@ -79,6 +78,7 @@
 3569,telegram-desktop
 359,alacritty
 38,authy
+38,jellyfin-media-player
 38,spotify
 38,zoom
 5,ca-certificates-mozilla
@@ -206,7 +206,6 @@
 8,android-messages-desktop-bin
 8,brave-bin
 8,hypnotix
-8,jellyfin-media-player
 8,nordvpn-bin
 8,rambox-bin
 8,ttf-ms-win10-auto
