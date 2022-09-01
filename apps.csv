@@ -134,7 +134,9 @@
 5679,zathura
 5679,zathura-djvu
 5679,zathura-ps
+569,networkmanager-openconnect
 569,ntp
+569,openconnect
 569,smbclient
 569,ufw
 579,avahi
@@ -193,6 +195,7 @@
 7,AtomicParsley
 7,NetworkManager
 7,NetworkManager-l2tp
+7,NetworkManager-openconnect
 7,NetworkManager-openvpn
 7,NetworkManager-pptp
 7,NetworkManager-vpnc
