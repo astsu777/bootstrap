@@ -98,7 +98,7 @@ The file *bootstrap&#46;sh* has a lot of variables defined at the very beginning
 
 * **applist**: defines the URL of the *apps.csv* file
 * **dfloc**: this variable defines where the installed dotfiles need to be stored. Default value is *$HOME/.dotfiles*
-* **dfrepo**: this variable indicates what repository of dotfiles needs to be installed (this points to [my dotfiles](https://github.com/GSquad934/dotfiles))
+* **dfrepo**: this variable indicates what repository of dotfiles needs to be installed (this points to [mydotfiles](https://github.com/astsu777/dotfiles))
 * **scriptsloc**: this variable defines where custom scripts will be stored. Personally, I use this to auto-create this folder so my dotfiles will deploy scripts there and add this folder to my *&#36;PATH*. Default value is *$HOME/.local/bin*
 * **resourcesloc**: this variable defines where resources to be used by custom scripts are located (Ex.: a list of all unicode characters)
 * **gitrepoloc**: this variable defines where cloned Git repositories will be stored. Default value is *$HOME/.sources/repos*
@@ -113,24 +113,24 @@ Other variables define URLs for custom fonts, a plugin manager for *TMUX*, etc..
 Once everything is customized to your needs, execute the following command:
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/astsu777/bootstrap/master/bootstrap.sh)"
 ```
 
 If *curl* is not installed, execute the following command that uses *wget*:
 
 ```
-/bin/bash -c "$(wget -O - https://raw.githubusercontent.com/GSquad934/bootstrap/master/bootstrap.sh)"
+/bin/bash -c "$(wget -O - https://raw.githubusercontent.com/astsu777/bootstrap/master/bootstrap.sh)"
 ```
 
 You can also clone this repository and execute the script locally (it will still download the *apps.csv* file using the *$applist* variable):
 
 ```
-git clone --depth 1 https://github.com/GSquad934/bootstrap.git
+git clone --depth 1 https://github.com/astsu777/bootstrap.git
 cd bootstrap
 /bin/bash ./bootstrap.sh
 ```
 
-If you use my dotfiles, a [function called bootstrap](https://github.com/GSquad934/dotfiles/blob/master/shellconfig/functions#L56) will automatically call this script again.
+If you use my dotfiles, a [function called bootstrap](https://github.com/astsu777/dotfiles/blob/master/shellconfig/functions#L56) will automatically call this script again.
 
 # Laptop
 When being executed, the script will try to determine if the machine is a laptop or not. If it is the case, the script will say so and propose to install *tlp*, a power saver software that can greatly increase a laptop's battery life.
@@ -144,7 +144,7 @@ If the script is ran via a SSH connection, it will consider it is running on a r
 * Install some useful server tools (tagged with "**I**" in the *apps.csv* file)
 * Deploy dotfiles
 
-[My personal dotfiles](https://github.com/GSquad934/dotfiles) are suited to run on both a workstation and server. The reason for this is the dynamism in them that does not disrupt the remote servers at all.
+[My personal dotfiles](https://github.com/astsu777/dotfiles) are suited to run on both a workstation and server. The reason for this is the dynamism in them that does not disrupt the remote servers at all.
 
 # Log
 The output to the console is pretty empty in order to keep everything clean. However, a log file is always created in the *$HOME* folder and is unique for each run. This way, it is possible to review all performed operations and check for errors.
@@ -152,7 +152,7 @@ The output to the console is pretty empty in order to keep everything clean. How
 # Contact
 You can always reach out to me:
 
-* [Twitter](https://twitter.com/gaetanict)
+* [Twitter](https://twitter.com/astsu777)
 * [Email](mailto:gaetan@ictpourtous.com)
 
 # TODO
