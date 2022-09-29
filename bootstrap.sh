@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #=========================================================================
-# Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @GaetanICT
+# Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 24 Jul 2022 13:59:17
+# Last modified: Thu 29 Sep 2022 22:33:12
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -13,7 +13,7 @@
 #=======================
 # Dotfiles location
 dfloc="$HOME/.dotfiles"
-dfrepo="https://github.com/GSquad934/dotfiles.git"
+dfrepo="https://github.com/astsu777/dotfiles.git"
 
 # Custom scripts location
 scriptsloc="$HOME/.local/bin"
@@ -29,13 +29,13 @@ ddloc="/usr/local/bin"
 # sourcesloc="$HOME/.sources"
 
 # Wallpapers
-wallpapers="https://github.com/GSquad934/wallpapers.git"
+wallpapers="https://github.com/astsu777/wallpapers.git"
 wallpapersloc="$HOME/.local/share/wallpapers"
 
 # Software lists
 homebrew="https://raw.githubusercontent.com/Homebrew/install/master/install.sh"
 aurhelper="https://aur.archlinux.org/yay.git"
-applist="https://raw.githubusercontent.com/GSquad934/bootstrap/master/apps.csv"
+applist="https://raw.githubusercontent.com/astsu777/bootstrap/master/apps.csv"
 
 # Font lists
 symbols_nerd="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/src/glyphs/Symbols-2048-em%20Nerd%20Font%20Complete.ttf"
@@ -51,17 +51,17 @@ powerline_fonts="https://github.com/powerline/fonts"
 clipmenurepo="https://github.com/cdown/clipmenu"
 
 # Custom WM/DE location
-dwmrepo="https://github.com/GSquad934/dwm.git"
+dwmrepo="https://github.com/astsu777/dwm.git"
 dwmloc="/opt/dwm"
-dmenurepo="https://github.com/GSquad934/dmenu.git"
+dmenurepo="https://github.com/astsu777/dmenu.git"
 dmenuloc="/opt/dmenu"
-sentrepo="https://github.com/GSquad934/sent.git"
+sentrepo="https://github.com/astsu777/sent.git"
 sentloc="/opt/sent"
-strepo="https://github.com/GSquad934/st.git"
+strepo="https://github.com/astsu777/st.git"
 stloc="/opt/st"
-slockrepo="https://github.com/GSquad934/slock.git"
+slockrepo="https://github.com/astsu777/slock.git"
 slockloc="/opt/slock"
-surfrepo="https://github.com/GSquad934/surf.git"
+surfrepo="https://github.com/astsu777/surf.git"
 surfloc="/opt/surf"
 adwaitaqtrepo="https://github.com/FedoraQt/adwaita-qt.git"
 
@@ -2085,7 +2085,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							installbspwm && installdmenu && installst && installslock && installsurf
 							sed -i '/export SESSION="*"/c export SESSION="bspwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 							echo -e "BSPWM installed" 2>&1 | logc
-							echo -e "If you have multiple monitors, please read the documentation at https://github.com/GSquad934/dotfiles/tree/master/config/bspwm" 2>&1 | logc
+							echo -e "If you have multiple monitors, please read the documentation at https://github.com/astsu777/dotfiles/tree/master/config/bspwm" 2>&1 | logc
 							echo -e 2>&1 | logc
 						elif [[ "$REPLY" == 2 ]]; then
 							echo -e "Installing DWM..." 2>&1 | logc
