@@ -8,6 +8,7 @@
 2,ansifilter
 2,findutils
 2,mactex-no-gui
+2,media-info
 2,msmtp
 2567,transmission-cli
 2567,watch
@@ -72,7 +73,6 @@
 35679,inkscape
 35679,keepassxc
 35679,libreoffice
-35679,mediainfo
 35679,qutebrowser
 35679,vlc
 3569,telegram-desktop
@@ -109,6 +109,7 @@
 5679,lsof
 5679,maim
 5679,man-db
+5679,mediainfo
 5679,mlocate
 5679,mpc
 5679,mpd
