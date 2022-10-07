@@ -10,6 +10,7 @@
 2,mactex-no-gui
 2,media-info
 2,msmtp
+2,pb
 2567,transmission-cli
 2567,watch
 25679,bash
@@ -221,6 +222,7 @@
 9,galculator-gtk3
 9,gst-plugins-good1
 9,obs
+9,pb-for-desktop
 9,rsyslog
 9,spotify-qt
 9,transmission
