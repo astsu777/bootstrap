@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 29 Sep 2022 22:33:12
+# Last modified: Wed 19 Oct 2022 16:25:03
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -721,7 +721,6 @@ installworkaurpkg(){ while IFS= read -r line; do installaur "$line" 2>&1 | logno
 installworksnappkg(){ while IFS= read -r line; do installsnap "$line" 2>&1 | lognoc; done < "$worksnappkg" ;}
 installxpkg(){ update 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$archxpkg" ;}
 installvoidxpkg(){ update 2>&1 | lognoc && enableSvc dbus 2>&1 | lognoc && while IFS= read -r line; do install "$line" 2>&1 | lognoc; done < "$voidxpkg" ;}
-installlibxftbgra(){ update 2>&1 | lognoc && yes | installaurconfirm libxft-bgra 2>&1 | lognoc ;}
 installjetbrainsmono(){ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)" ;}
 installgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$repo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
 installworkgitrepo(){ if [[ ! -d "$gitrepoloc" ]]; then mkdir -pv "$gitrepoloc" > /dev/null 2>&1; fi && if type git > /dev/null 2>&1; then < "$workrepo" xargs -n1 -I url git -C "$gitrepoloc" clone --depth 1 url 2>&1 | lognoc; fi ;}
@@ -2072,8 +2071,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 					echo -e "You can also choose these environments, but they will be vanilla (no customisation):"
 					echo -e "[7] KDE/Plasma"
 					echo -e "[9] Cancel"
-					echo -e "WARNING: if you are running Void Linux, DWM will only display a text-only statusbar"
-					echo -e "See https://gitlab.freedesktop.org/xorg/lib/libxft/-/merge_requests/1 for more details"
 					echo -e
 					while read -p "Choose (ex.: type 2 for DWM): " -n 1 -r; do
 						echo -e 2>&1 | logc
@@ -2093,7 +2090,6 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 							installfonts
 							getsudo
 							installdwm && installdmenu && installst && installslock && installsurf
-							installlibxftbgra
 							sed -i '/export SESSION="*"/c export SESSION="dwm"' "$HOME"/.xinitrc 2>&1 | lognoc
 							echo -e "DWM installed" 2>&1 | logc
 							echo -e 2>&1 | logc

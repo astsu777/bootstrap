@@ -366,6 +366,7 @@ X,gvfs-mtp
 X,gvfs-nfs
 X,gvfs-smb
 X,jwm
+X,libxft
 X,lxappearance
 X,lxsession
 X,network-manager-applet
@@ -421,6 +422,7 @@ Y,freetype-devel
 Y,gcr-devel
 Y,harfbuzz-devel
 Y,libX11-devel
+Y,libXft
 Y,libXft-devel
 Y,libXinerama-devel
 Y,libXrender-devel
