@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 19 Oct 2022 17:19:01
+# Last modified: Wed 04 Jan 2023 20:29:26
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1227,9 +1227,6 @@ backupdotfiles(){
 	mv "$HOME"/.config/qutebrowser/dark.css "$HOME"/.old-dotfiles/qutedark.css > /dev/null 2>&1
 	mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
 	mv "$HOME"/.links "$HOME"/.old-dotfiles/links > /dev/null 2>&1
-	mv "$HOME"/.config/mpd/mpd.conf "$HOME"/.old-dotfiles/mpd.conf > /dev/null 2>&1
-	mv "$HOME"/.config/ncmpcpp/config "$HOME"/.old-dotfiles/ncmpcpp/config > /dev/null 2>&1
-	mv "$HOME"/.config/ncmpcpp/bindings "$HOME"/.old-dotfiles/ncmpcpp/bindings > /dev/null 2>&1
 	mv "$HOME"/.config/zathura/zathurarc "$HOME"/.old-dotfiles/zathurarc > /dev/null 2>&1
 	mv "$HOME"/.config/sxiv/exec/key-handler "$HOME"/.old-dotfiles/sxiv-key-handler > /dev/null 2>&1
 	mv "$HOME"/.config/picom/picom.conf "$HOME"/.old-dotfiles/picom.conf > /dev/null 2>&1
@@ -1284,9 +1281,6 @@ deletedotfiles(){
 	rm -Rf "$HOME"/.config/qutebrowser/dark.css
 	rm -Rf "$HOME"/.jwmrc
 	if [[ -d "$HOME"/.moc ]]; then rm -Rf "$HOME"/.moc; else rm -Rf "$HOME"/.config/moc; fi
-	rm -Rf "$HOME"/.config/mpd/mpd.conf
-	rm -Rf "$HOME"/.config/ncmpcpp/config
-	rm -Rf "$HOME"/.config/ncmpcpp/bindings
 	rm -Rf "$HOME"/.config/zathura/zathurarc
 	rm -Rf "$HOME"/.config/sxiv/exec/key-handler
 	rm -Rf "$HOME"/.config/picom/picom.conf
@@ -1434,22 +1428,6 @@ installdotfiles(){
 			mkdir -pv "$HOME"/.config/redshift 2>&1 | lognoc
 		fi
 		ln -sf "$dfloc"/config/redshift/redshift.conf "$HOME"/.config/redshift/redshift.conf 2>&1 | lognoc
-	fi
-	if type mpd > /dev/null 2>&1; then
-		if [[ ! -d "$HOME"/.config/mpd ]]; then
-			mkdir -pv "$HOME"/.config/mpd 2>&1 | lognoc
-		fi
-		if [[ ! -d "$HOME"/.local/share/mpd ]]; then
-			mkdir -pv "$HOME"/.local/share/mpd 2>&1 | lognoc
-		fi
-		ln -sf "$dfloc"/config/mpd/mpd.conf "$HOME"/.config/mpd/ 2>&1 | lognoc
-	fi
-	if type ncmpcpp > /dev/null 2>&1; then
-		if [[ ! -d "$HOME"/.config/ncmpcpp ]]; then
-			mkdir -pv "$HOME"/.config/ncmpcpp 2>&1 | lognoc
-		fi
-		ln -sf "$dfloc"/config/ncmpcpp/config "$HOME"/.config/ncmpcpp/ 2>&1 | lognoc
-		ln -sf "$dfloc"/config/ncmpcpp/bindings "$HOME"/.config/ncmpcpp/ 2>&1 | lognoc
 	fi
 	if type dunst > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/dunst ]]; then

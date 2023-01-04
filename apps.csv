@@ -111,9 +111,6 @@
 5679,man-db
 5679,mediainfo
 5679,mlocate
-5679,mpc
-5679,mpd
-5679,ncmpcpp
 5679,net-tools
 5679,ntfs-3g
 5679,playerctl
@@ -191,7 +188,6 @@
 6,wpasupplicant
 6,xz-utils
 678,webapp-manager
-6789,mpdris2
 689,farbfeld
 7,AtomicParsley
 7,NetworkManager
