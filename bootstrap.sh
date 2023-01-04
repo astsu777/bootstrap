@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 04 Jan 2023 20:29:26
+# Last modified: Wed 04 Jan 2023 20:39:35
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -465,17 +465,7 @@ elif type pacman yay > /dev/null 2>&1; then
 	setupcustomrepos(){
 		# Arch Linux/Artix
 		if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
-			# Pritunl
-			if ! grep '^\[pritunl\]' /etc/pacman.conf > /dev/null 2>&1; then
-				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
-				[pritunl]
-				Server = https://repo.pritunl.com/stable/pacman
-				EOF
-			sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
-			sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
-			fi
-			# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
-			curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
+			echo > /dev/null 2>&1
 		# Artix
 		elif [[ -f /etc/artix-release ]]; then
 			# Arch Linux repos for Artix
@@ -497,8 +487,6 @@ elif type pacman yay > /dev/null 2>&1; then
 		else
 			echo > /dev/null 2>&1
 		fi
-		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
-		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
 	}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
@@ -545,17 +533,7 @@ elif type pacman > /dev/null 2>&1; then
 	setupcustomrepos(){
 		# Arch Linux/Artix
 		if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
-			# Pritunl
-			if ! grep '^\[pritunl\]' /etc/pacman.conf > /dev/null 2>&1; then
-				sudo tee -a /etc/pacman.conf <<-'EOF' >/dev/null
-				[pritunl]
-				Server = https://repo.pritunl.com/stable/pacman
-				EOF
-			sudo pacman-key --keyserver hkp://keyserver.ubuntu.com -r 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
-			sudo pacman-key --lsign-key 7568D9BB55FF9E5287D586017AE645C0CF8E292A > /dev/null 2>&1 | lognoc
-			fi
-			# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
-			curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
+			echo > /dev/null 2>&1
 		# Artix
 		elif [[ -f /etc/artix-release ]]; then
 			# Arch Linux repos for Artix
@@ -577,8 +555,6 @@ elif type pacman > /dev/null 2>&1; then
 		else
 			echo > /dev/null 2>&1
 		fi
-		# Spotify (see https://aur.archlinux.org/packages/spotify/ if key import failed)
-		curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import - > /dev/null 2>&1 | lognoc
 	}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[5][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
@@ -1129,7 +1105,6 @@ setupworkstation(){
 		fi
 		if type cupsd > /dev/null 2>&1; then enableSvc cups 2>&1 | lognoc; fi
 		if type crond > /dev/null 2>&1; then enableSvc cronie 2>&1 | lognoc; fi
-		if type pritunl-client > /dev/null 2>&1; then enableSvc pritunl-client 2>&1 | lognoc; fi
 		if type syslog-ng > /dev/null 2>&1; then enableSvc syslog-ng@default 2>&1 | lognoc; fi
 		if [ -f /usr/bin/ufw ]; then sudo /usr/bin/ufw enable 2>&1 | lognoc; fi
 		enableSvc bluetooth 2>&1 | lognoc
@@ -1435,13 +1410,6 @@ installdotfiles(){
 		fi
 		ln -sf "$dfloc"/config/dunst/dunstrc "$HOME"/.config/dunst/ 2>&1 | lognoc
 		ln -sf "$dfloc"/config/dunst/*.wav "$HOME"/.config/dunst/ 2>&1 | lognoc
-	fi
-	if type tuir > /dev/null 2>&1; then
-		if [[ ! -d "$HOME"/.config/tuir ]]; then
-			mkdir -pv "$HOME"/.config/tuir 2>&1 | lognoc
-		fi
-		ln -sf "$dfloc"/config/tuir/tuir.cfg "$HOME"/.config/tuir/ 2>&1 | lognoc
-		ln -sf "$dfloc"/config/tuir/mailcap "$HOME"/.config/tuir/ 2>&1 | lognoc
 	fi
 	if type rofi > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/rofi ]]; then

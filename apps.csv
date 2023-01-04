@@ -10,7 +10,6 @@
 2,mactex-no-gui
 2,media-info
 2,msmtp
-2,pb
 2567,transmission-cli
 2567,watch
 25679,bash
@@ -64,8 +63,6 @@
 3,nextcloud
 3,obs
 3,openvpn-connect
-3,pritunl
-3,rambox-ce
 3,signal
 3,webcatalog
 35679,audacity
@@ -79,8 +76,6 @@
 3569,telegram-desktop
 359,alacritty
 38,authy
-38,jellyfin-media-player
-38,spotify
 38,zoom
 5,ca-certificates-mozilla
 5,networkmanager
@@ -89,7 +84,6 @@
 5,networkmanager-pptp
 5,networkmanager-vpnc
 5,perl-image-exiftool
-5,pritunl-client-electron
 5,reflector
 5,signal-desktop
 5,syslog-ng
@@ -206,20 +200,14 @@
 8,android-messages-desktop-bin
 8,brave-bin
 8,hypnotix
-8,nordvpn-bin
-8,rambox-bin
 8,ttf-ms-win10-auto
-8,webtorrent-cli
 89,cointop
 89,droidcam
-89,tuir
 9,Signal-Desktop
 9,galculator-gtk3
 9,gst-plugins-good1
 9,obs
-9,pb-for-desktop
 9,rsyslog
-9,spotify-qt
 9,transmission
 9,trayer-srg
 9,ts
@@ -259,7 +247,6 @@ S5679,tcpdump
 S5679,vim
 S67,fd-find
 U,brave
-U,rambox
 U,zoom-client
 W0,https://github.com/payloadsecurity/vxapi.git
 W0,https://github.com/sullo/nikto.git
@@ -325,7 +312,6 @@ W67,hping3
 W67,telnet
 W679,netcat
 W679,rpi-imager
-W8,bria
 W8,gns3-converter
 W8,microsoft-edge-beta-bin
 W8,plow-bin
