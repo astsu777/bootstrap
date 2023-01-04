@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 04 Jan 2023 21:07:47
+# Last modified: Wed 04 Jan 2023 21:45:36
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1201,6 +1201,8 @@ backupdotfiles(){
 	mv "$HOME"/.config/qutebrowser/config.py "$HOME"/.old-dotfiles/qutebrowser.py > /dev/null 2>&1
 	mv "$HOME"/.config/qutebrowser/dark.css "$HOME"/.old-dotfiles/qutedark.css > /dev/null 2>&1
 	mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
+	mv "$HOME"/.moc/config "$HOME"/.old-dotfiles/moc-config > /dev/null 2>&1
+	mv "$HOME"/.moc/themes "$HOME"/.old-dotfiles/moc-themes > /dev/null 2>&1
 	mv "$HOME"/.links "$HOME"/.old-dotfiles/links > /dev/null 2>&1
 	mv "$HOME"/.config/zathura/zathurarc "$HOME"/.old-dotfiles/zathurarc > /dev/null 2>&1
 	mv "$HOME"/.config/sxiv/exec/key-handler "$HOME"/.old-dotfiles/sxiv-key-handler > /dev/null 2>&1
@@ -1441,6 +1443,13 @@ installdotfiles(){
 	fi
 	if type jwm > /dev/null 2>&1; then
 		ln -sf "$dfloc"/jwmrc "$HOME"/.jwmrc 2>&1 | lognoc
+	fi
+	if type mocp > /dev/null 2>&1; then
+		if [[ ! -d "$HOME"/.moc ]]; then
+			mkdir -pv "$HOME"/.moc 2>&1 | lognoc
+		fi
+		ln -sf "$dfloc"/moc/config "$HOME"/.moc/ 2>&1 | lognoc
+		ln -sf "$dfloc"/moc/themes "$HOME"/.moc/ 2>&1 | lognoc
 	fi
 	if type zathura > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/zathura ]]; then
