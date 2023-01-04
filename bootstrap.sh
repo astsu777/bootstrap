@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Wed 04 Jan 2023 20:39:35
+# Last modified: Wed 04 Jan 2023 21:07:47
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1524,7 +1524,7 @@ setupgtktheme(){
 	fi
 	ln -sf "$dfloc"/config/gtk-2.0/gtkrc "$HOME"/.config/gtk-2.0/ 2>&1 | lognoc
 	ln -sf "$dfloc"/config/gtk-3.0/settings.ini "$HOME"/.config/gtk-3.0/ 2>&1 | lognoc
-	ln -sf "$dfloc"/config/gtk-3.0/settings.ini "$HOME"/.config/gtk-4.0/ 2>&1 | lognoc
+	ln -sf "$dfloc"/config/gtk-4.0/settings.ini "$HOME"/.config/gtk-4.0/ 2>&1 | lognoc
 	ln -sf "$dfloc"/icons/default/index.theme "$HOME"/.icons/default/ 2>&1 | lognoc
 	if type pcmanfm > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/libfm ]]; then
