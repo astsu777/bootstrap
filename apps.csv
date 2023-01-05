@@ -278,7 +278,6 @@ W25679,speedtest-cli
 W25679,ssh-audit
 W25679,tor
 W25679,whois
-W25679,xca
 W2569,httpie
 W259,cdrtools
 W259,inetutils
@@ -289,6 +288,7 @@ W2789,zeek
 W29,geoip
 W3,raspberry-pi-imager
 W3,tunnelblick
+W35679,xca
 W3679,wireshark
 W378,unetbootin
 W38,teamviewer
