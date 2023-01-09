@@ -337,7 +337,6 @@ X,bluez
 X,bluez-utils
 X,cmake
 X,dunst
-X,easyeffects
 X,feh
 X,file-roller
 X,gnome-keyring
@@ -397,6 +396,7 @@ X569,ttf-ubuntu-font-family
 X569,xdo
 X59,pulsemixer
 X59,xdg-user-dirs
+X7,easyeffects
 Y,automake
 Y,base-devel
 Y,dejavu-fonts-ttf
