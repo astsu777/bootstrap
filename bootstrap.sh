@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 12 Jan 2023 11:57:19
+# Last modified: Sun 15 Jan 2023 18:01:31
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -2232,7 +2232,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 		fi
 	fi
 	# Virtual Machines
-	if grep -E --color '(vmx|svm)' /proc/cpuinfo > /dev/null 2>&1 || if sysctl -a | grep -o VMX > /dev/null 2>&1; then
+	if grep -E --color '(vmx|svm)' /proc/cpuinfo > /dev/null 2>&1 || sysctl -a | grep -o VMX > /dev/null 2>&1; then
 		echo -e "Your computer supports the creation of virtual machines"
 		while read -p "Do you want to install the necessary software to create VMs? (Y/n) " -n 1 -r; do
 			echo -e 2>&1 | logc
