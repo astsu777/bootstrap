@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 15 Jan 2023 18:01:31
+# Last modified: Thu 19 Jan 2023 20:46:22
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -145,7 +145,7 @@ if type brew > /dev/null 2>&1; then
 	install(){ brew install "$@" 2>&1 | lognoc ;}
 	uninstall(){ brew uninstall "$@" 2>&1 | lognoc ;}
 	installgui(){ brew install --cask "$@" 2>&1 | lognoc ;}
-	installvirtualbox(){ update 2>&1 | lognoc && install virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
+	# installvirtualbox(){ update 2>&1 | lognoc && install virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 	installkvm(){ update 2>&1 | lognoc && install utm 2>&1 | lognoc ;}
 elif type apt-get snap > /dev/null 2>&1; then
 	export DEBIAN_FRONTEND=noninteractive
@@ -198,11 +198,11 @@ elif type apt-get snap > /dev/null 2>&1; then
 			sudo snap remove --purge "$@" 2>&1 | lognoc
 		fi
 	}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
-		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
-		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+	# 	version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+	# 	yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install ovmf ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
 		updatesnap 2>&1 | lognoc && installsnap --beta swtpm-mvo 2>&1 | lognoc
@@ -263,11 +263,11 @@ elif type apt snap > /dev/null 2>&1; then
 			sudo snap remove --purge "$@" 2>&1 | lognoc
 		fi
 	}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
-		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
-		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+	# 	version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+	# 	yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install ovmf ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
 		updatesnap 2>&1 | lognoc && installsnap --beta swtpm-mvo 2>&1 | lognoc
@@ -308,11 +308,11 @@ elif type apt-get > /dev/null 2>&1; then
 			sudo apt-get remove -y --purge "$@" 2>&1 | lognoc
 		fi
 	}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
-		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
-		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+	# 	version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+	# 	yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install ovmf ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
@@ -351,11 +351,11 @@ elif type apt > /dev/null 2>&1; then
 			sudo apt remove -y --purge "$@" 2>&1 | lognoc
 		fi
 	}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
-		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
-		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+	# 	version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+	# 	yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install ovmf ebtables iptables qemu-kvm dmidecode libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
@@ -401,11 +401,11 @@ elif type yum > /dev/null 2>&1; then
 			sudo yum remove -y "$@" 2>&1 | lognoc
 		fi
 	}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
-		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
-		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
+	# 	version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+	# 	yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install edk2-ovmf swtpm dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
@@ -450,11 +450,11 @@ elif type dnf > /dev/null 2>&1; then
 			sudo dnf remove -y "$@" 2>&1 | lognoc
 		fi
 	}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
-		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
-		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install VirtualBox linux-headers 2>&1 | lognoc
+	# 	version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+	# 	yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install edk2-ovmf swtpm dmidecode qemu-kvm libvirt libvirt-python libguestfs-tools virt-install ebtables iptables 2>&1 | lognoc
 		if [[ "$initSystem" == "openrc" ]]; then install libvirt-openrc 2>&1 | lognoc; fi
@@ -516,10 +516,10 @@ elif type pacman yay > /dev/null 2>&1; then
 	installaur(){ yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -S "$@" 2>&1 | lognoc ;}
 	installaurconfirm(){ yes | yay --cleanafter --nodiffmenu --noprovides --removemake --needed -S "$@" 2>&1 | lognoc ;}
 	uninstallaur(){ yes | yay --cleanafter --nodiffmenu --noprovides --removemake --noconfirm --needed -Rcs "$@" 2>&1 | lognoc ;}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
-		installaur virtualbox-ext-oracle 2>&1 | lognoc
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+	# 	installaur virtualbox-ext-oracle 2>&1 | lognoc
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install edk2-ovmf swtpm qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
@@ -581,11 +581,11 @@ elif type pacman > /dev/null 2>&1; then
 			sudo pacman -Rcs "$@" --noconfirm 2>&1 | lognoc
 		fi
 	}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
-		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
-		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install virtualbox linux-headers 2>&1 | lognoc
+	# 	version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+	# 	yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install edk2-ovmf swtpm qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
@@ -622,11 +622,11 @@ elif type xbps-install > /dev/null 2>&1; then
 			sudo xbps-remove -Roy "$@" 2>&1 | lognoc
 		fi
 	}
-	installvirtualbox(){
-		update 2>&1 | lognoc && install virtualbox-ose linux-headers 2>&1 | lognoc
-		version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
-		yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
-	}
+	# installvirtualbox(){
+	# 	update 2>&1 | lognoc && install virtualbox-ose linux-headers 2>&1 | lognoc
+	# 	version=$(VBoxManage -v | sed 's/r[0-9a-b]*//') && wget "https://download.virtualbox.org/virtualbox/${version}/Oracle_VM_VirtualBox_Extension_Pack-${version}.vbox-extpack"
+	# 	yes | VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack && rm -f Oracle_VM_VirtualBox_Extension_Pack-"${version}".vbox-extpack
+	# }
 	installkvm(){
 		update 2>&1 | lognoc && install swtpm qemu dmidecode virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat iptables-nft libguestfs 2>&1 | lognoc
 		sudo sed -i 's/^#unix_sock_group = "libvirt"/unix_sock_group = "libvirt"/' /etc/libvirt/libvirtd.conf 2>&1 | lognoc
@@ -2239,7 +2239,7 @@ if [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]]; then
 			if [[ "$REPLY" =~ ^[Yy]$ ]]; then
 				echo -e "Installing virtualization software..." 2>&1 | logc
 				getsudo
-				installvirtualbox
+				# installvirtualbox
 				installkvm
 				echo -e "Virtualization software installed" 2>&1 | logc
 				echo -e 2>&1 | logc
