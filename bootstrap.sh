@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 09 Feb 2023 20:36:06
+# Last modified: Sat 18 Feb 2023 12:42:56
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -765,10 +765,14 @@ installpythondeps(){
 	if type pip > /dev/null 2>&1 && ! type virtualenv > /dev/null 2>&1; then
 	# Virtual Environment
 		pip install virtualenv 2>&1 | lognoc
+	elif type pip3 > /dev/null 2>&1 && ! type virtualenv > /dev/null 2>&1; then
+		pip3 install virtualenv 2>&1 | lognoc
 	fi
 	if type pip > /dev/null 2>&1 && [[ "$pythonx" =~ vxapi.py ]]; then
 	# VxAPI
 		pip install requests colorama 2>&1 | lognoc
+	elif type pip3 > /dev/null 2>&1 && [[ "$pythonx" =~ vxapi.py ]]; then
+		pip3 install requests colorama 2>&1 | lognoc
 	fi
 }
 setupkeyring(){
