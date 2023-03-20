@@ -401,6 +401,7 @@ X569,xdo
 X59,pulsemixer
 X59,xdg-user-dirs
 X7,easyeffects
+X7,lsp-plugins
 Y,automake
 Y,base-devel
 Y,dejavu-fonts-ttf
