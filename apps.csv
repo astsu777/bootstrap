@@ -7,6 +7,7 @@
 1,https://raw.githubusercontent.com/pystardust/ytfzf/master/ytfzf ytfzf
 2,ansifilter
 2,findutils
+2,maccy
 2,mactex-no-gui
 2,media-info
 2,msmtp
@@ -60,6 +61,8 @@
 3,android-messages
 3,brave-browser
 3,gpg-suite-no-mail
+3,hiddenbar
+3,kekaexternalhelper
 3,keycastr
 3,nextcloud
 3,nordvpn
@@ -70,6 +73,7 @@
 35679,audacity
 35679,calibre
 35679,darktable
+35679,flameshot
 35679,gimp
 35679,inkscape
 35679,kdenlive
@@ -100,7 +104,6 @@
 5679,biber
 5679,ca-certificates
 5679,cifs-utils
-5679,flameshot
 5679,gparted
 5679,gpick
 5679,guvcview
