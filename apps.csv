@@ -19,7 +19,6 @@
 25679,coreutils
 25679,curl
 25679,dos2unix
-25679,exa
 25679,ffmpeg
 25679,firefox
 25679,fzf
@@ -28,6 +27,7 @@
 25679,kitty
 25679,lame
 25679,links
+25679,lsd
 25679,moc
 25679,mpv
 25679,neovim
