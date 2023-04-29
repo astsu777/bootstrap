@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 18 Feb 2023 12:42:56
+# Last modified: Sat 29 Apr 2023 18:48:58
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1182,7 +1182,6 @@ backupdotfiles(){
 	if [[ -f "$HOME"/.inputrc ]]; then mv "$HOME"/.inputrc "$HOME"/.old-dotfiles/inputrc > /dev/null 2>&1; else mv "$HOME"/.config/inputrc "$HOME"/.old-dotfiles/inputrc > /dev/null 2>&1; fi
 	if [[ -f "$HOME"/.gitconfig ]]; then mv "$HOME"/.gitconfig "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1; else mv "$HOME"/.config/git/config "$HOME"/.old-dotfiles/gitconfig > /dev/null 2>&1; fi
 	if [[ -f "$HOME"/.msmtprc ]]; then mv "$HOME"/.msmtprc "$HOME"/.old-dotfiles/msmtprc > /dev/null 2>&1; else mv "$HOME"/.config/msmtp "$HOME"/.old-dotfiles/msmtp > /dev/null 2>&1; fi
-	if [[ -f "$HOME"/.tmux.conf ]]; then mv "$HOME"/.tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; else mv "$HOME"/.config/tmux/tmux.conf "$HOME"/.old-dotfiles/tmux.conf > /dev/null 2>&1; fi
 	if [[ -f "$HOME"/.screenrc ]]; then mv "$HOME"/.screenrc "$HOME"/.old-dotfiles/screenrc > /dev/null 2>&1; else mv "$HOME"/.config/screen/screenrc "$HOME"/.old-dotfiles/screenrc > /dev/null 2>&1; fi
 	if [[ -f "$HOME"/.Xresources ]]; then mv "$HOME"/.Xresources "$HOME"/.old-dotfiles/Xresources > /dev/null 2>&1; else mv "$HOME"/.config/X11/Xresources "$HOME"/.old-dotfiles/Xresources > /dev/null 2>&1; fi
 	mv "$HOME"/.vim "$HOME"/.old-dotfiles/vim > /dev/null 2>&1
@@ -1200,6 +1199,7 @@ backupdotfiles(){
 	mv "$HOME"/.config/alacritty "$HOME"/.old-dotfiles/alacritty > /dev/null 2>&1
 	mv "$HOME"/.config/kitty "$HOME"/.old-dotfiles/kitty > /dev/null 2>&1
 	mv "$HOME"/.config/surfraw/conf "$HOME"/.old-dotfiles/surfraw > /dev/null 2>&1
+	mv "$HOME"/.config/tmux "$HOME"/.old-dotfiles/tmux > /dev/null 2>&1
 	mv "$HOME"/.config/newsboat/config "$HOME"/.old-dotfiles/newsboat-config > /dev/null 2>&1
 	mv "$HOME"/.config/newsboat/urls "$HOME"/.old-dotfiles/newsboat-urls > /dev/null 2>&1
 	mv "$HOME"/.config/redshift.conf "$HOME"/.old-dotfiles/redshift.conf > /dev/null 2>&1
@@ -1226,7 +1226,6 @@ deletedotfiles(){
 	if [[ -f "$HOME"/.gitconfig ]]; then rm -Rf "$HOME"/.gitconfig; else rm -Rf "$HOME"/.config/git/config; fi
 	if [[ -f "$HOME"/.msmtprc ]]; then rm -Rf "$HOME"/.msmtprc; else rm -Rf "$HOME"/.config/msmtp; fi
 	if [[ -f "$HOME"/.p10k.zsh ]]; then rm -Rf "$HOME"/.p10k.zsh; else rm -Rf "$HOME"/.config/zsh/.p10k.zsh; fi
-	if [[ -f "$HOME"/.tmux.conf ]]; then rm -Rf "$HOME"/.tmux.conf; else rm -Rf "$HOME"/.config/tmux/tmux.conf; fi
 	if [[ -f "$HOME"/screenrc ]]; then rm -Rf "$HOME"/screenrc; else rm -Rf "$HOME"/.config/screen/screenrc; fi
 	if [[ -f "$HOME"/.Xresources ]]; then rm -Rf "$HOME"/.Xresources; else rm -Rf "$HOME"/.config/X11/Xresources; fi
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then rm -Rf "$HOME"/.config/mimeapps.list ; fi
@@ -1245,6 +1244,7 @@ deletedotfiles(){
 	rm -Rf "$HOME"/.config/kitty
 	rm -Rf "$HOME"/.links
 	rm -Rf "$HOME"/.config/surfraw/conf
+	rm -Rf "$HOME"/.config/tmux
 	rm -Rf "$HOME"/.config/newsboat/config
 	rm -Rf "$HOME"/.config/newsboat/urls
 	rm -Rf "$HOME"/.config/weechat
@@ -1509,10 +1509,9 @@ installdotfiles(){
 			fi
 		else
 			if [[ $(tmux -V) =~ 3\.[1-9] ]]; then
-				if [[ ! -d "$HOME"/.config/tmux ]]; then
-					mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
-				fi
+				mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
 				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+				ln -sf "$dfloc"/config/tmux/*_theme.conf "$HOME"/.config/tmux/ 2>&1 | lognoc
 			else
 				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 			fi
