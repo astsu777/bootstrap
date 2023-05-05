@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sat 29 Apr 2023 18:48:58
+# Last modified: Fri 05 May 2023 18:57:13
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1508,13 +1508,9 @@ installdotfiles(){
 				ln -sf "$dfloc"/config/tmux/tmux29-server.conf "$HOME"/.tmux.conf 2>&1 | lognoc
 			fi
 		else
-			if [[ $(tmux -V) =~ 3\.[1-9] ]]; then
-				mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
-				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
-				ln -sf "$dfloc"/config/tmux/*_theme.conf "$HOME"/.config/tmux/ 2>&1 | lognoc
-			else
-				ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.tmux.conf 2>&1 | lognoc
-			fi
+			mkdir -pv "$HOME"/.config/tmux 2>&1 | lognoc
+			ln -sf "$dfloc"/config/tmux/tmux-workstation.conf "$HOME"/.config/tmux/tmux.conf 2>&1 | lognoc
+			ln -sf "$dfloc"/config/tmux/*_theme.conf "$HOME"/.config/tmux/ 2>&1 | lognoc
 		fi
 	fi
 }
