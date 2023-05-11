@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 11 May 2023 14:00:14
+# Last modified: Thu 11 May 2023 14:18:33
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -850,6 +850,7 @@ installsurf(){
 	if [[ ! -d "$HOME"/.config/surf/styles ]]; then mkdir -pv "$HOME"/.config/surf/styles > /dev/null 2>&1; fi
 	cp "$surfloc"/script.js "$HOME"/.config/surf/ > /dev/null 2>&1
 	cp -R "$surfloc"/styles/*.css "$HOME"/.config/surf/styles/ > /dev/null 2>&1
+	install webkit2gtk 2>&1 | lognoc
 	sudo make -C "$surfloc" clean install > /dev/null 2>&1
 }
 installbspwm(){
