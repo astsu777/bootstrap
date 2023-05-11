@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Fri 05 May 2023 18:57:13
+# Last modified: Thu 11 May 2023 14:00:14
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -883,7 +883,11 @@ installopenbox(){
 }
 installspectrwm(){
 	update 2>&1 | lognoc
-	install spectrwm 2>&1 | lognoc
+	if [[ -f /etc/arch-release ]] || [[ -f /etc/artix-release ]]; then
+		installaur spectrwm 2>&1 | lognoc
+	else
+		install spectrwm 2>&1 | lognoc
+	fi
 	if [[ ! -d "$dfloc" ]]; then git clone --depth 1 "$dfrepo" "$dfloc" > /dev/null 2>&1 ; fi
 	if [[ ! -d "$HOME"/.config/spectrwm ]]; then mkdir -pv "$HOME"/.config/spectrwm > /dev/null 2>&1 ; fi
 	ln -sf "$dfloc"/config/spectrwm/* "$HOME"/.config/spectrwm/ > /dev/null 2>&1
