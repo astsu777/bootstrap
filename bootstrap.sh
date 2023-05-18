@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 11 May 2023 14:20:05
+# Last modified: Thu 18 May 2023 10:05:05
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1364,28 +1364,19 @@ installdotfiles(){
 	if type msmtp > /dev/null 2>&1; then
 		ln -sf "$dfloc"/config/msmtp "$HOME"/.config/msmtp 2>&1 | lognoc
 	fi
-	if type alacritty > /dev/null 2>&1 || [[ -d /Applications/Alacritty.app ]]; then
+	if type alacritty > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/alacritty ]]; then
 			mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc
 		fi
-		if [[ "$OSTYPE" == "darwin"* ]]; then
-			mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-macos.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
-			ln -sf "$dfloc"/config/alacritty/*_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
-		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-			mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty-linux.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
-			ln -sf "$dfloc"/config/alacritty/*_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
-		fi
+		mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
+		ln -sf "$dfloc"/config/alacritty/*_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
 	fi
-	if type kitty > /dev/null 2>&1 || [[ -d /Applications/Kitty.app ]]; then
+	if type kitty > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/kitty ]]; then
 			mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc
 		fi
-		if [[ "$OSTYPE" == "darwin"* ]]; then
-			mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
-			ln -sf "$dfloc"/config/kitty/*_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
-		elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-			mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
-			ln -sf "$dfloc"/config/kitty/*_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
+		mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
+		ln -sf "$dfloc"/config/kitty/*_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
 		fi
 	fi
 	if type links > /dev/null 2>&1; then
