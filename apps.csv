@@ -302,11 +302,11 @@ W26,dhcpdump
 W2678,wakeonlan
 W2789,zeek
 W29,geoip
+W3,balenaetcher
 W3,raspberry-pi-imager
 W3,tunnelblick
 W35679,xca
 W3679,wireshark
-W378,unetbootin
 W38,teamviewer
 W38,tor-browser
 W4,1295203466 microsoft remote desktop
@@ -330,6 +330,7 @@ W67,hping3
 W67,telnet
 W679,netcat
 W679,rpi-imager
+W8,balena-etcher
 W8,gns3-converter
 W8,microsoft-edge-beta-bin
 W8,plow-bin
