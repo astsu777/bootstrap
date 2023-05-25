@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 18 May 2023 10:05:05
+# Last modified: Thu 25 May 2023 20:35:41
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1378,7 +1378,6 @@ installdotfiles(){
 		mkdir -pv "$HOME"/.config/kitty 2>&1 | lognoc && ln -sf "$dfloc"/config/kitty/kitty.conf "$HOME"/.config/kitty/kitty.conf 2>&1 | lognoc
 		ln -sf "$dfloc"/config/kitty/*_theme.conf "$HOME"/.config/kitty/ 2>&1 | lognoc
 		fi
-	fi
 	if type links > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.links ]]; then
 			mkdir -pv "$HOME"/.links 2>&1 | lognoc
