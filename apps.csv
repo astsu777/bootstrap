@@ -288,6 +288,7 @@ W25679,jq
 W25679,masscan
 W25679,minicom
 W25679,nmap
+W25679,putty
 W25679,rtmpdump
 W25679,socat
 W25679,speedtest-cli
@@ -332,6 +333,7 @@ W679,netcat
 W679,rpi-imager
 W8,balena-etcher
 W8,gns3-converter
+W8,icaclient
 W8,microsoft-edge-beta-bin
 W8,plow-bin
 W8,rpi-imager-bin
