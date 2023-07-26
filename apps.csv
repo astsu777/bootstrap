@@ -320,6 +320,9 @@ W5679,remmina
 W5679,testssl.sh
 W5679,traceroute
 W5679,visidata
+W569,tftp-hpa
+W59,dhcp
+W6,dhcpd
 W6,freerdp2-x11
 W6,inetutils-ftp
 W6,inetutils-ping
@@ -332,6 +335,8 @@ W67,hping3
 W67,telnet
 W679,netcat
 W679,rpi-imager
+W7,dhcp-server
+W7,tftp-server
 W8,balena-etcher
 W8,gns3-converter
 W8,icaclient
