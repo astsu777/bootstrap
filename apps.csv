@@ -101,6 +101,7 @@
 5,reflector
 5,signal-desktop
 5,syslog-ng
+5,texlive
 56,ifplugd
 567,galculator
 567,obs-studio
@@ -178,7 +179,6 @@
 59,splix
 59,system-config-printer
 59,texlive-lang
-59,texlive-most
 59,ueberzug
 59,xorg-server-xephyr
 59,xsel
@@ -229,6 +229,7 @@
 9,gst-plugins-good1
 9,obs
 9,rsyslog
+9,texlive-most
 9,transmission
 9,trayer-srg
 9,ts
