@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 25 Jul 2024 17:10:09
+# Last modified: Tue 12 Nov 2024 16:56:20
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -142,9 +142,9 @@ if type brew > /dev/null 2>&1; then
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[2][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[2][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
 	update(){ brew update 2>&1 | lognoc ;}
-	install(){ brew install "$@" 2>&1 | lognoc ;}
+	install(){ HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ENV_HINTS=1 brew install "$@" 2>&1 | lognoc ;}
 	uninstall(){ brew uninstall "$@" 2>&1 | lognoc ;}
-	installgui(){ brew install --cask "$@" 2>&1 | lognoc ;}
+	installgui(){ HOMEBREW_NO_INSTALL_CLEANUP=1 HOMEBREW_NO_ENV_HINTS=1 brew install --cask "$@" 2>&1 | lognoc ;}
 	# installvirtualbox(){ update 2>&1 | lognoc && install virtualbox virtualbox-extension-pack 2>&1 | lognoc ;}
 	installkvm(){ update 2>&1 | lognoc && install utm 2>&1 | lognoc ;}
 elif type apt-get snap > /dev/null 2>&1; then
