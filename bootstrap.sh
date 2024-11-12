@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 12 Nov 2024 17:07:50
+# Last modified: Tue 12 Nov 2024 20:01:28
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1370,8 +1370,8 @@ installdotfiles(){
 		if [[ ! -d "$HOME"/.config/alacritty ]]; then
 			mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc
 		fi
-		mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty.yml "$HOME"/.config/alacritty/alacritty.yml 2>&1 | lognoc
-		ln -sf "$dfloc"/config/alacritty/*_theme.yml "$HOME"/.config/alacritty/ 2>&1 | lognoc
+		mkdir -pv "$HOME"/.config/alacritty 2>&1 | lognoc && ln -sf "$dfloc"/config/alacritty/alacritty.toml "$HOME"/.config/alacritty/alacritty.toml 2>&1 | lognoc
+		ln -sf "$dfloc"/config/alacritty/*_theme.toml "$HOME"/.config/alacritty/ 2>&1 | lognoc
 	fi
 	if type kitty > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/kitty ]]; then
