@@ -86,7 +86,8 @@
 3569,telegram-desktop
 357U,discord
 359,alacritty
-36,fonts-jetbrains-mono
+3,font-jetbrains-mono
+6,fonts-jetbrains-mono
 38,authy
 38,zoom
 5,android-udev
