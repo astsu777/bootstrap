@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Tue 12 Nov 2024 16:56:20
+# Last modified: Tue 12 Nov 2024 17:07:50
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1035,10 +1035,12 @@ setupworkstation(){
 		# settings we’re about to change
 		osascript -e 'tell application "System Preferences" to quit'
 		# General
-		defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark" # Enable Dark Mode
-		defaults write NSGlobalDomain AppleHighlightColor -string "0.847059 0.847059 0.862745 Graphite" # Choose Graphite as the highlight color
-		defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 # Set the sidebar icon size to small
-		# defaults write NSGlobalDomain _HIHideMenuBar -bool true # Auto-hide the menu bar
+		defaults write "Apple Global Domain" AppleInterfaceStyle -string "Dark" # Enable Dark Mode
+		defaults write "Apple Global Domain" AppleHighlightColor -string "0.847059 0.847059 0.862745 Graphite" # Choose Graphite as the highlight color
+		defaults write "Apple Global Domain" AppleAccentColor -int 4 # Choose the accent color
+		defaults write "Apple Global Domain" AppleAquaColorVariant -int 1 # Choose the color variant
+		defaults write "Apple Global Domain" NSTableViewDefaultSizeMode -int 1 # Set the sidebar icon size to small
+		# defaults write "Apple Global Domain" _HIHideMenuBar -bool true # Auto-hide the menu bar
 		# Disable screen saver
 		defaults -currentHost write com.apple.screensaver idleTime -int 0
 		# Disable creation of .DS_Store files
@@ -1055,25 +1057,25 @@ setupworkstation(){
 		# Mission Control
 		defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces automatically by recent use
 		# Trackpad
-		defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 # Click when tapping on the trackpad
-		defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -int 0 # Right-click in bottom-right corner of the trackpad
-		defaults -currentHost write NSGlobalDomain com.apple.trackpad.scrollBehavior -int 2 # Do not invert scrolling
+		defaults -currentHost write "Apple Global Domain" com.apple.mouse.tapBehavior -int 1 # Click when tapping on the trackpad
+		defaults -currentHost write "Apple Global Domain" com.apple.trackpad.enableSecondaryClick -int 0 # Right-click in bottom-right corner of the trackpad
+		defaults -currentHost write "Apple Global Domain" com.apple.trackpad.scrollBehavior -int 2 # Do not invert scrolling
 		# Firewall
 		sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1 # Enable the firewall
 		sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -int 1 # Do not respond to ICMP
 		# Disable UI sound effects
-		defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
+		defaults write "Apple Global Domain" com.apple.sound.uiaudio.enabled -int 0
 		# Keyboard
-		defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false # Disable automatic capitalization
-		defaults write NSGlobalDomain NSUserQuotesArray -array '"\""' '"\""' '"'\''"' '"'\''"' # Adjust smart quotes
-		defaults write NSGlobalDomain KeyRepeat -int 1 # Enable fast key repeat
-		defaults write NSGlobalDomain InitialKeyRepeat -int 10 # Very fast initial key repeat
-		defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false # Disable automatic spelling correction
+		defaults write "Apple Global Domain" NSAutomaticCapitalizationEnabled -bool false # Disable automatic capitalization
+		defaults write "Apple Global Domain" NSUserQuotesArray -array '"\""' '"\""' '"'\''"' '"'\''"' # Adjust smart quotes
+		defaults write "Apple Global Domain" KeyRepeat -int 1 # Enable fast key repeat
+		defaults write "Apple Global Domain" InitialKeyRepeat -int 10 # Very fast initial key repeat
+		defaults write "Apple Global Domain" NSAutomaticSpellingCorrectionEnabled -bool false # Disable automatic spelling correction
 		defaults write -g ApplePressAndHoldEnabled -bool false # Enable key repeat
 		# Configure the clock to be 24h and display the date
 		defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM  HH:mm"
 		# Finder
-		defaults write NSGlobalDomain AppleShowAllExtensions -bool true # Show all file extensions
+		defaults write "Apple Global Domain" AppleShowAllExtensions -bool true # Show all file extensions
 		defaults write com.apple.finder ShowPathbar -bool true # Show full path
 		defaults write com.apple.finder ShowStatusBar -bool true # Show status bar
 		defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv" # View as list
