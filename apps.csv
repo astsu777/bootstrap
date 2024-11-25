@@ -63,11 +63,13 @@
 3,android-messages
 3,brave-browser
 3,caffeine
+3,font-jetbrains-mono
 3,gpg-suite-no-mail
 3,hiddenbar
 3,kekaexternalhelper
 3,keycastr
 3,nextcloud
+3,nikitabobko/tap/aerospace
 3,obs
 3,openvpn-connect
 3,signal
@@ -86,8 +88,6 @@
 3569,telegram-desktop
 357U,discord
 359,alacritty
-3,font-jetbrains-mono
-6,fonts-jetbrains-mono
 38,authy
 38,zoom
 5,android-udev
@@ -187,6 +187,7 @@
 6,avahi-daemon
 6,build-essential
 6,dnsutils
+6,fonts-jetbrains-mono
 6,libimage-exiftool-perl
 6,libnfs-utils
 6,libnss-mdns
