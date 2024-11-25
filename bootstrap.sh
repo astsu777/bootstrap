@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 25 Nov 2024 16:18:21
+# Last modified: Mon 25 Nov 2024 16:24:50
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1196,7 +1196,7 @@ backupdotfiles(){
 	if [[ -f "$HOME"/.zshrc ]]; then mv "$HOME"/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; else mv "$HOME"/.config/zsh/.zshrc "$HOME"/.old-dotfiles/zshrc > /dev/null 2>&1; fi
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then mv "$HOME"/.config/mimeapps.list "$HOME"/.old-dotfiles/mimeapps.list > /dev/null 2>&1 ; fi
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then mv "$HOME"/.local/share/applications/mimeapps.list "$HOME"/.old-dotfiles/local_share_applications_mimeapps.list > /dev/null 2>&1 ; fi
-	if [[ "$OSTYPE" == "darwin"* ]]; then mv "$HOME"/.aerospace.toml "$HOME"/.old-dotfiles/aerospace.toml > /dev/null 2>&1 ; fi
+	if [[ "$OSTYPE" == "darwin"* ]]; then mv "$HOME"/.config/aerospace/aerospace.toml "$HOME"/.old-dotfiles/aerospace.toml > /dev/null 2>&1 ; fi
 	mv "$HOME"/.local/share/applications/sxiview.desktop "$HOME"/.old-dotfiles/sxiview.desktop > /dev/null 2>&1
 	mv "$HOME"/.zprofile "$HOME"/.old-dotfiles/zprofile > /dev/null 2>&1
 	mv "$HOME"/.zshenv "$HOME"/.old-dotfiles/zshenv > /dev/null 2>&1
@@ -1237,7 +1237,7 @@ deletedotfiles(){
 	if [[ -f "$HOME"/.Xresources ]]; then rm -Rf "$HOME"/.Xresources; else rm -Rf "$HOME"/.config/X11/Xresources; fi
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then rm -Rf "$HOME"/.config/mimeapps.list ; fi
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then rm -Rf "$HOME"/.local/share/applications/mimeapps.list ; fi
-	if [[ "$OSTYPE" == "darwin"* ]]; then rm -Rf "$HOME"/.aerospace.toml ; fi
+	if [[ "$OSTYPE" == "darwin"* ]]; then rm -Rf "$HOME"/.config/aerospace/aerospace.toml ; fi
 	rm -Rf "$HOME"/.vim
 	rm -Rf "$HOME"/.vimrc
 	if [[ -f "$HOME"/.zshrc ]]; then rm -Rf "$HOME"/.zshrc; else rm -Rf "$HOME"/.config/zsh/.zshrc; fi
@@ -1493,7 +1493,10 @@ installdotfiles(){
 		fi
 	fi
 	if type AeroSpace > /dev/null 2>&1; then
-		ln -sf "$dfloc"/aerospace.toml "$HOME"/.aerospace.toml 2>&1 | lognoc
+		if [[ ! -d "$HOME"/.config/aerospace ]]; then
+			mkdir -pv "$HOME"/.config/aerospace 2>&1 | lognoc
+		fi
+		ln -sf "$dfloc"/config/aerospace/aerospace.toml "$HOME"/.config/aerospace/aerospace.toml 2>&1 | lognoc
 	fi
 	# If this is a SSH connection, install the server config of TMUX
 	# For TMUX <=2.9, another config file can be manually installed if TMUX is throwing errors
