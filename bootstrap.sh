@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 25 Nov 2024 16:24:50
+# Last modified: Mon 25 Nov 2024 16:28:46
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1053,9 +1053,9 @@ setupworkstation(){
 		defaults write com.apple.dock launchanim -int 0 # Disable launch animation
 		defaults write com.apple.dock tilesize -int 38 # Set the icons size
 		defaults write com.apple.dock show-recents -int 0 # Do not show recent apps
-		defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces
 		# Mission Control
 		defaults write com.apple.dock mru-spaces -int 0 # Do not rearrange workspaces automatically by recent use
+		defaults write com.apple.dock expose-group-apps -bool true && killall Dock # Group windows by application
 		# Trackpad
 		defaults -currentHost write "Apple Global Domain" com.apple.mouse.tapBehavior -int 1 # Click when tapping on the trackpad
 		defaults -currentHost write "Apple Global Domain" com.apple.trackpad.enableSecondaryClick -int 0 # Right-click in bottom-right corner of the trackpad
