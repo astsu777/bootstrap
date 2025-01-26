@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Mon 25 Nov 2024 16:28:46
+# Last modified: Sun 26 Jan 2025 23:54:00
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1574,71 +1574,6 @@ setupqttheme(){
 	sudo make 2>&1 | lognoc && sudo make install 2>&1 | lognoc
 	cd "$HOME" || exit
 }
-setupamethyst(){
-			# Set windows to always stay in floating mode
-			defaults write com.amethyst.Amethyst.plist floating '(
-		        	{
-    	    	id = "com.apple.systempreferences";
-    	    	"window-titles" =         (
-    	    	);
-    		},
-		        	{
-    	    	id = "com.skitch.skitch";
-    	    	"window-titles" =         (
-    	    	);
-    		},
-		        	{
-    	    	id = "com.microsoft.autoupdate2";
-    	    	"window-titles" =         (
-    	    	);
-    		},
-		        	{
-    	    	id = "com.apple.Stickies";
-    	    	"window-titles" =         (
-    	    	);
-    		},
-		        	{
-    	    	id = "com.parallels.desktop.console";
-    	    	"window-titles" =         (
-    	    	);
-    		},
-		        	{
-    	    	id = "cx.c3.theunarchiver";
-    	    	"window-titles" =         (
-    	    	);
-    		},
-    	    	{
-    	    	id = "com.tapbots.Tweetbot3Mac";
-    	    	"window-titles" =         (
-    	    	);
-    		}
-    		},
-                {
-            id = "org.torproject.torbrowser";
-            "window-titles" =             (
-            	);
-        	}
-			)'
-			defaults write com.amethyst.Amethyst.plist floating-is-blacklist 1
-			# Follow window when moved to different workspace
-			defaults write com.amethyst.Amethyst.plist follow-space-thrown-windows 1
-			# Configure layouts
-			defaults write com.amethyst.Amethyst.plist layouts '(
-				tall, wide, floating, fullscreen
-			)'
-			# Restore layouts when application starts
-			defaults write com.amethyst.Amethyst.plist restore-layouts-on-launch 1
-			# Set window margins
-			defaults write com.amethyst.Amethyst.plist window-margins 1
-			defaults write com.amethyst.Amethyst.plist window-margin-size 5
-			# Do not display layout names
-			defaults write com.amethyst.Amethyst.plist enables-layout-hud 0
-			defaults write com.amethyst.Amethyst.plist enables-layout-hud-on-space-change 0
-			# Disable automatic update check as it is done by Homebrew
-			defaults write com.amethyst.Amethyst.plist SUEnableAutomaticChecks 0
-			# Delete the plist cache
-			defaults read com.amethyst.Amethyst.plist > /dev/null 2>&1
-}
 
 #=======================
 # BEGINNING
@@ -2361,22 +2296,6 @@ while read -p "Do you want to install the dotfiles? (Y/n) " -n 1 -r; do
 					echo -e 2>&1 | logc
 					break
 				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					break
-				fi
-			done
-		fi
-		# macOS - Amethyst Configuration
-		if { [[ -z "$SSH_CLIENT" ]] || [[ -z "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == "darwin"* ]] && [[ -d /Applications/Amethyst.app ]]; then
-			while read -p "Do you want to install Amethyst's configuration? (Y/n) " -n 1 -r; do
-				echo -e 2>&1 | logc
-				if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-					echo -e "Setting up Amethyst..." 2>&1 | logc
-					setupamethyst
-					echo -e "Amethyst configured" 2>&1 | logc
-					echo -e 2>&1 | logc
-					break
-				elif [[ "$REPLY" =~ ^[Nn]$ ]]; then
-					echo -e
 					break
 				fi
 			done
