@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 26 Jan 2025 23:54:00
+# Last modified: Sun 26 Jan 2025 23:55:54
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1215,6 +1215,7 @@ backupdotfiles(){
 	mv "$HOME"/.config/sxhkd/sxhkdrc "$HOME"/.old-dotfiles/sxhkdrc > /dev/null 2>&1
 	mv "$HOME"/.config/sxhkd/sxhkdrc_bspwm "$HOME"/.old-dotfiles/sxhkdrc_bspwm > /dev/null 2>&1
 	mv "$HOME"/.config/amfora/config.toml "$HOME"/.old-dotfiles/amfora.toml > /dev/null 2>&1
+	mv "$HOME"/.config/aerospace/aerospace.toml "$HOME"/.old-dotfiles/aerospace.toml > /dev/null 2>&1
 	mv "$HOME"/.config/qutebrowser/config.py "$HOME"/.old-dotfiles/qutebrowser.py > /dev/null 2>&1
 	mv "$HOME"/.config/qutebrowser/dark.css "$HOME"/.old-dotfiles/qutedark.css > /dev/null 2>&1
 	mv "$HOME"/.jwmrc "$HOME"/.old-dotfiles/jwmrc > /dev/null 2>&1
@@ -1272,6 +1273,7 @@ deletedotfiles(){
 	rm -Rf "$HOME"/.config/sxhkd/sxhkdrc
 	rm -Rf "$HOME"/.config/sxhkd/sxhkdrc_bspwm
 	rm -Rf "$HOME"/.config/amfora/config.toml
+	rm -Rf "$HOME"/.config/aerospace/aerospace.toml
 	rm -Rf "$HOME"/.config/qutebrowser/config.py
 	rm -Rf "$HOME"/.config/qutebrowser/dark.css
 	rm -Rf "$HOME"/.jwmrc
@@ -1441,6 +1443,12 @@ installdotfiles(){
 			mkdir -pv "$HOME"/.config/amfora 2>&1 | lognoc
 		fi
 		ln -sf "$dfloc"/config/amfora/config.toml "$HOME"/.config/amfora/ 2>&1 | lognoc
+	fi
+	if type aerospace > /dev/null 2>&1; then
+		if [[ ! -d "$HOME"/.config/aerospace ]]; then
+			mkdir -pv "$HOME"/.config/aerospace 2>&1 | lognoc
+		fi
+		ln -sf "$dfloc"/config/aerospace/aerospace.toml "$HOME"/.config/aerospace/ 2>&1 | lognoc
 	fi
 	if type qutebrowser > /dev/null 2>&1; then
 		if [[ ! -d "$HOME"/.config/qutebrowser ]]; then
