@@ -54,16 +54,17 @@
 2569,atomicparsley
 2569,cpanminus
 2569,shellcheck
+2569,shfmt
 2569,streamlink
 2579,xz
 259,fd
 2678,task-spooler
 26789,urlview
 29,exiftool
-3,amethyst
-3,android-messages
+3,aerospace
 3,brave-browser
 3,caffeine
+3,cyberduck
 3,font-jetbrains-mono
 3,gpg-suite-no-mail
 3,hiddenbar
@@ -75,6 +76,7 @@
 3,openvpn-connect
 3,signal
 3,webcatalog
+3,winbox
 35679,audacity
 35679,calibre
 35679,darktable
@@ -91,7 +93,6 @@
 359,alacritty
 38,authy
 38,zoom
-5,android-udev
 5,ca-certificates-mozilla
 5,networkmanager
 5,networkmanager-l2tp
@@ -184,7 +185,6 @@
 59,xorg-server-xephyr
 59,xsel
 6,adb
-6,android-sdk-platform-tools
 6,avahi-daemon
 6,build-essential
 6,dnsutils
@@ -218,13 +218,10 @@
 7,perl-Image-ExifTool
 7,samba-client
 7,texlive-scheme-full
-79,android-tools
-8,android-messages-desktop-bin
 8,brave-bin
 8,hypnotix
 8,ttf-ms-win10-auto
 89,cointop
-89,droidcam
 9,Signal-Desktop
 9,galculator-gtk3
 9,gst-plugins-good1
