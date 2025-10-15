@@ -256,6 +256,7 @@ P,docker-runit
 P,networkmanager-runit
 P,ntp-runit
 P,syslog-ng-runit
+S25679,btop
 S25679,glances
 S25679,htop
 S25679,inxi
