@@ -321,10 +321,13 @@ W5679,freerdp
 W5679,remmina
 W5679,testssl.sh
 W5679,traceroute
+W5679,ttyd
 W5679,visidata
 W569,tftp-hpa
 W59,dhcp
+W59,grex
 W6,dhcpd
+W6,faker
 W6,freerdp2-x11
 W6,inetutils-ftp
 W6,inetutils-ping
