@@ -1,6 +1,6 @@
 # Category Tags: S=Server Tools, W=Work, X=Arch|Artix Xorg, Y=Void Xorg
 # InitSys Tags: M=S6, N=Suite66, O=OpenRC, P=Runit,
-# System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 5=Arch Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS, U=Snap
+# System Tags: 0=Git Repo, 1=Direct Download, 2=macOS brew, 3=macOS Casks, 5=Arch Pacman, 6=Debian APT, 7=Red Hat, 8=Yay, 9=Void XBPS, A=Busybox, U=Snap
 0,https://github.com/dylanaraps/neofetch
 0,https://github.com/raylee/tldr-sh-client
 1,https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp yt-dlp
@@ -257,17 +257,18 @@ P,docker-runit
 P,networkmanager-runit
 P,ntp-runit
 P,syslog-ng-runit
-S25679,btop
-S25679,glances
-S25679,htop
-S25679,inxi
-S25679,ncdu
-S25679,nethogs
-S25679,tmux
-S5679,nmon
-S5679,tcpdump
-S5679,vim
+S25679A,btop
+S25679A,glances
+S25679A,htop
+S25679A,inxi
+S25679A,ncdu
+S25679A,nethogs
+S25679A,tmux
+S5679A,nmon
+S5679A,tcpdump
+S5679A,vim
 S67,fd-find
+SA,fd
 U,brave
 U,zoom-client
 W0,https://github.com/payloadsecurity/vxapi.git

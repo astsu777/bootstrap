@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Sun 26 Jan 2025 23:55:54
+# Last modified: Thu 05 Mar 2026 08:37:59
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -86,7 +86,7 @@ getsudo(){
 }
 
 # Determine init system in Linux
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
+if [[ "$OSTYPE" == "linux-gnu" ]] || [[ "$OSTYPE" == "linux-musl" ]]; then
 	if type systemctl >> /dev/null 2>&1; then
 		initSystem="systemd"
 		enableSvc(){ sudo systemctl enable "$1" ;}
@@ -137,7 +137,45 @@ grepxpkg(){ archxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[X][^,]*,
 grepvoidxpkg(){ voidxpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[Y][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$voidxpkg" ;}
 
 # Package managers
-if type brew > /dev/null 2>&1; then
+if type apk > /dev/null 2>&1; then
+	setupcustomrepos(){
+		# Alpine Linux
+		if [[ -f /etc/alpine-release ]]; then
+			if [[ -f /etc/apk/repositories ]]; then
+				sudo cp /etc/apk/repositories /etc/apk/repositorie.old
+				sudo tee /etc/apk/repositories <<-'EOF' >/dev/null
+http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
+http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
+				EOF
+			fi
+		else
+			echo > /dev/null 2>&1
+		fi
+	}
+	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
+	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[A][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
+	update(){
+		if [[ "$EUID" == 0 ]]; then
+			apk update 2>&1 | lognoc
+		else
+			sudo apk update 2>&1 | lognoc
+		fi
+	}
+	install(){
+		if [[ "$EUID" == 0 ]]; then
+			apk add "$@" 2>&1 | lognoc
+		else
+			sudo apk add "$@" 2>&1 | lognoc
+		fi
+	}
+	uninstall(){
+		if [[ "$EUID" == 0 ]]; then
+			apk del "$@" 2>&1 | lognoc
+		else
+			sudo apk del "$@" 2>&1 | lognoc
+		fi
+	}
+elif type brew > /dev/null 2>&1; then
 	setupcustomrepos(){ echo > /dev/null 2>&1;}
 	greppkg(){ pkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[2][^,]*," | sed '/^W/d' | sed 's/^.*,//g' > "$pkg" ;}
 	grepworkpkg(){ workpkg=$(mktemp) && sed '/^#/d' "$HOME"/apps.csv | grep "[2][^,]*," | grep "^W" | sed 's/^.*,//g' > "$workpkg" ;}
