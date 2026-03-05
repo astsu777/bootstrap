@@ -2,7 +2,7 @@
 #=========================================================================
 # Author: Gaetan (gaetan@ictpourtous.com) - Twitter: @astsu777
 # Creation: Sun Mar 2020 19:49:21
-# Last modified: Thu 05 Mar 2026 08:37:59
+# Last modified: Thu 05 Mar 2026 08:39:44
 # Version: 2.0
 #
 # Description: this script automates the setup of my personal computers
@@ -1639,7 +1639,7 @@ echo -e 2>&1 | logc
 # SERVERS SPECIFIC
 #=======================
 # Install software
-if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && [[ "$OSTYPE" == 'linux-gnu' ]]; then
+if { [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]] ;} && { [[ "$OSTYPE" == 'linux-gnu' ]] || [[ "$OSTYPE" == 'linux-musl' ]] ;}; then
 	while read -p "[SERVER SESSION DETECTED] Do you want to install useful tools? (Y/n) " -n 1 -r; do
 		echo -e 2>&1 | logc
 		if [[ "$REPLY" =~ ^[Yy]$ ]]; then
